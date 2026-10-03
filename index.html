@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio | La Receta Secreta</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="app.js" defer></script>
+  <script src="recetas.js" defer></script>
+</head>
+<body>
+  <header>
+    <a class="marca" href="#/inicio">La Receta Secreta</a>
+    <nav aria-label="Navegación principal">
+      <a href="#/inicio" aria-current="page">Inicio</a>
+      <a href="#/recetas">Recetas</a>
+      <a href="#/publicar">Publicar</a>
+      <a href="#/acceso">Acceso</a>
+    </nav>
+  </header>
+  <noscript><p class="aviso">Activa JavaScript para navegar por este recetario.</p></noscript>
+  <main id="contenido">
+    <!-- Pantalla: Inicio -->
+    <div class="pantalla" id="inicio" data-titulo="Inicio" hidden>
+      <section class="bienvenida">
+        <p>RECETAS PARA TODOS LOS DÍAS</p>
+        <h1>Las buenas recetas se comparten.</h1>
+        <p>Comidas sencillas para disfrutar en casa, con ingredientes de todos los días.</p>
+        <a class="boton" href="#/recetas">Ver recetas</a>
+      </section>
+      <section>
+        <h2>Bienvenido a nuestra cocina</h2>
+        <p>La Receta Secreta es un proyecto para compartir nuestras recetas favoritas.</p>
+        <p>Encuentra ideas para cocinar y descubre nuevas combinaciones de ingredientes.</p>
+      </section>
+    </div>
+
+    <!-- Pantalla: Recetas -->
+    <div class="pantalla" id="recetas" data-titulo="Recetas" hidden>
+      <h1>Nuestras recetas</h1>
+      <p>Ideas sencillas para tu próxima comida.</p>
+      <div class="galeria">
+        <article class="tarjeta">
+          <img class="foto-receta" src="fotos/tacos.jpg" alt="Tacos con aguacate" width="800" height="600">
+          <h2>Tacos de frijol con aguacate</h2>
+          <p>Comida · 15 minutos · 2 porciones</p>
+          <p>Una comida rápida para esos días con poco tiempo.</p>
+          <a href="#/tacos">Ver receta: Tacos de frijol con aguacate</a>
+        </article>
+        <article class="tarjeta">
+          <img class="foto-receta" src="fotos/avena.jpg" alt="Avena con rodajas de plátano" width="800" height="600">
+          <h2>Avena con plátano</h2>
+          <p>Desayuno · 10 minutos · 1 porción</p>
+          <p>Un desayuno sencillo para empezar bien el día.</p>
+          <a href="#/avena">Ver receta: Avena con plátano</a>
+        </article>
+        <article class="tarjeta">
+          <img class="foto-receta" src="fotos/ensalada.jpg" alt="Ensalada de garbanzos con pepino y jitomate" width="800" height="600">
+          <h2>Ensalada de garbanzo</h2>
+          <p>Comida · 12 minutos · 2 porciones</p>
+          <p>Fresca, fácil de llevar y sin encender la estufa.</p>
+          <a href="#/ensalada">Ver receta: Ensalada de garbanzo</a>
+        </article>
+      </div>
+    </div>
+
+    <!-- Pantalla: Tacos de frijol con aguacate -->
+    <div class="pantalla" id="tacos" data-titulo="Tacos de frijol con aguacate" hidden>
+      <a href="#/recetas">← Volver a las recetas</a>
+      <h1>Tacos de frijol con aguacate</h1>
+      <img class="foto-receta foto-detalle" src="fotos/tacos.jpg" alt="Tacos con aguacate" width="800" height="600">
+      <p>Una comida rápida para esos días con poco tiempo.</p>
+      <p><strong>Comida · 15 minutos · 2 porciones</strong></p>
+      <section>
+        <h2>Ingredientes</h2>
+        <ul>
+          <li>6 tortillas de maíz</li>
+          <li>1 taza de frijoles cocidos</li>
+          <li>1 aguacate</li>
+          <li>Salsa al gusto</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Preparación</h2>
+        <ol>
+          <li>Calienta los frijoles en una sartén.</li>
+          <li>Calienta las tortillas por ambos lados.</li>
+          <li>Rellena con frijoles, agrega aguacate y termina con salsa.</li>
+        </ol>
+      </section>
+    </div>
+
+    <!-- Pantalla: Avena con plátano -->
+    <div class="pantalla" id="avena" data-titulo="Avena con plátano" hidden>
+      <a href="#/recetas">← Volver a las recetas</a>
+      <h1>Avena con plátano</h1>
+      <img class="foto-receta foto-detalle" src="fotos/avena.jpg" alt="Avena con rodajas de plátano" width="800" height="600">
+      <p>Un desayuno sencillo para empezar bien el día.</p>
+      <p><strong>Desayuno · 10 minutos · 1 porción</strong></p>
+      <section>
+        <h2>Ingredientes</h2>
+        <ul>
+          <li>½ taza de avena</li>
+          <li>1 taza de leche o bebida vegetal</li>
+          <li>1 plátano</li>
+          <li>Canela al gusto</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Preparación</h2>
+        <ol>
+          <li>Mezcla la avena y la leche en una olla.</li>
+          <li>Cocina a fuego bajo durante 5 minutos, moviendo con frecuencia.</li>
+          <li>Sirve con plátano en rodajas y canela.</li>
+        </ol>
+      </section>
+    </div>
+
+    <!-- Pantalla: Ensalada de garbanzo -->
+    <div class="pantalla" id="ensalada" data-titulo="Ensalada de garbanzo" hidden>
+      <a href="#/recetas">← Volver a las recetas</a>
+      <h1>Ensalada de garbanzo</h1>
+      <img class="foto-receta foto-detalle" src="fotos/ensalada.jpg" alt="Ensalada de garbanzos con pepino y jitomate" width="800" height="600">
+      <p>Fresca, fácil de llevar y sin encender la estufa.</p>
+      <p><strong>Comida · 12 minutos · 2 porciones</strong></p>
+      <section>
+        <h2>Ingredientes</h2>
+        <ul>
+          <li>1 taza de garbanzos cocidos</li>
+          <li>1 pepino</li>
+          <li>1 jitomate</li>
+          <li>1 limón</li>
+          <li>1 cucharada de aceite de oliva</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Preparación</h2>
+        <ol>
+          <li>Lava y corta el pepino y el jitomate en cubos.</li>
+          <li>Mezcla las verduras con los garbanzos.</li>
+          <li>Añade el jugo de limón y el aceite antes de servir.</li>
+        </ol>
+      </section>
+    </div>
+
+    <!-- Pantalla: Publicar receta -->
+    <div class="pantalla" id="publicar" data-titulo="Publicar receta" hidden>
+      <h1>Comparte tu receta</h1>
+      <label for="archivo-receta">Importar receta desde un archivo JSON</label>
+      <input id="archivo-receta" type="file" accept=".json,application/json" aria-describedby="estado-json">
+      <p id="estado-json" role="status" aria-live="polite"></p>
+      <form id="formulario-receta">
+        <label for="titulo">Nombre de la receta</label>
+        <input id="titulo" type="text" maxlength="100" placeholder="Por ejemplo: arroz con verduras">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="3" maxlength="350"></textarea>
+        <label for="foto">Foto de la receta (opcional)</label>
+        <input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ayuda-foto">
+        <small id="ayuda-foto">JPG, PNG o WebP. Máximo 2 MB.</small>
+        <img id="vista-foto" class="foto-receta foto-previa" alt="Vista previa de la foto elegida" hidden>
+        <button id="quitar-foto" type="button" hidden>Quitar foto</button>
+        <label for="categoria">Categoría</label>
+        <select id="categoria">
+          <option>Desayuno</option>
+          <option>Comida</option>
+          <option>Cena</option>
+          <option>Postre</option>
+        </select>
+        <label for="tiempo">Tiempo de preparación (minutos)</label>
+        <input id="tiempo" type="number" min="1" max="1440">
+        <label for="porciones">Porciones</label>
+        <input id="porciones" type="number" min="1" max="100">
+        <label for="ingredientes">Ingredientes (uno por línea, con su cantidad)</label>
+        <textarea id="ingredientes" rows="5" maxlength="4000"></textarea>
+        <label for="pasos">Preparación (un paso por línea)</label>
+        <textarea id="pasos" rows="5" maxlength="8000"></textarea>
+        <button type="submit">Agregar al recetario</button>
+        <button type="button" id="exportar-formulario">Exportar JSON</button>
+      </form>
+    </div>
+
+    <!-- Pantalla: Acceso -->
+    <div class="pantalla" id="acceso" data-titulo="Acceso" hidden>
+      <h1>Acceso</h1>
+      <form>
+        <label for="nombre">Nombre</label>
+        <input id="nombre" type="text" placeholder="Alex" maxlength="60">
+        <button type="button" disabled>Acceder</button>
+      </form>
+      <p>Puedes <a href="#/recetas">explorar las recetas sin una cuenta</a>.</p>
+    </div>
+
+    <div class="pantalla" id="no-encontrada" data-titulo="Página no encontrada" hidden>
+        <h1>Página no encontrada</h1>
+        <p>Ese enlace no corresponde a ninguna pantalla.</p>
+        <a href="#/inicio">Volver al inicio</a>
+    </div>
+  </main>
+  <footer>La Receta Secreta · Recetas para compartir</footer>
+</body>
+</html>
