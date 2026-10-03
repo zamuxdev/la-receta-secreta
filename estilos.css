@@ -1,0 +1,157 @@
+/* Estilos compartidos por todas las pantallas. */
+[hidden] {
+  display: none !important;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #293d32;
+  background-color: #faf8f2;
+}
+header, main, footer {
+  max-width: 1000px;
+  margin: auto;
+  padding: 24px;
+}
+header {
+  border-bottom: 1px solid #d9d9cc;
+}
+.marca {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+}
+nav {
+  margin-top: 12px;
+}
+nav a {
+  display: inline-block;
+  margin-right: 20px;
+}
+nav a[aria-current="page"] {
+  font-weight: bold;
+}
+a {
+  color: #28563c;
+}
+h1, h2 {
+  line-height: 1.3;
+}
+main {
+  min-height: 65vh;
+}
+section {
+  margin-bottom: 32px;
+}
+li {
+  margin-bottom: 12px;
+}
+.bienvenida {
+  background-color: #e6ecdb;
+  padding: 32px;
+  border-radius: 8px;
+}
+.bienvenida h1 {
+  font-size: 36px;
+}
+.boton {
+  display: inline-block;
+  padding: 10px 18px;
+  background-color: #28563c;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+/* Las tarjetas se acomodan en filas cuando hay espacio. */
+.galeria {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.tarjeta {
+  flex: 1 1 250px;
+  padding: 20px;
+  border: 1px solid #d9d9cc;
+  border-radius: 8px;
+  background-color: white;
+}
+.tarjeta h2 {
+  font-size: 22px;
+}
+.foto-receta {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.foto-detalle {
+  max-width: 640px;
+  margin: 20px 0;
+}
+.foto-previa {
+  max-width: 320px;
+  margin-top: 12px;
+}
+
+/* Campos de los formularios. */
+form {
+  max-width: 600px;
+}
+label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+input, textarea, select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #899789;
+  border-radius: 4px;
+  font: inherit;
+  background-color: white;
+}
+textarea {
+  resize: vertical;
+}
+button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  color: #555;
+  background-color: #e7e7e0;
+  border: 1px solid #999;
+  cursor: not-allowed;
+}
+.aviso {
+  background-color: #f0e7d4;
+  padding: 16px;
+  border-left: 4px solid #93633a;
+}
+:focus-visible {
+  outline: 3px solid #93633a;
+  outline-offset: 3px;
+}
+footer {
+  border-top: 1px solid #d9d9cc;
+  font-size: 14px;
+}
+@media (max-width: 600px) {
+  header, main, footer {
+    padding: 18px;
+  }
+  .bienvenida {
+    padding: 20px;
+  }
+  .bienvenida h1 {
+    font-size: 28px;
+  }
+}
