@@ -11,7 +11,7 @@ La aplicación tiene un enfoque social: los usuarios participan en la creación 
 - guardar recetas en favoritos
 - calificar los platillos publicados
 
-Tendrá componentes del lado del cliente y del lado del servidor. El cliente presenta la información y permite la interacción mediante formularios, botones y búsquedas. El servidor procesa solicitudes, valida información y gestiona los datos. Ambos se comunican mediante HTTP. Al final del semestre se despliega en la nube.
+Tendrá componentes del lado del cliente y del lado del servidor. El cliente presenta la información y permite la interacción mediante formularios, botones y búsquedas. El servidor procesa solicitudes, valida información y gestiona los datos. Ambos se comunican mediante HTTP, protegido con HTTPS en producción. Al final del semestre se despliega en la nube.
 
 No es solo una página para mostrar recetas. Es una aplicación web dinámica que integra interfaz, interacción con usuarios, procesamiento de información, almacenamiento de datos y servicios en la nube.
 
