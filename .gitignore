@@ -1,1 +1,8 @@
 Proyecto programacion web.pdf
+
+# .NET
+bin/
+obj/
+
+# Obsidian (configuración personal)
+.obsidian/

@@ -1,0 +1,20 @@
+# Base de datos para desarrollo local. Las credenciales son solo de desarrollo.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: receta_secreta
+      POSTGRES_USER: receta
+      POSTGRES_PASSWORD: receta_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U receta -d receta_secreta"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  datos-postgres:
