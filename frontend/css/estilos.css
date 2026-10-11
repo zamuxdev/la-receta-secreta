@@ -155,3 +155,15 @@ footer {
     font-size: 28px;
   }
 }
+
+/* Ranuras donde los módulos agregan sus botones. */
+.tarjeta-acciones:empty {
+  display: none;
+}
+.tarjeta-acciones {
+  margin-top: 12px;
+}
+.en-construccion {
+  color: #555;
+  font-style: italic;
+}

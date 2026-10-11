@@ -3,7 +3,6 @@ const formularioReceta = document.getElementById('formulario-receta');
 const archivoReceta = document.getElementById('archivo-receta');
 const estadoJSON = document.getElementById('estado-json');
 const categorias = ['Desayuno', 'Comida', 'Cena', 'Postre'];
-let numeroReceta = 0;
 let fotoActual = '';
 const campoFoto = document.getElementById('foto');
 const vistaFoto = document.getElementById('vista-foto');
@@ -177,82 +176,21 @@ document.getElementById('exportar-formulario').addEventListener('click', () => {
   }
 });
 
-function elemento(etiqueta, texto) {
-  const nuevo = document.createElement(etiqueta);
-  nuevo.textContent = texto;
-  return nuevo;
-}
-
-function botonExportar(receta) {
-  const boton = elemento('button', 'Exportar JSON');
-  boton.type = 'button';
-  boton.addEventListener('click', () => exportarReceta(receta));
-  return boton;
-}
-
-function imagenReceta(receta) {
-  const imagen = document.createElement('img');
-  imagen.className = 'foto-receta';
-  imagen.src = receta.foto;
-  imagen.alt = 'Foto de ' + receta.nombre;
-  return imagen;
-}
-
-formularioReceta.addEventListener('submit', (evento) => {
+// La receta se envía a la API y se abre su detalle, que dibuja js/catalogo.js.
+formularioReceta.addEventListener('submit', async (evento) => {
   evento.preventDefault();
   try {
     const receta = leerFormulario();
-    const id = 'receta-' + (++numeroReceta);
-    const detalle = document.createElement('div');
-    detalle.className = 'pantalla';
-    detalle.id = id;
-    detalle.dataset.titulo = receta.nombre;
-    detalle.hidden = true;
-    const volver = elemento('a', '← Volver a las recetas');
-    volver.href = '#/recetas';
-    detalle.append(volver, elemento('h1', receta.nombre), elemento('p', receta.descripcion),
-      elemento('p', `${receta.categoria} · ${receta.tiempo} minutos · ${receta.porciones} porciones`));
-    if (receta.foto) {
-      const imagen = imagenReceta(receta);
-      imagen.classList.add('foto-detalle');
-      detalle.append(imagen);
-    }
-    for (const [titulo, etiqueta, textos] of [
-      ['Ingredientes', 'ul', receta.ingredientes], ['Preparación', 'ol', receta.pasos],
-    ]) {
-      const lista = document.createElement(etiqueta);
-      for (const texto of textos) lista.append(elemento('li', texto));
-      detalle.append(elemento('h2', titulo), lista);
-    }
-    detalle.append(botonExportar(receta));
-    document.querySelector('main').append(detalle);
-
-    const tarjeta = document.createElement('article');
-    tarjeta.className = 'tarjeta';
-    const enlace = elemento('a', 'Ver receta: ' + receta.nombre);
-    enlace.href = '#/' + id;
-    if (receta.foto) tarjeta.append(imagenReceta(receta));
-    tarjeta.append(elemento('h2', receta.nombre), elemento('p', receta.descripcion), enlace);
-    document.querySelector('.galeria').append(tarjeta);
-    estadoJSON.textContent = 'Receta agregada. Exporta su JSON para conservarla después de cerrar o recargar la página.';
-    window.location.hash = '#/' + id;
+    bloquearArchivos(true);
+    estadoJSON.textContent = 'Publicando la receta...';
+    const creada = await api.crearReceta(receta);
+    estadoJSON.textContent = 'Receta publicada.';
+    formularioReceta.reset();
+    mostrarFoto('');
+    window.location.hash = '#/receta/' + creada.id;
   } catch (error) {
-    estadoJSON.textContent = error.message;
+    estadoJSON.textContent = error instanceof ErrorApi ? error.textoParaUsuario() : error.message;
+  } finally {
+    bloquearArchivos(false);
   }
 });
-
-// Exportamos también las tres recetas que ya están escritas en el HTML.
-for (const [id, categoria, tiempo, porciones] of [
-  ['tacos', 'Comida', 15, 2], ['avena', 'Desayuno', 10, 1], ['ensalada', 'Comida', 12, 2],
-]) {
-  const pantalla = document.getElementById(id);
-  const receta = {
-    nombre: pantalla.querySelector('h1').textContent,
-    descripcion: pantalla.querySelector('p').textContent,
-    categoria, tiempo, porciones,
-    foto: pantalla.querySelector('img').getAttribute('src'),
-    ingredientes: Array.from(pantalla.querySelectorAll('ul li'), (item) => item.textContent.trim()),
-    pasos: Array.from(pantalla.querySelectorAll('ol li'), (item) => item.textContent.trim()),
-  };
-  pantalla.append(botonExportar(receta));
-}

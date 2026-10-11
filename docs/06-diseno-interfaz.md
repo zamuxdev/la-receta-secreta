@@ -20,21 +20,26 @@ Antes de programar se diseñan las pantallas en Figma, que sirven de referencia 
 
 ## 6.2 Interfaz implementada (tema 2)
 
-Está en la raíz del repositorio y no necesita servidor:
+Está en la carpeta `frontend/` y no necesita compilarse:
 
-- `index.html`: todas las pantallas en un solo archivo.
-- `estilos.css`: estilos compartidos por todas las pantallas.
-- `app.js`: navegación entre pantallas.
-- `recetas.js`: formulario de publicación y exportación e importación de recetas en JSON.
-- `fotos/`: imágenes de las recetas de ejemplo.
+| Archivo | Para qué sirve |
+|---|---|
+| `index.html` | Todas las pantallas en un solo archivo |
+| `css/estilos.css` | Estilos compartidos por todas las pantallas |
+| `js/app.js` | Navegación entre pantallas por la URL |
+| `js/api.js` y `js/api-prueba.js` | Cliente de la API y datos de prueba que imitan el contrato ([10-contrato-api.md](10-contrato-api.md)) |
+| `js/catalogo.js` | Dibuja la galería y el detalle de cada receta con los datos de la API |
+| `js/publicar.js` | Formulario de publicación y exportación e importación de recetas en JSON |
+| `js/busqueda.js`, `js/favoritos.js`, `js/calificaciones.js`, `js/acceso.js` | Un módulo por función, con su CSS en `css/` (temas 3 y siguientes) |
+| `fotos/` | Imágenes de las recetas de ejemplo |
 
-Incluye una galería con tres recetas, la ficha de cada una (foto, tiempo, porciones, ingredientes y pasos) y un formulario para publicar con validación.
+Incluye una galería de recetas, la ficha de cada una (foto, tiempo, porciones, ingredientes y pasos) y un formulario para publicar con validación. La galería y las fichas no están escritas a mano: se dibujan con los datos que entrega la API (o los datos de prueba), de modo que lo que publica un usuario aparece solo.
 
 ## 6.3 Justificación de las decisiones de diseño
 
 ### Estructura de una sola página
 
-Todas las pantallas viven en `index.html` y `app.js` muestra una a la vez según el fragmento de la URL (`#/recetas`, `#/publicar`, etc.). Es el mismo modelo de SPA de la arquitectura propuesta y funciona en GitHub Pages sin servidor. Cada pantalla tiene un enlace directo, y el botón de retroceso del navegador funciona. Si el enlace no existe, se muestra una pantalla de "Página no encontrada".
+Todas las pantallas viven en `index.html` y `js/app.js` muestra una a la vez según el fragmento de la URL (`#/recetas`, `#/publicar`, etc.). Es el mismo modelo de SPA de la arquitectura propuesta y se puede servir como archivos estáticos, sin servidor propio. Cada pantalla tiene un enlace directo, y el botón de retroceso del navegador funciona. Una receta tiene su propio enlace (`#/receta/5`), que se puede compartir. Si el enlace no existe, se muestra una pantalla de "Página no encontrada".
 
 ### Paleta de color
 

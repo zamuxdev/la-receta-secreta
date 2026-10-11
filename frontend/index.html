@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio | La Receta Secreta</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="css/busqueda.css">
+  <link rel="stylesheet" href="css/favoritos.css">
+  <link rel="stylesheet" href="css/calificaciones.css">
+  <link rel="stylesheet" href="css/acceso.css">
+  <!-- El orden importa: primero la API, luego los módulos y al final el enrutador. -->
+  <script src="js/api-prueba.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/catalogo.js" defer></script>
+  <script src="js/busqueda.js" defer></script>
+  <script src="js/favoritos.js" defer></script>
+  <script src="js/calificaciones.js" defer></script>
+  <script src="js/acceso.js" defer></script>
+  <script src="js/publicar.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <header>
+    <a class="marca" href="#/inicio">La Receta Secreta</a>
+    <nav aria-label="Navegación principal">
+      <a href="#/inicio" aria-current="page">Inicio</a>
+      <a href="#/recetas">Recetas</a>
+      <a href="#/mejor-valoradas">Mejor valoradas</a>
+      <a href="#/favoritos">Favoritos</a>
+      <a href="#/publicar">Publicar</a>
+      <a href="#/acceso">Acceso</a>
+    </nav>
+  </header>
+  <noscript><p class="aviso">Activa JavaScript para navegar por este recetario.</p></noscript>
+  <main id="contenido">
+    <!-- Pantalla: Inicio -->
+    <div class="pantalla" id="inicio" data-titulo="Inicio" hidden>
+      <section class="bienvenida">
+        <p>RECETAS PARA TODOS LOS DÍAS</p>
+        <h1>Las buenas recetas se comparten.</h1>
+        <p>Comidas sencillas para disfrutar en casa, con ingredientes de todos los días.</p>
+        <a class="boton" href="#/recetas">Ver recetas</a>
+      </section>
+      <section>
+        <h2>Bienvenido a nuestra cocina</h2>
+        <p>La Receta Secreta es un proyecto para compartir nuestras recetas favoritas.</p>
+        <p>Encuentra ideas para cocinar y descubre nuevas combinaciones de ingredientes.</p>
+      </section>
+    </div>
+
+    <!-- Pantalla: Recetas. Las tarjetas las dibuja js/catalogo.js con los datos de la API. -->
+    <div class="pantalla" id="recetas" data-titulo="Recetas" hidden>
+      <h1>Nuestras recetas</h1>
+      <p>Ideas sencillas para tu próxima comida.</p>
+      <!-- Módulo Búsqueda: aquí va la barra de búsqueda y los filtros. -->
+      <p id="estado-catalogo" role="status"></p>
+      <div class="galeria"></div>
+    </div>
+
+    <!-- Pantalla: Detalle de una receta (#/receta/<id>). La rellena js/catalogo.js. -->
+    <div class="pantalla" id="receta-detalle" data-titulo="Receta" hidden>
+      <a href="#/recetas">← Volver a las recetas</a>
+      <h1>Cargando receta...</h1>
+      <p id="estado-detalle" role="status"></p>
+      <div id="detalle-contenido" hidden>
+        <img id="detalle-foto" class="foto-receta foto-detalle" alt="" width="800" height="600" hidden>
+        <p id="detalle-descripcion"></p>
+        <p><strong id="detalle-meta"></strong></p>
+        <!-- Ranura del módulo Favoritos -->
+        <div id="detalle-acciones"></div>
+        <!-- Ranura del módulo Calificaciones -->
+        <div id="detalle-calificacion"></div>
+        <section>
+          <h2>Ingredientes</h2>
+          <ul id="detalle-ingredientes"></ul>
+        </section>
+        <section>
+          <h2>Preparación</h2>
+          <ol id="detalle-pasos"></ol>
+        </section>
+        <button type="button" id="detalle-exportar">Exportar JSON</button>
+      </div>
+    </div>
+
+    <!-- Pantalla: Mejor valoradas (módulo Calificaciones) -->
+    <div class="pantalla" id="mejor-valoradas" data-titulo="Mejor valoradas" hidden>
+      <h1>Mejor valoradas</h1>
+      <p class="en-construccion">Esta pantalla está en construcción.</p>
+    </div>
+
+    <!-- Pantalla: Favoritos (módulo Favoritos) -->
+    <div class="pantalla" id="favoritos" data-titulo="Favoritos" hidden>
+      <h1>Mis favoritos</h1>
+      <p class="en-construccion">Esta pantalla está en construcción.</p>
+    </div>
+
+    <!-- Pantalla: Publicar receta -->
+    <div class="pantalla" id="publicar" data-titulo="Publicar receta" hidden>
+      <h1>Comparte tu receta</h1>
+      <label for="archivo-receta">Importar receta desde un archivo JSON</label>
+      <input id="archivo-receta" type="file" accept=".json,application/json" aria-describedby="estado-json">
+      <p id="estado-json" role="status" aria-live="polite"></p>
+      <form id="formulario-receta">
+        <label for="titulo">Nombre de la receta</label>
+        <input id="titulo" type="text" maxlength="100" placeholder="Por ejemplo: arroz con verduras">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="3" maxlength="350"></textarea>
+        <label for="foto">Foto de la receta (opcional)</label>
+        <input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ayuda-foto">
+        <small id="ayuda-foto">JPG, PNG o WebP. Máximo 2 MB.</small>
+        <img id="vista-foto" class="foto-receta foto-previa" alt="Vista previa de la foto elegida" hidden>
+        <button id="quitar-foto" type="button" hidden>Quitar foto</button>
+        <label for="categoria">Categoría</label>
+        <select id="categoria">
+          <option>Desayuno</option>
+          <option>Comida</option>
+          <option>Cena</option>
+          <option>Postre</option>
+        </select>
+        <label for="tiempo">Tiempo de preparación (minutos)</label>
+        <input id="tiempo" type="number" min="1" max="1440">
+        <label for="porciones">Porciones</label>
+        <input id="porciones" type="number" min="1" max="100">
+        <label for="ingredientes">Ingredientes (uno por línea, con su cantidad)</label>
+        <textarea id="ingredientes" rows="5" maxlength="4000"></textarea>
+        <label for="pasos">Preparación (un paso por línea)</label>
+        <textarea id="pasos" rows="5" maxlength="8000"></textarea>
+        <button type="submit">Agregar al recetario</button>
+        <button type="button" id="exportar-formulario">Exportar JSON</button>
+      </form>
+    </div>
+
+    <!-- Pantalla: Acceso -->
+    <div class="pantalla" id="acceso" data-titulo="Acceso" hidden>
+      <h1>Acceso</h1>
+      <form>
+        <label for="nombre">Nombre</label>
+        <input id="nombre" type="text" placeholder="Alex" maxlength="60">
+        <button type="button" disabled>Acceder</button>
+      </form>
+      <p>Puedes <a href="#/recetas">explorar las recetas sin una cuenta</a>.</p>
+    </div>
+
+    <!-- Pantalla: Registro (módulo Acceso) -->
+    <div class="pantalla" id="registro" data-titulo="Crear cuenta" hidden>
+      <h1>Crear cuenta</h1>
+      <p class="en-construccion">Esta pantalla está en construcción.</p>
+    </div>
+
+    <div class="pantalla" id="no-encontrada" data-titulo="Página no encontrada" hidden>
+        <h1>Página no encontrada</h1>
+        <p>Ese enlace no corresponde a ninguna pantalla.</p>
+        <a href="#/inicio">Volver al inicio</a>
+    </div>
+  </main>
+  <footer>La Receta Secreta · Recetas para compartir</footer>
+</body>
+</html>

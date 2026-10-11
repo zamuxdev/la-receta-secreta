@@ -1,4 +1,8 @@
 // Todas las pantallas están en index.html. Solo mostramos una a la vez.
+//
+// Cuando se muestra una pantalla se emite el evento 'pantalla-mostrada' en `document`,
+// con { id, parametro } en `evento.detail`. Cada módulo escucha ese evento para iniciarse.
+// Ejemplo: #/receta/5 muestra la pantalla 'receta-detalle' con parametro "5".
 const enlacesMenu = document.querySelectorAll('nav a');
 
 function mostrarPantalla() {
@@ -8,16 +12,28 @@ function mostrarPantalla() {
   const ruta = !fragmento || fragmento === '#/'
     ? 'inicio'
     : fragmento.startsWith('#/') ? fragmento.slice(2) : 'no-encontrada';
-  const destino = Array.from(pantallas).find((pantalla) => pantalla.id === ruta);
+
+  // Una ruta con una barra solo es válida como receta/<id>; las demás no existen.
+  const partes = ruta.split('/');
+  let nombre = partes[0];
+  let parametro = partes[1];
+  if (partes.length === 2 && nombre === 'receta' && parametro) {
+    nombre = 'receta-detalle';
+  } else if (partes.length > 1) {
+    nombre = 'no-encontrada';
+    parametro = undefined;
+  }
+
+  const destino = Array.from(pantallas).find((pantalla) => pantalla.id === nombre);
   const pantallaActual = destino || document.getElementById('no-encontrada');
 
   for (const pantalla of pantallas) {
     pantalla.hidden = pantalla !== pantallaActual;
   }
 
-  // Al abrir una receta, el menú mantiene marcada la sección Recetas.
-  const esReceta = ['tacos', 'avena', 'ensalada'].includes(ruta) || ruta.startsWith('receta-');
-  const seccion = esReceta ? 'recetas' : ruta;
+  // Al abrir una receta el menú mantiene marcada Recetas, y Registro cuenta como Acceso.
+  const secciones = { 'receta-detalle': 'recetas', registro: 'acceso' };
+  const seccion = secciones[nombre] || nombre;
   for (const enlace of enlacesMenu) {
     if (enlace.getAttribute('href') === '#/' + seccion) {
       enlace.setAttribute('aria-current', 'page');
@@ -31,6 +47,10 @@ function mostrarPantalla() {
   titulo.setAttribute('tabindex', '-1');
   titulo.focus({ preventScroll: true });
   window.scrollTo(0, 0);
+
+  document.dispatchEvent(new CustomEvent('pantalla-mostrada', {
+    detail: { id: pantallaActual.id, parametro: pantallaActual === destino ? parametro : undefined },
+  }));
 }
 
 // Los formularios se manejan en el navegador, sin enviar datos a un servidor.
