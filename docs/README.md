@@ -17,6 +17,7 @@ Esta carpeta es la fuente de verdad de la documentación. Se edita en Markdown y
 | [07-plan-de-trabajo.md](07-plan-de-trabajo.md) | Plan del semestre y entregables por parcial |
 | [08-conceptos.md](08-conceptos.md) | Conceptos de aplicaciones web aplicados al proyecto |
 | [09-referencias.md](09-referencias.md) | Referencias |
+| [10-contrato-api.md](10-contrato-api.md) | Contrato de la API: endpoints, datos y errores (borrador) |
 
 ## Estado del proyecto
 
@@ -31,7 +32,6 @@ Esta carpeta es la fuente de verdad de la documentación. Se edita en Markdown y
 ## Puntos por decidir
 
 - **Cómo se construye el frontend.** Vistas Razor del servidor o SPA que consume la API REST. Hoy la interfaz es una SPA estática con HTML, CSS y JavaScript. Ver [05-arquitectura.md](05-arquitectura.md).
-- **XML.** Qué función concreta tendrá dentro de la aplicación (exportar recetas, feed RSS u otra). La interfaz actual exporta e importa JSON.
 - **Requisitos opcionales.** Marcar cuáles requisitos no funcionales son obligatorios y cuáles opcionales para el tiempo del semestre.
 - **Rol de administrador.** Solo se incluirá si forma parte de la versión final.
 - **Figma.** Agregar capturas de las pantallas diseñadas a [06-diseno-interfaz.md](06-diseno-interfaz.md).
