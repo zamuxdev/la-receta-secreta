@@ -19,9 +19,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseCors("Desarrollo");
 
-    // En desarrollo la base se crea y actualiza sola al arrancar.
+    // En desarrollo la base se crea, se actualiza y recibe recetas de ejemplo al arrancar.
     using var alcance = app.Services.CreateScope();
-    alcance.ServiceProvider.GetRequiredService<RecetaDbContext>().Database.Migrate();
+    var db = alcance.ServiceProvider.GetRequiredService<RecetaDbContext>();
+    db.Database.Migrate();
+    DatosIniciales.Sembrar(db);
 }
 
 app.UseAuthorization();
