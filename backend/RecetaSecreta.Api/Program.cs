@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecetaSecreta.Api.Data;
 
@@ -5,7 +7,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<RecetaDbContext>(opciones =>
     opciones.UseNpgsql(builder.Configuration.GetConnectionString("RecetaDb")));
-builder.Services.AddControllers();
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(opciones =>
+{
+    // Los errores de validación automática usan las mismas claves en camelCase
+    // que el resto de la API (por ejemplo "tiempo" y no "Tiempo").
+    opciones.InvalidModelStateResponseFactory = contexto =>
+    {
+        var errores = contexto.ModelState
+            .Where(campo => campo.Value?.Errors.Count > 0)
+            .ToDictionary(
+                campo => JsonNamingPolicy.CamelCase.ConvertName(campo.Key),
+                campo => campo.Value!.Errors.Select(error => error.ErrorMessage).ToArray());
+        return new BadRequestObjectResult(new ValidationProblemDetails(errores));
+    };
+});
 builder.Services.AddOpenApi();
 
 // La interfaz estática corre en otro origen durante el desarrollo.
