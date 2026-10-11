@@ -32,7 +32,7 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 
 ## 4. Quién hace qué
 
-Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos**, para que casi nunca se editen los mismos.
+Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos**, para que casi nunca se editen los mismos. La lista detallada de tareas de cada una, con el orden y cuándo está lista cada una, está en [`TAREAS.md`](TAREAS.md): léela para saber qué le toca a la persona con la que trabajas.
 
 | Módulo | Responsable (sugerido) | Qué construye | Contrato (API) | Requisitos |
 |---|---|---|---|---|

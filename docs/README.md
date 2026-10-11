@@ -18,6 +18,8 @@ Esta carpeta es la fuente de verdad de la documentación. Se edita en Markdown y
 | [08-conceptos.md](08-conceptos.md) | Conceptos de aplicaciones web aplicados al proyecto |
 | [09-referencias.md](09-referencias.md) | Referencias |
 | [10-contrato-api.md](10-contrato-api.md) | Contrato de la API: endpoints, datos y errores (borrador) |
+| [../TAREAS.md](../TAREAS.md) | Tareas de cada integrante del equipo |
+| [decisiones/](decisiones/) | Decisiones técnicas de cada módulo (cada responsable mantiene el suyo) |
 
 ## Estado del proyecto
 
