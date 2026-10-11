@@ -80,7 +80,7 @@ Representa información con etiquetas estructuradas. Permite demostrar el manejo
 </receta>
 ```
 
-> Pendiente: elegir cuál será el uso concreto de XML en la aplicación.
+> Decisión: XML se usa para exportar una receta individual (`GET /api/recetas/{id}/exportar?formato=xml`). Ver [10-contrato-api.md](10-contrato-api.md#108-exportación-propuesto).
 
 ### CSV
 
