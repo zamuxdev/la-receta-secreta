@@ -1,6 +1,6 @@
 # AGENTS.md: reglas para trabajar en La Receta Secreta
 
-Este archivo lo leen los agentes de programación (Claude Code, Codex, opencode). Sirve para que cinco personas trabajen en paralelo sin pisarse. Si eres un agente, sigue estas reglas y no las cambies por tu cuenta.
+Este archivo lo leen los agentes de programación (Claude Code, Codex, OpenCode). Sirve para que cinco personas trabajen en paralelo sin pisarse. Si eres un agente, sigue estas reglas y no las cambies por tu cuenta.
 
 ## 1. Qué es el proyecto
 
