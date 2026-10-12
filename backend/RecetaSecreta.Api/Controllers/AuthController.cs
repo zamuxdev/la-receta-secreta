@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +58,18 @@ public class AuthController(
             return CredencialesIncorrectas();
 
         return CrearSesion(usuario);
+    }
+
+    // GET api/auth/yo
+    [Authorize]
+    [HttpGet("yo")]
+    public async Task<ActionResult<UsuarioDto>> Yo()
+    {
+        // "sub" es el id del usuario que guardamos en el token al iniciar sesión.
+        var id = int.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+        var usuario = await db.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+        // El token puede ser válido aunque la cuenta ya no exista.
+        return usuario is null ? Unauthorized() : ADto(usuario);
     }
 
     // El mismo mensaje si falla el correo o la contraseña (contrato 10.5).
