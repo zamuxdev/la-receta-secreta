@@ -91,9 +91,10 @@ const apiReal = (() => {
     try { datos = await respuesta.json(); } catch { /* respuesta sin cuerpo JSON */ }
 
     if (!respuesta.ok) {
+      // Si el servidor manda un mensaje propio en `detail` (por ejemplo, el del login), se usa ese.
       const mensaje = respuesta.status >= 500
         ? 'Algo salió mal en el servidor. Inténtalo más tarde.'
-        : MENSAJES_POR_ESTADO[respuesta.status] || 'No se pudo completar la operación.';
+        : (datos && datos.detail) || MENSAJES_POR_ESTADO[respuesta.status] || 'No se pudo completar la operación.';
       throw new ErrorApi(respuesta.status, mensaje, (datos && datos.errors) || {});
     }
     return datos;
