@@ -134,8 +134,9 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
 - **Con el backend real:**
   1. Abre Docker Desktop.
   2. `docker compose up -d`
-  3. `dotnet run --project backend/RecetaSecreta.Api`
-  4. La API queda en `http://localhost:5166/api/recetas`. Para que la interfaz la use, `USAR_DATOS_DE_PRUEBA` debe ser `false` en `frontend/js/api.js`.
+  3. **Solo la primera vez**, crea la clave que firma las sesiones (se guarda en tu computadora, no en el repositorio). En la terminal de Git Bash: `dotnet user-secrets set "Jwt:Clave" "$(openssl rand -base64 64 | tr -d '\n')" --project backend/RecetaSecreta.Api`. Sin ella la API no arranca y te dice cómo crearla.
+  4. `dotnet run --project backend/RecetaSecreta.Api`
+  5. La API queda en `http://localhost:5166/api/recetas`. Para que la interfaz la use, `USAR_DATOS_DE_PRUEBA` debe ser `false` en `frontend/js/api.js`.
 - Para reiniciar la base con los datos de ejemplo: `docker compose down -v`, y de nuevo los pasos anteriores.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
 
@@ -167,7 +168,7 @@ Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con 
 
 - Documentación de las unidades 1 y 2 hecha.
 - Interfaz con galería y detalle dibujados desde la API (con datos de prueba), formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
-- Backend con recetas (listar, ver, publicar), categorías y datos de ejemplo. Le falta autenticación, favoritos, calificaciones y exportación.
+- Backend con recetas (listar, ver, publicar), categorías, datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Le falta que publicar exija sesión, favoritos, calificaciones y exportación.
 
 **Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Cada módulo se desarrolla primero con datos de prueba y se conecta a la API real cuando el backend lo tenga.
 
