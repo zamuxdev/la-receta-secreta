@@ -25,4 +25,6 @@ public record RecetaDetalle(
     int Id, string Nombre, string Descripcion, string Categoria,
     int Tiempo, int Porciones, string? Foto,
     List<string> Ingredientes, List<string> Pasos,
-    double? Promedio, int TotalCalificaciones);
+    double? Promedio, int TotalCalificaciones,
+    // Nombre de quien la publicó; null en las recetas de ejemplo, que no tienen autor.
+    string? Autor, bool EsMia, int? MiCalificacion);
