@@ -24,7 +24,7 @@ public class Receta
     public List<string> Pasos { get; set; } = [];
     public DateTime CreadaEn { get; set; } = DateTime.UtcNow;
 
-    // Nulo hasta que exista autenticación.
+    // Nulo solo en las recetas de ejemplo; las publicadas siempre tienen autor.
     public int? AutorId { get; set; }
     public Usuario? Autor { get; set; }
 
