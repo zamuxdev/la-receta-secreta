@@ -1,7 +1,9 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecetaSecreta.Api.Data;
+using RecetaSecreta.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,7 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(opciones =>
     };
 });
 builder.Services.AddOpenApi();
+builder.Services.AddScoped<IPasswordHasher<Usuario>, PasswordHasher<Usuario>>();
 
 // La interfaz estática corre en otro origen durante el desarrollo.
 builder.Services.AddCors(opciones => opciones.AddPolicy("Desarrollo",
