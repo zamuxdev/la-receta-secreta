@@ -138,7 +138,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | Y4 | **Mostrar quién eres y cerrar sesión.** En la pantalla de Acceso, si hay sesión: "Hola, [nombre]" y un botón "Cerrar sesión". | Cierras sesión y la pantalla vuelve a mostrar el formulario de entrada. Responde al evento `sesion-cambiada`. |
 | Y5 | **Enlaces entre pantallas.** Desde Acceso se llega a Crear cuenta y al revés. | Se puede ir de una a otra sin usar el menú. |
 | Y6 | **Publicar: errores del servidor.** Cuando el servidor rechace una receta, muestra los mensajes por campo (lo que hoy se muestra en un solo texto). | Publicar una receta con el tiempo en 0 muestra el mensaje junto al campo de tiempo. |
-| Y7 | **Publicar: aviso si no hay sesión.** Hoy se puede publicar sin cuenta, pero pronto será obligatorio. Muestra un aviso amable invitando a entrar. | Sin sesión aparece el aviso, con la sesión iniciada no. |
+| Y7 | **Publicar: aviso si no hay sesión.** Publicar exige sesión (sin ella la API responde 401). Muestra un aviso amable invitando a entrar. | Sin sesión aparece el aviso, con la sesión iniciada no. |
 | Y8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/acceso-publicar.md`. | Los formularios tienen sus etiquetas, se usan con el teclado y se ven bien en el celular. |
 
 **Importante:** en `index.html` el formulario de Acceso que existe es solo un ejemplo con el botón desactivado. Reemplázalo.

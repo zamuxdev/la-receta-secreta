@@ -177,10 +177,10 @@ const apiPrueba = (() => {
 
     async crearReceta(entrada) {
       await esperar();
-      const usuario = usuarioDeLaSesion();
+      const usuario = exigirUsuario();
       const valida = validarReceta(entrada);
       const d = leer();
-      const receta = { id: d.siguienteReceta++, autorId: usuario ? usuario.id : null, ...valida };
+      const receta = { id: d.siguienteReceta++, autorId: usuario.id, ...valida };
       d.recetas.push(receta);
       guardar();
       return detalle(receta);
