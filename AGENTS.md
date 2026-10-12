@@ -12,12 +12,25 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 
 ## 2. Cómo trabajar con la persona que te usa
 
-1. **Pregunta primero quién es y cuál es su módulo** (sección 4), si no te lo ha dicho. Trabaja solo en ese módulo.
-2. **Explica en lenguaje sencillo** lo que vas a hacer antes de hacerlo, y qué hiciste al terminar (3 a 5 líneas) con cómo probarlo en el navegador.
-3. **Cambios pequeños.** Una tarea, un cambio, una prueba. No hagas refactorizaciones grandes ni "mejoras" que nadie pidió.
-4. **Si algo no está claro, pregunta.** No inventes endpoints, campos ni pantallas: lo que existe está en el contrato.
-5. **Enseña, no solo entregues.** Si la persona pregunta por qué algo funciona así, explícalo. Si no entiende un cambio tuyo, vuelve a explicarlo.
-6. **Nunca ocultes un error.** Si algo no funcionó o no lo pudiste probar, dilo.
+**Modo normal: trabaja con libertad y termina el trabajo.** Es el modo para las cuatro personas que hacen la interfaz. La persona quiere avanzar rápido, no una clase.
+
+1. **Pregunta una sola vez su nombre y su módulo** (sección 4) si no lo sabes. Si no responde o no queda claro, sigue en modo normal. Trabaja en el módulo de esa persona (archivos de la sección 4).
+2. **Escribe tú todo el código.** No le pidas a la persona que escriba código, ni le des pasos para que los haga ella. Si una tarea de [`TAREAS.md`](TAREAS.md) se puede terminar, termínala completa.
+3. **No pidas confirmación en cada paso.** Decide con criterio y sigue adelante. Pregunta solo si estás realmente bloqueado, o si algo contradice el contrato de la API o las reglas de este archivo.
+4. **Prueba lo que hiciste** (abre la página, recorre el flujo) antes de decir que terminó. Si no pudiste probar algo, dilo.
+5. **Al terminar, da un "Resumen para defender".** Es lo único que se exige en cuanto a explicar. La persona debe poder contarlo en la presentación, así que escríbelo en lenguaje sencillo, en 4 a 6 líneas:
+   - **Qué hace ahora** que antes no hacía, desde el punto de vista de quien usa la web.
+   - **Qué archivos tocaste** y para qué sirve cada uno.
+   - **Cómo se conecta** con el resto (con qué función de `api`, evento o ranura trabaja).
+   - **Qué decisiones tomaste y por qué.**
+   - **Cómo probarlo** en el navegador.
+
+   Copia ese mismo resumen en el documento del módulo (`docs/decisiones/<modulo>.md`), dentro del mismo Pull Request. Así queda documentado sin trabajo extra.
+6. **Si la persona pregunta cómo o por qué funciona algo, explícalo** con claridad y sin sermones. No conviertas cada tarea en una lección.
+7. **Mantén los cambios dentro del trabajo pedido.** No hagas refactorizaciones grandes ni "mejoras" que nadie pidió, y no inventes endpoints, campos ni pantallas: lo que existe está en el contrato.
+8. **Nunca ocultes un error.** Si algo no funcionó o no lo pudiste probar, dilo.
+
+El modo de enseñanza (sección 10) **solo** aplica cuando la persona es Fernando y trabaja en `backend/`.
 
 ## 3. Reglas de git (obligatorias)
 
@@ -126,9 +139,11 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
 - Para reiniciar la base con los datos de ejemplo: `docker compose down -v`, y de nuevo los pasos anteriores.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
 
-## 10. Reglas para el backend (solo Fernando)
+## 10. Modo enseñanza: solo Fernando, solo en `backend/`
 
-Fernando está aprendiendo .NET. Cuando trabajes en `backend/` con él:
+**Esta sección aplica únicamente si la persona es Fernando y el trabajo es en `backend/`.** Para todas las demás personas, y para cualquier trabajo de la interfaz, **no uses este modo**: sigue el modo normal de la sección 2.
+
+Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con él:
 
 - **Explica cada concepto nuevo** y compáralo con Spring Boot si ayuda (él ya lo conoce).
 - **No escribas todo el código de golpe.** Propón el paso, explica y deja que él lo escriba; ayuda cuando se atore o pida que lo termines.
