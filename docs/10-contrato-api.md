@@ -54,6 +54,7 @@ Los errores 400 devuelven este formato estándar. La interfaz muestra al usuario
 - Cada clave trae una lista de mensajes.
 - `title` es un texto técnico y la interfaz no debe mostrarlo. Lo que se muestra son los mensajes de `errors`.
 - Esto aplica tanto a las validaciones automáticas (rangos, campos obligatorios, longitudes) como a las reglas del negocio (por ejemplo, una categoría que no existe).
+- Un error que no es de un campo puede traer `detail` con un mensaje en español listo para mostrar (por ejemplo el 401 del inicio de sesión). Si no trae `errors` ni `detail`, la interfaz muestra un mensaje general según el código.
 
 ## 10.2 Formas de los datos
 
@@ -208,7 +209,7 @@ Devuelve las categorías disponibles. Sirve para llenar el selector del formular
 ]
 ```
 
-## 10.5 Usuarios y sesión (propuesto)
+## 10.5 Usuarios y sesión (implementado)
 
 | Método y ruta | Quién | Qué hace |
 |---|---|---|
@@ -230,7 +231,9 @@ Devuelve las categorías disponibles. Sirve para llenar el selector del formular
 
 - **201:** `Usuario`. No inicia sesión automáticamente.
 - **400:** datos no válidos.
-- **409:** ya existe una cuenta con ese correo.
+- **409:** ya existe una cuenta con ese correo. Usa el mismo formato que el 400, con el mensaje en `errors.correo`.
+
+El correo se guarda sin espacios y en minúsculas, así que `Alex@Correo.com` y `alex@correo.com` son la misma cuenta.
 
 ### POST /api/auth/login
 
@@ -248,7 +251,12 @@ Devuelve las categorías disponibles. Sirve para llenar el selector del formular
   }
   ```
 
-- **401:** correo o contraseña incorrectos. El mensaje es el mismo en ambos casos, para no revelar qué correos existen.
+- **400:** falta el correo o la contraseña.
+- **401:** correo o contraseña incorrectos. El mensaje es el mismo en ambos casos, para no revelar qué correos existen, y viene en `detail`:
+
+  ```json
+  { "title": "Unauthorized", "status": 401, "detail": "Correo o contraseña incorrectos." }
+  ```
 
 La interfaz guarda el token y lo envía en `Authorization: Bearer <token>` en cada petición que requiera sesión. Cuando el token vence, la API responde 401 y se vuelve a pedir inicio de sesión.
 
@@ -340,9 +348,9 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | PUT | `/api/recetas/{id}` | Sí | Propuesto |
 | DELETE | `/api/recetas/{id}` | Sí | Propuesto |
 | GET | `/api/categorias` | No | Propuesto |
-| POST | `/api/auth/registro` | No | Propuesto |
-| POST | `/api/auth/login` | No | Propuesto |
-| GET | `/api/auth/yo` | Sí | Propuesto |
+| POST | `/api/auth/registro` | No | Implementado |
+| POST | `/api/auth/login` | No | Implementado |
+| GET | `/api/auth/yo` | Sí | Implementado |
 | GET | `/api/favoritos` | Sí | Propuesto |
 | PUT | `/api/favoritos/{recetaId}` | Sí | Propuesto |
 | DELETE | `/api/favoritos/{recetaId}` | Sí | Propuesto |

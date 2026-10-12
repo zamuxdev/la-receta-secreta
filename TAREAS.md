@@ -52,7 +52,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 - **Solo toca los archivos de tu módulo** (están listados en tu sección). Si necesitas algo de otro módulo, avisa.
 - **No agregues** etiquetas `<script>` ni `<link>` al HTML: ya están puestas.
 - **No uses `fetch` directo.** Todo lo que hable con el servidor pasa por el objeto `api`.
-- **Entiende lo que haces.** El agente escribe el código, pero tú debes poder explicar qué hace. En la presentación final nos preguntarán a cada uno. Pídele al agente que te lo explique.
+- **Puedes dejar que el agente trabaje libremente.** Él escribe el código y al terminar te da un **"Resumen para defender"**: qué hace, qué archivos tocó, cómo se conecta y cómo probarlo. **Léelo y asegúrate de entenderlo**, porque en la presentación final nos preguntarán a cada uno. Si algo no te queda claro, pregúntale.
 - **Escribe tu documento de decisiones** (`docs/decisiones/...`): es parte de lo que se entrega en este parcial.
 
 ---
@@ -141,7 +141,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | Y7 | **Publicar: aviso si no hay sesión.** Hoy se puede publicar sin cuenta, pero pronto será obligatorio. Muestra un aviso amable invitando a entrar. | Sin sesión aparece el aviso, con la sesión iniciada no. |
 | Y8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/acceso-publicar.md`. | Los formularios tienen sus etiquetas, se usan con el teclado y se ven bien en el celular. |
 
-**Importante:** en `index.html` el formulario de Acceso que existe es solo un ejemplo con el botón desactivado. Reemplázalo. Pídele a tu agente que lo explique antes de cambiarlo.
+**Importante:** en `index.html` el formulario de Acceso que existe es solo un ejemplo con el botón desactivado. Reemplázalo.
 
 ---
 
@@ -170,11 +170,12 @@ Una tarea está **terminada** cuando:
 2. Se ve bien en pantalla chica y se puede usar con el teclado.
 3. Los errores se muestran con un mensaje claro, no con la pantalla en blanco.
 4. El Pull Request está abierto y Fernando lo unió.
-5. Su parte del documento de decisiones está actualizada.
+5. Su parte del documento de decisiones está actualizada (el agente copia ahí el resumen para defender).
+6. La persona leyó el resumen y puede explicar con sus palabras qué hace su parte.
 
 ## Si te atoras
 
-1. **Pregúntale a tu agente** qué significa el error y qué pasó. No lo copies a ciegas.
+1. **Cuéntale a tu agente qué pasó** y pídele que lo arregle.
 2. Revisa el archivo de tu módulo: tiene comentarios con pistas de lo que debe hacer.
 3. Mira `docs/10-contrato-api.md` para saber qué datos entrega y recibe cada función.
 4. Si sigues sin avanzar, **avísale a Fernando con un mensaje claro**: qué quisiste hacer, qué pasó y qué dijo el error.
