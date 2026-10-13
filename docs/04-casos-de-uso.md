@@ -1,6 +1,6 @@
 # 4. Casos de uso
 
-Describen las interacciones principales de los perfiles de usuario (visitante, usuario registrado y administrador) con el sistema.
+Describen las interacciones principales de los perfiles de usuario con el sistema. El administrador no aparece porque es un rol propuesto para una versión posterior (ver [02-alcance-y-usuarios.md](02-alcance-y-usuarios.md#administrador)).
 
 ## Actores
 
@@ -14,7 +14,7 @@ Describen las interacciones principales de los perfiles de usuario (visitante, u
 - **Flujo principal:**
   1. El usuario ingresa a la página principal (galería de recetas).
   2. El sistema muestra las recetas más recientes o populares.
-  3. El usuario escribe en la barra de búsqueda, o filtra por ingredientes o tipos de comida (por ejemplo postres, sopas, platos fuertes).
+  3. El usuario busca por ingrediente o filtra por categoría (Desayuno, Comida, Cena o Postre), o combina las dos.
   4. El sistema procesa la solicitud mediante la API y actualiza la interfaz con las fichas coincidentes (foto, ingredientes principales y tiempo de preparación).
   5. El usuario abre una receta para ver los pasos completos.
 
@@ -55,6 +55,18 @@ Describen las interacciones principales de los perfiles de usuario (visitante, u
 - **Descripción:** emitir una valoración numérica o por estrellas basada en su experiencia.
 - **Flujo principal:**
   1. El usuario abre el detalle de una receta publicada por otro miembro.
-  2. Elige una calificación en una escala definida (por ejemplo de 1 a 5 estrellas).
-  3. El sistema procesa la puntuación, recalcula el promedio de la receta y guarda el voto.
+  2. Elige una calificación de 1 a 5 estrellas.
+  3. El sistema guarda el voto (si ya había calificado, reemplaza el anterior) y recalcula el promedio de la receta.
   4. La interfaz muestra el nuevo promedio.
+- **Excepciones:** un usuario no puede calificar sus propias recetas, y sin sesión se le pide iniciarla.
+
+## CU-06: Administrar mis recetas
+
+- **Actor principal:** usuario registrado.
+- **Descripción:** el usuario corrige o elimina las recetas que publicó (RF-14).
+- **Flujo principal:**
+  1. El usuario consulta la lista de recetas que ha publicado.
+  2. Elige una y la edita, o la borra.
+  3. El sistema comprueba que la receta sea suya. Si no lo es, rechaza la operación.
+  4. Al editar, el sistema valida los datos igual que al publicar y conserva las calificaciones y favoritos que tenía. Al borrar, elimina también sus favoritos y calificaciones.
+  5. La interfaz muestra la receta actualizada, o deja de mostrarla si se borró.

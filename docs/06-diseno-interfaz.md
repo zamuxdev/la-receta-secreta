@@ -7,18 +7,21 @@ Antes de programar se diseñan las pantallas en Figma, que sirven de referencia 
 | Pantalla | Propósito | En la interfaz actual |
 |---|---|---|
 | Inicio | Pantalla principal con acceso a las funciones y recetas | Sí (`#/inicio`) |
-| Registro de usuario | Crear una cuenta | No (tema 4) |
-| Inicio de sesión | Acceder a las funciones que requieren autenticación | Maqueta (`#/acceso`, botón deshabilitado) |
+| Registro de usuario | Crear una cuenta | Vacía, en construcción (`#/registro`, módulo Acceso) |
+| Inicio de sesión | Acceder a las funciones que requieren autenticación | Maqueta (`#/acceso`, botón deshabilitado, módulo Acceso) |
 | Galería de recetas | Recetas en tarjetas que facilitan la consulta | Sí (`#/recetas`) |
-| Búsqueda de recetas | Buscar por ingredientes o tipo de comida | No (tema 3) |
-| Detalle de receta | Nombre, imagen, ingredientes, preparación, tipo, calificación y favoritos | Parcial: sin calificación ni favoritos |
+| Búsqueda de recetas | Buscar por ingredientes o tipo de comida | No, en la pantalla Recetas (módulo Búsqueda) |
+| Detalle de receta | Nombre, imagen, ingredientes, preparación, tipo, calificación y favoritos | Parcial: con exportación a JSON y XML, sin calificación ni favoritos (`#/receta/<id>`) |
+| Mejor valoradas | Recetas ordenadas por su calificación promedio | Vacía, en construcción (`#/mejor-valoradas`, módulo Calificaciones) |
 | Publicación de receta | Registrar una receta nueva | Sí (`#/publicar`) |
-| Favoritos | Consultar las recetas guardadas | No (tema 3) |
-| Perfil de usuario | Datos de la cuenta y recetas publicadas | No |
+| Favoritos | Consultar las recetas guardadas | Vacía, en construcción (`#/favoritos`, módulo Favoritos) |
+| Perfil de usuario | Datos de la cuenta y recetas publicadas | No (la API ya tiene `GET /api/recetas/mias`) |
+
+Cada módulo y su responsable están en [`TAREAS.md`](../TAREAS.md).
 
 > Pendiente: agregar aquí capturas de las pantallas en Figma.
 
-## 6.2 Interfaz implementada (tema 2)
+## 6.2 Interfaz implementada
 
 Está en la carpeta `frontend/` y no necesita compilarse:
 
@@ -29,11 +32,13 @@ Está en la carpeta `frontend/` y no necesita compilarse:
 | `js/app.js` | Navegación entre pantallas por la URL |
 | `js/api.js` y `js/api-prueba.js` | Cliente de la API y datos de prueba que imitan el contrato ([10-contrato-api.md](10-contrato-api.md)) |
 | `js/catalogo.js` | Dibuja la galería y el detalle de cada receta con los datos de la API |
-| `js/publicar.js` | Formulario de publicación y exportación e importación de recetas en JSON |
-| `js/busqueda.js`, `js/favoritos.js`, `js/calificaciones.js`, `js/acceso.js` | Un módulo por función, con su CSS en `css/` (temas 3 y siguientes) |
+| `js/publicar.js` | Formulario de publicación, que envía la receta a la API, y exportación e importación de recetas en JSON |
+| `js/busqueda.js`, `js/favoritos.js`, `js/calificaciones.js`, `js/acceso.js` | Un módulo por función, con su CSS en `css/` (tema 3) |
 | `fotos/` | Imágenes de las recetas de ejemplo |
 
-Incluye una galería de recetas, la ficha de cada una (foto, tiempo, porciones, ingredientes y pasos) y un formulario para publicar con validación. La galería y las fichas no están escritas a mano: se dibujan con los datos que entrega la API (o los datos de prueba), de modo que lo que publica un usuario aparece solo.
+Incluye una galería de recetas, la ficha de cada una (foto, tiempo, porciones, ingredientes y pasos, con botones para exportarla en JSON o XML) y un formulario para publicar con validación. La galería y las fichas no están escritas a mano: se dibujan con los datos que entrega la API (o los datos de prueba), de modo que lo que publica un usuario aparece solo.
+
+Mientras `USAR_DATOS_DE_PRUEBA` es `true` en `js/api.js`, la interfaz usa datos de prueba que imitan el contrato y se guardan en el navegador (`localStorage`). Con `false` usa la API real en `http://localhost:5166`.
 
 ## 6.3 Justificación de las decisiones de diseño
 
@@ -75,7 +80,7 @@ El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas
 - Los tipos de campo restringen la entrada: `number` con mínimo y máximo para tiempo y porciones, `select` para la categoría y límites de longitud en los textos.
 - La foto es opcional, se limita a JPG, PNG o WebP de 2 MB como máximo y se muestra una vista previa con la opción de quitarla.
 - La validación en el cliente revisa el contenido antes de agregar la receta y avisa de los errores con mensajes claros (RF-12 y RF-24). Los textos se insertan como texto y no como HTML, para evitar XSS.
-- Se puede exportar e importar la receta en JSON. Así se prueba el formato de intercambio de datos antes de tener servidor.
+- Se puede exportar e importar la receta en JSON. El archivo tiene los mismos campos que la API recibe al publicar (`RecetaCrear`), así que una receta exportada desde el detalle se puede importar aquí.
 
 ### Accesibilidad y adaptación
 
@@ -88,6 +93,6 @@ El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas
 
 ### Decisiones que se tomaron por ahora
 
-- Las recetas nuevas solo viven mientras la página está abierta. Para conservarlas hay que exportar el JSON. La persistencia llega con el servidor (tema 4).
-- La pantalla "Acceso" es una maqueta con el botón deshabilitado, porque la autenticación llega con el servidor.
-- No hay búsqueda, calificación ni favoritos todavía. Son los entregables del tema 3.
+- Las recetas publicadas se guardan con la API. Con los datos de prueba se conservan en el navegador (`localStorage`) y sobreviven a recargar la página; con la API real se guardan en la base de datos.
+- La pantalla "Acceso" sigue siendo una maqueta con el botón deshabilitado. La API ya tiene registro e inicio de sesión, y conectarla es tarea del módulo Acceso (tema 3).
+- Búsqueda, calificaciones y favoritos ya tienen su lugar en la interfaz (ranuras y pantallas vacías) y la API ya los ofrece. Los programa cada módulo como entregable del tema 3.

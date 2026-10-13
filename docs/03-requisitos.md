@@ -75,10 +75,12 @@ Definen atributos de calidad, restricciones y rendimiento para que la experienci
 - **RNF-01. Carga inicial.** La SPA debe cargarse en menos de 2.5 segundos con una conexión de banda ancha estándar.
 - **RNF-02. Búsquedas.** Las búsquedas por ingrediente, categoría o título deben devolver resultados en menos de 1.0 segundo, incluso con volúmenes medianos de datos.
 - **RNF-03. Imágenes.** Las fotos subidas por los usuarios deben procesarse y comprimirse automáticamente para evitar latencias en la galería.
+  - Estado: hoy el servidor revisa que la foto sea JPG, PNG o WebP real y que no pase de 2 MB, pero todavía no la comprime.
 
 ### Seguridad y privacidad
 
-- **RNF-04. Contraseñas.** No se almacenan en texto plano. Se aplica un algoritmo de hashing robusto (como BCrypt) con sales únicas.
+- **RNF-04. Contraseñas.** No se almacenan en texto plano. Se aplica un algoritmo de hashing robusto con sales únicas.
+  - Se usa PBKDF2 con el `PasswordHasher` de ASP.NET Core en lugar de BCrypt. La justificación está en [05-arquitectura.md](05-arquitectura.md#55-justificación-de-las-decisiones-técnicas).
 - **RNF-05. Sesiones.** La comunicación entre la SPA y la API REST se autentica con tokens seguros (por ejemplo JWT) con tiempo de expiración definido.
 - **RNF-06. Protección de datos.** Todo se transmite por HTTPS. La validación en el servidor debe prevenir inyecciones SQL y XSS al publicar recetas.
 
