@@ -35,7 +35,7 @@ Cada formato debe tener una función concreta dentro del sistema, sin duplicar i
 
 La aplicación debe separar la interfaz, la lógica de aplicación y el manejo de datos. Esto permite modificar una parte sin afectar a las demás. .NET ofrece configuración, inyección de dependencias, autenticación, autorización y registro de eventos.
 
-> Nota: el requisito se menciona como ".NET Core", pero desde .NET 5 la plataforma se llama simplemente .NET. La versión concreta se fija en la etapa de implementación.
+> Nota: el requisito se menciona como ".NET Core", pero desde .NET 5 la plataforma se llama simplemente .NET. El proyecto usa .NET 10.
 
 ## 2.3 Despliegue
 

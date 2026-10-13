@@ -133,27 +133,25 @@
     }
   }
 
-  // Exporta la receta en JSON con los mismos campos que el formulario de publicar.
-  detalle.exportar.addEventListener('click', () => {
-    if (!recetaMostrada || typeof exportarReceta !== 'function') return;
-    const { nombre, descripcion, categoria, tiempo, porciones, ingredientes, pasos, foto } = recetaMostrada;
-    exportarReceta({ nombre, descripcion, categoria, tiempo, porciones, ingredientes, pasos, ...(foto ? { foto } : {}) });
-  });
-
-  // El XML lo arma la API (GET /api/recetas/{id}/exportar?formato=xml).
-  detalle.exportarXml.addEventListener('click', async () => {
+  // El archivo lo arma la API (GET /api/recetas/{id}/exportar?formato=...).
+  // El JSON tiene los mismos campos que el formulario de publicar, así que se puede importar ahí.
+  async function exportar(boton, formato) {
     if (!recetaMostrada) return;
-    detalle.exportarXml.disabled = true;
-    detalle.estado.textContent = 'Preparando el archivo XML...';
+    const nombreFormato = formato.toUpperCase();
+    boton.disabled = true;
+    detalle.estado.textContent = `Preparando el archivo ${nombreFormato}...`;
     try {
-      await api.descargarReceta(recetaMostrada.id, 'xml');
-      detalle.estado.textContent = 'Se descargó el archivo XML.';
+      await api.descargarReceta(recetaMostrada.id, formato);
+      detalle.estado.textContent = `Se descargó el archivo ${nombreFormato}.`;
     } catch (error) {
       detalle.estado.textContent = mensajeDeError(error);
     } finally {
-      detalle.exportarXml.disabled = false;
+      boton.disabled = false;
     }
-  });
+  }
+
+  detalle.exportar.addEventListener('click', () => exportar(detalle.exportar, 'json'));
+  detalle.exportarXml.addEventListener('click', () => exportar(detalle.exportarXml, 'xml'));
 
   document.addEventListener('pantalla-mostrada', (evento) => {
     const { id, parametro } = evento.detail;

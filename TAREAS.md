@@ -8,7 +8,7 @@ Este archivo dice **qué le toca a cada persona**, en qué orden y cómo saber q
 
 **La Receta Secreta** es una web donde la gente publica recetas, las busca, las guarda en favoritos y las califica. Ya existen la galería de recetas, la ficha de cada receta y el formulario para publicar. Ahora vamos a hacerla **dinámica**: que se pueda buscar, calificar, guardar favoritos y entrar con una cuenta.
 
-Para que cuatro personas trabajen a la vez sin pisarse, **cada una tiene su propio módulo**, con sus propios archivos.
+Para que cinco personas trabajen a la vez sin pisarse, **cada una tiene su propio módulo**, con sus propios archivos.
 
 | Persona | Módulo | En una frase |
 |---|---|---|
@@ -147,18 +147,18 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 
 ## Fernando González: Backend y coordinación
 
-| # | Tarea |
-|---|---|
-| F1 | Autenticación: registro, inicio de sesión, hash de contraseñas y JWT |
-| F2 | Que publicar exija sesión y la receta quede ligada a su autor |
-| F3 | Endpoint de categorías |
-| F4 | Favoritos (agregar, quitar y listar) |
-| F5 | Calificaciones (votar, promedio y mejor valoradas) |
-| F6 | Editar y borrar recetas propias, y "mis recetas" |
-| F7 | Validar la foto en el servidor (formato y tamaño, hoy no se valida) |
-| F8 | Exportar en XML y CSV |
-| F9 | Pruebas automatizadas del backend |
-| F10 | Revisar los Pull Requests, mantener el contrato de la API y activar la API real (`USAR_DATOS_DE_PRUEBA = false`) cuando cada parte esté lista |
+| # | Tarea | Estado |
+|---|---|---|
+| F1 | Autenticación: registro, inicio de sesión, hash de contraseñas y JWT | Hecha |
+| F2 | Que publicar exija sesión y la receta quede ligada a su autor | Hecha |
+| F3 | Endpoint de categorías | Hecha |
+| F4 | Favoritos (agregar, quitar y listar) | Hecha |
+| F5 | Calificaciones (votar, promedio y mejor valoradas) | Hecha |
+| F6 | Editar y borrar recetas propias, y "mis recetas" | Hecha |
+| F7 | Validar la foto en el servidor (formato real y tamaño) | Hecha |
+| F8 | Exportar en XML y CSV | Hecha |
+| F9 | Pruebas automatizadas del backend | Hecha |
+| F10 | Revisar los Pull Requests, mantener el contrato de la API y activar la API real (`USAR_DATOS_DE_PRUEBA = false`) cuando cada parte esté lista | En curso |
 
 ---
 
