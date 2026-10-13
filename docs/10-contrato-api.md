@@ -332,33 +332,66 @@ Requieren sesión. Cada usuario tiene como máximo una calificación por receta 
 
 Para que la interfaz oculte o deshabilite el control de calificar en las recetas propias, `RecetaDetalle` incluye `esMia` (ver sección 10.2).
 
-## 10.8 Exportación (propuesto)
+## 10.8 Exportación (implementado)
 
-Cumple RF-23 (JSON, XML y CSV). La respuesta es un archivo descargable.
+Cumple RF-23 (JSON, XML y CSV). La respuesta es un archivo descargable: trae la cabecera `Content-Disposition` con el nombre del archivo, que se arma con el nombre de la receta sin acentos (`arroz-con-leche.xml`).
 
-| Ruta | Qué exporta |
-|---|---|
-| `GET /api/recetas/{id}/exportar?formato=json` | Una receta en JSON |
-| `GET /api/recetas/{id}/exportar?formato=xml` | Una receta en XML |
-| `GET /api/favoritos/exportar` | Los favoritos del usuario en CSV (requiere sesión) |
+| Ruta | Qué exporta | Sesión |
+|---|---|:---:|
+| `GET /api/recetas/{id}/exportar?formato=json` | Una receta en JSON (`formato` es opcional, `json` por defecto) | No |
+| `GET /api/recetas/{id}/exportar?formato=xml` | Una receta en XML | No |
+| `GET /api/favoritos/exportar` | Los favoritos del usuario en CSV, en el mismo orden que `GET /api/favoritos` | Sí |
 
-Ejemplo del XML de una receta:
+- **400:** `formato` no es `json` ni `xml` (mensaje en `errors.formato`).
+- **401:** el CSV de favoritos sin sesión.
+- **404:** la receta no existe.
+
+En la interfaz se usan con `api.descargarReceta(id, 'xml')` y `api.descargarFavoritos()`, que descargan el archivo en el navegador. Funcionan igual con los datos de prueba.
+
+El JSON tiene los mismos campos que `RecetaCrear` (sin `foto` si no tiene), así que se puede importar en la pantalla Publicar:
+
+```json
+{
+  "nombre": "Arroz con leche",
+  "descripcion": "Postre clásico",
+  "categoria": "Postre",
+  "tiempo": 40,
+  "porciones": 4,
+  "ingredientes": ["1 taza de arroz", "1 litro de leche"],
+  "pasos": ["Cocina el arroz", "Agrega la leche"]
+}
+```
+
+El XML tiene los mismos campos (`foto` solo si tiene):
 
 ```xml
+<?xml version="1.0" encoding="utf-8"?>
 <receta>
   <nombre>Arroz con leche</nombre>
+  <descripcion>Postre clásico</descripcion>
   <categoria>Postre</categoria>
   <tiempo>40</tiempo>
   <porciones>4</porciones>
+  <ingredientes>
+    <ingrediente>1 taza de arroz</ingrediente>
+    <ingrediente>1 litro de leche</ingrediente>
+  </ingredientes>
+  <pasos>
+    <paso>Cocina el arroz</paso>
+    <paso>Agrega la leche</paso>
+  </pasos>
 </receta>
 ```
 
-Ejemplo del CSV de favoritos:
+El CSV de favoritos, en UTF-8 con BOM para que Excel muestre bien los acentos:
 
 ```csv
 Id,Nombre,Categoria,Tiempo,Porciones
 1,Tacos de frijol con aguacate,Comida,15,2
 ```
+
+- Si un texto tiene coma, comillas o saltos de línea, va entre comillas (`"Pozole, rojo"`).
+- Si empieza con `=`, `+`, `-` o `@`, se le antepone `'` para que Excel no lo ejecute como fórmula.
 
 Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individual (JSON además es el formato de intercambio de toda la API). CSV exporta los favoritos como tabla.
 
@@ -382,8 +415,8 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | DELETE | `/api/favoritos/{recetaId}` | Sí | Implementado |
 | PUT | `/api/recetas/{id}/calificacion` | Sí | Implementado |
 | DELETE | `/api/recetas/{id}/calificacion` | Sí | Implementado |
-| GET | `/api/recetas/{id}/exportar` | No | Propuesto |
-| GET | `/api/favoritos/exportar` | Sí | Propuesto |
+| GET | `/api/recetas/{id}/exportar` | No | Implementado |
+| GET | `/api/favoritos/exportar` | Sí | Implementado |
 
 
 ## 10.10 Requisitos cubiertos
