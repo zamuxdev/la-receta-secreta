@@ -5,8 +5,7 @@
 //   Para empezar de cero, borra la clave 'receta-secreta-prueba' (o usa el modo incógnito).
 // - Hay un usuario de prueba: demo@recetasecreta.test con contraseña demo12345.
 // - Aquí las contraseñas se guardan en texto plano. Solo es una imitación: el backend real no lo hace.
-// - Publicar una receta no exige sesión, igual que el backend hoy. Cuando el backend lo exija,
-//   se cambia aquí y en el contrato.
+// - Publicar, editar, borrar, calificar y los favoritos exigen sesión, igual que el backend.
 
 const apiPrueba = (() => {
   const CLAVE = 'receta-secreta-prueba';
@@ -115,6 +114,43 @@ const apiPrueba = (() => {
       esMia: Boolean(usuario) && r.autorId === usuario.id,
       miCalificacion: mia ? mia.puntos : null,
     };
+  }
+
+  function favoritosDe(usuario) {
+    const ids = leer().favoritos.filter((f) => f.usuarioId === usuario.id).map((f) => f.recetaId);
+    return leer().recetas.filter((r) => ids.includes(r.id)).sort((a, b) => b.id - a.id).map(resumen);
+  }
+
+  // Mismas reglas que backend/RecetaSecreta.Api/Exportacion/Exportador.cs.
+  function nombreArchivo(nombre, extension) {
+    const base = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return (base || 'receta') + '.' + extension;
+  }
+
+  function recetaXml(datos) {
+    const doc = document.implementation.createDocument(null, 'receta');
+    const agregar = (padre, etiqueta, texto) => {
+      const elemento = doc.createElement(etiqueta);
+      // XML no admite algunos caracteres de control.
+      if (texto !== undefined) elemento.textContent = String(texto).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
+      padre.append(elemento);
+      return elemento;
+    };
+    const raiz = doc.documentElement;
+    ['nombre', 'descripcion', 'categoria', 'tiempo', 'porciones'].forEach((campo) => agregar(raiz, campo, datos[campo]));
+    const ingredientes = agregar(raiz, 'ingredientes');
+    datos.ingredientes.forEach((texto) => agregar(ingredientes, 'ingrediente', texto));
+    const pasos = agregar(raiz, 'pasos');
+    datos.pasos.forEach((texto) => agregar(pasos, 'paso', texto));
+    if (datos.foto) agregar(raiz, 'foto', datos.foto);
+    return '<?xml version="1.0" encoding="utf-8"?>\n' + new XMLSerializer().serializeToString(doc) + '\n';
+  }
+
+  function celdaCsv(valor) {
+    let texto = String(valor);
+    if (/^[=+\-@\t\r]/.test(texto)) texto = "'" + texto; // que Excel no lo tome como fórmula
+    return /[",\n\r]/.test(texto) ? '"' + texto.replace(/"/g, '""') + '"' : texto;
   }
 
   const limpiar = (lista) => (Array.isArray(lista) ? lista : []).map((t) => String(t).trim()).filter(Boolean);
@@ -268,9 +304,7 @@ const apiPrueba = (() => {
 
     async listarFavoritos() {
       await esperar();
-      const usuario = exigirUsuario();
-      const ids = leer().favoritos.filter((f) => f.usuarioId === usuario.id).map((f) => f.recetaId);
-      return leer().recetas.filter((r) => ids.includes(r.id)).sort((a, b) => b.id - a.id).map(resumen);
+      return favoritosDe(exigirUsuario());
     },
 
     async agregarFavorito(recetaId) {
@@ -321,6 +355,30 @@ const apiPrueba = (() => {
       d.calificaciones = d.calificaciones.filter((c) => !(c.usuarioId === usuario.id && c.recetaId === receta.id));
       guardar();
       return { ...estadisticas(receta.id), miCalificacion: null };
+    },
+
+    async descargarReceta(recetaId, formato = 'json') {
+      await esperar();
+      const r = buscarReceta(recetaId);
+      const tipo = String(formato).toLowerCase();
+      if (tipo !== 'json' && tipo !== 'xml') {
+        throw new ErrorApi(400, 'Revisa los datos que escribiste.', { formato: ['El formato debe ser json o xml.'] });
+      }
+      const datos = {
+        nombre: r.nombre, descripcion: r.descripcion, categoria: r.categoria, tiempo: r.tiempo,
+        porciones: r.porciones, ingredientes: [...r.ingredientes], pasos: [...r.pasos], ...(r.foto ? { foto: r.foto } : {}),
+      };
+      return tipo === 'xml'
+        ? { archivo: new Blob([recetaXml(datos)], { type: 'application/xml' }), nombre: nombreArchivo(r.nombre, 'xml') }
+        : { archivo: new Blob([JSON.stringify(datos, null, 2) + '\n'], { type: 'application/json' }), nombre: nombreArchivo(r.nombre, 'json') };
+    },
+
+    async descargarFavoritos() {
+      await esperar();
+      const filas = favoritosDe(exigirUsuario())
+        .map((r) => [r.id, celdaCsv(r.nombre), celdaCsv(r.categoria), r.tiempo, r.porciones].join(','));
+      const csv = '\uFEFF' + ['Id,Nombre,Categoria,Tiempo,Porciones', ...filas].join('\r\n') + '\r\n';
+      return { archivo: new Blob([csv], { type: 'text/csv;charset=utf-8' }), nombre: 'favoritos.csv' };
     },
   };
 })();
