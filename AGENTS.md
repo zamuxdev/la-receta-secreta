@@ -48,9 +48,9 @@ Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos*
 | Módulo | Responsable | Qué construye | Contrato (API) | Requisitos |
 |---|---|---|---|---|
 | **Búsqueda** | Hazel Martínez | Barra de búsqueda por ingrediente, filtro por categoría (el selector se llena desde la API), mensaje cuando no hay resultados | `GET /api/recetas`, `GET /api/categorias` | RF-03, RF-04, RF-05 |
-| **Favoritos** | Brandon Aguilar | Botón de corazón en las fichas y en el detalle, pantalla "Favoritos", quitar de favoritos | `/api/favoritos` | RF-15, RF-16, RF-17 |
+| **Favoritos** | Brandon Aguilar | Botón de corazón en las fichas y en el detalle, pantalla "Favoritos", quitar de favoritos, descargar los favoritos en CSV | `/api/favoritos`, `GET /api/favoritos/exportar` | RF-15, RF-16, RF-17, RF-23 |
 | **Calificaciones** | Leilani Muñoz | Estrellas en el detalle de la receta, mostrar el promedio, pantalla "Mejor valoradas" | `/api/recetas/{id}/calificacion`, `GET /api/recetas/mejor-valoradas` | RF-18 a RF-22 |
-| **Acceso y publicar** | Yaret Juárez | Registro e inicio de sesión (mostrar quién entró, cerrar sesión) y las reglas de sesión del formulario "Publicar" | `/api/auth/*`, `POST /api/recetas` | RF-06 a RF-13 |
+| **Acceso y publicar** | Yaret Juárez | Registro e inicio de sesión (mostrar quién entró, cerrar sesión), las reglas de sesión del formulario "Publicar", y "Mis recetas" con editar y borrar | `/api/auth/*`, `POST /api/recetas`, `GET /api/recetas/mias`, `PUT` y `DELETE /api/recetas/{id}` | RF-06 a RF-14 |
 | **Backend y base** | Fernando González | API en .NET, base de datos, cliente de la API, enrutador, catálogo, contrato, revisión de PRs | Todo `backend/` | Todos |
 
 ### Archivos de cada módulo (solo edita los tuyos)
@@ -101,6 +101,7 @@ Los módulos no se llaman entre sí ni editan los archivos de otros. Se coordina
 
 - La galería la dibuja `catalogo.js`. Para volver a dibujarla con filtros, llama a `catalogo.cargar({ categoria, ingrediente })`.
 - El detalle de una receta es la ruta `#/receta/<id>`. Los enlaces a una receta deben apuntar ahí.
+- Para editar una receta se usa la ruta `#/publicar/<id>`: abre la pantalla Publicar y `pantalla-mostrada` trae el `id` en `parametro`.
 - Las pantallas "Mejor valoradas", "Favoritos" y "Crear cuenta" ya existen vacías en `index.html`: rellena la tuya.
 - **Envuelve todo tu archivo JS en `(() => { ... })();`**, como ya están los archivos de cada módulo. Si no, tus variables chocan con las de otros módulos y se rompe la página. La excepción es `publicar.js`, que todavía no está envuelto: envuélvelo la primera vez que lo modifiques. Ningún otro archivo usa sus variables, así que se puede hacer sin romper nada.
 - Cada archivo `.js` de módulo ya tiene los `TODO` de lo que le toca. Los de `publicar.js` están al inicio de `acceso.js`.
