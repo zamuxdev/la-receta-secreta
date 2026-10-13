@@ -2,7 +2,8 @@
 //
 // Cuando se muestra una pantalla se emite el evento 'pantalla-mostrada' en `document`,
 // con { id, parametro } en `evento.detail`. Cada módulo escucha ese evento para iniciarse.
-// Ejemplo: #/receta/5 muestra la pantalla 'receta-detalle' con parametro "5".
+// Ejemplo: #/receta/5 muestra la pantalla 'receta-detalle' con parametro "5", y #/publicar/5
+// muestra 'publicar' con parametro "5" (para editar esa receta).
 const enlacesMenu = document.querySelectorAll('nav a');
 
 function mostrarPantalla() {
@@ -13,12 +14,13 @@ function mostrarPantalla() {
     ? 'inicio'
     : fragmento.startsWith('#/') ? fragmento.slice(2) : 'no-encontrada';
 
-  // Una ruta con una barra solo es válida como receta/<id>; las demás no existen.
+  // Una ruta con una barra solo es válida como receta/<id> o publicar/<id>; las demás no existen.
+  const conParametro = { receta: 'receta-detalle', publicar: 'publicar' };
   const partes = ruta.split('/');
   let nombre = partes[0];
   let parametro = partes[1];
-  if (partes.length === 2 && nombre === 'receta' && parametro) {
-    nombre = 'receta-detalle';
+  if (partes.length === 2 && conParametro[nombre] && parametro) {
+    nombre = conParametro[nombre];
   } else if (partes.length > 1) {
     nombre = 'no-encontrada';
     parametro = undefined;
