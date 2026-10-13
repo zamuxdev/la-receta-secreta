@@ -138,6 +138,7 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
   4. `dotnet run --project backend/RecetaSecreta.Api`
   5. La API queda en `http://localhost:5166/api/recetas`. Para que la interfaz la use, `USAR_DATOS_DE_PRUEBA` debe ser `false` en `frontend/js/api.js`.
 - Para reiniciar la base con los datos de ejemplo: `docker compose down -v`, y de nuevo los pasos anteriores.
+- **Pruebas automatizadas del backend:** con Docker abierto y la base arriba (`docker compose up -d`), corre `dotnet test backend/RecetaSecreta.Api.Tests`. Usan su propia base (`receta_secreta_pruebas`), que borran y crean de nuevo en cada corrida, así que no tocan tus datos. No necesitan la API corriendo ni la clave de user-secrets. Si cambias algo del backend, córrelas antes de abrir el PR.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
 
 ## 10. Modo enseñanza: solo Fernando, solo en `backend/`
@@ -168,7 +169,7 @@ Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con 
 
 - Documentación de las unidades 1 y 2 hecha.
 - Interfaz con galería y detalle dibujados desde la API (con datos de prueba), formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
-- Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Editar, borrar y "mis recetas" implementados. El servidor valida la foto (formato real y tamaño). Exportación en JSON, XML y CSV implementada (`api.descargarReceta`, `api.descargarFavoritos`). Le faltan las pruebas automatizadas.
+- Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Editar, borrar y "mis recetas" implementados. El servidor valida la foto (formato real y tamaño). Exportación en JSON, XML y CSV implementada (`api.descargarReceta`, `api.descargarFavoritos`). Tiene pruebas automatizadas con xUnit (`backend/RecetaSecreta.Api.Tests`).
 
 **Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Cada módulo se desarrolla primero con datos de prueba y se conecta a la API real cuando el backend lo tenga.
 

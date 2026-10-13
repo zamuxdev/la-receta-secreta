@@ -115,3 +115,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Hace visible la clase Program para que las pruebas puedan levantar la API en memoria.
+public partial class Program;
