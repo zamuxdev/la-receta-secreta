@@ -1,0 +1,2 @@
+# Los scripts de bash deben tener saltos de línea LF, incluso en Windows, o Git Bash no los puede correr.
+*.sh text eol=lf
