@@ -28,6 +28,7 @@
     ingredientes: document.getElementById('detalle-ingredientes'),
     pasos: document.getElementById('detalle-pasos'),
     exportar: document.getElementById('detalle-exportar'),
+    exportarXml: document.getElementById('detalle-exportar-xml'),
   };
 
   let filtrosActuales = {};
@@ -137,6 +138,21 @@
     if (!recetaMostrada || typeof exportarReceta !== 'function') return;
     const { nombre, descripcion, categoria, tiempo, porciones, ingredientes, pasos, foto } = recetaMostrada;
     exportarReceta({ nombre, descripcion, categoria, tiempo, porciones, ingredientes, pasos, ...(foto ? { foto } : {}) });
+  });
+
+  // El XML lo arma la API (GET /api/recetas/{id}/exportar?formato=xml).
+  detalle.exportarXml.addEventListener('click', async () => {
+    if (!recetaMostrada) return;
+    detalle.exportarXml.disabled = true;
+    detalle.estado.textContent = 'Preparando el archivo XML...';
+    try {
+      await api.descargarReceta(recetaMostrada.id, 'xml');
+      detalle.estado.textContent = 'Se descargó el archivo XML.';
+    } catch (error) {
+      detalle.estado.textContent = mensajeDeError(error);
+    } finally {
+      detalle.exportarXml.disabled = false;
+    }
   });
 
   document.addEventListener('pantalla-mostrada', (evento) => {
