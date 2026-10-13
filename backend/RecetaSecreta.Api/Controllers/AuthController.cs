@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using RecetaSecreta.Api.Data;
 using RecetaSecreta.Api.Dtos;
 using RecetaSecreta.Api.Models;
+using RecetaSecreta.Api.Seguridad;
 
 namespace RecetaSecreta.Api.Controllers;
 
@@ -66,7 +67,7 @@ public class AuthController(
     public async Task<ActionResult<UsuarioDto>> Yo()
     {
         // "sub" es el id del usuario que guardamos en el token al iniciar sesión.
-        var id = int.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+        var id = User.IdDeUsuario();
         var usuario = await db.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
         // El token puede ser válido aunque la cuenta ya no exista.
         return usuario is null ? Unauthorized() : ADto(usuario);
