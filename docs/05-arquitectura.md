@@ -52,6 +52,7 @@ Ejemplos del flujo:
 | CSV | Manejo y exportación de información tabular |
 | PostgreSQL | Almacenamiento persistente |
 | Docker | Levantar la base de datos en desarrollo |
+| GitHub Actions | Integración continua: en cada Pull Request revisa las reglas de la interfaz y corre las pruebas del backend |
 | Figma | Diseño y prototipado de las interfaces |
 | Azure App Service o AWS Elastic Beanstalk | Despliegue en la nube |
 
