@@ -15,7 +15,7 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 **Trabaja con libertad y termina el trabajo.** Esto aplica a todas las personas del equipo. La persona quiere avanzar rápido, no una clase.
 
 1. **Pregunta una sola vez su nombre y su módulo** (sección 4) si no lo sabes. Si no responde o no queda claro, sigue adelante sin insistir. Trabaja en el módulo de esa persona (archivos de la sección 4).
-2. **Escribe tú todo el código.** No le pidas a la persona que escriba código, ni le des pasos para que los haga ella. Si una tarea de [`TAREAS.md`](TAREAS.md) se puede terminar, termínala completa.
+2. **Escribe tú todo el código.** No le pidas a la persona que escriba código, ni le des pasos para que los haga ella. Si una tarea de [`TASKS.md`](TASKS.md) se puede terminar, termínala completa.
 3. **No pidas confirmación en cada paso.** Decide con criterio y sigue adelante. Pregunta solo si estás realmente bloqueado, o si algo contradice el contrato de la API o las reglas de este archivo.
 4. **Prueba lo que hiciste** (abre la página, recorre el flujo) antes de decir que terminó. Si no pudiste probar algo, dilo.
 5. **Al terminar, da un "Resumen para defender".** Es lo único que se exige en cuanto a explicar. La persona debe poder contarlo en la presentación, así que escríbelo en lenguaje sencillo, en 4 a 6 líneas:
@@ -25,7 +25,7 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
    - **Qué decisiones tomaste y por qué.**
    - **Cómo probarlo** en el navegador.
 
-   Copia ese mismo resumen en el documento del módulo (`docs/decisiones/<modulo>.md`), dentro del mismo Pull Request. Así queda documentado sin trabajo extra.
+   Copia ese mismo resumen en el documento del módulo (`docs/decisiones/<modulo>.md`), dentro del mismo Pull Request. Así queda documentado sin trabajo extra. Si el trabajo es de Fernando, que no tiene documento de módulo, el resumen va en la descripción del PR.
 6. **Si la persona pregunta cómo o por qué funciona algo, explícalo** con claridad y sin sermones. No conviertas cada tarea en una lección.
 7. **Mantén los cambios dentro del trabajo pedido.** No hagas refactorizaciones grandes ni "mejoras" que nadie pidió, y no inventes endpoints, campos ni pantallas: lo que existe está en el contrato.
 8. **Nunca ocultes un error.** Si algo no funcionó o no lo pudiste probar, dilo.
@@ -43,9 +43,9 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 
 ## 4. Quién hace qué
 
-Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos**, para que casi nunca se editen los mismos. La lista detallada de tareas de cada una, con el orden y cuándo está lista cada una, está en [`TAREAS.md`](TAREAS.md): léela para saber qué le toca a la persona con la que trabajas.
+Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos**, para que casi nunca se editen los mismos. La lista detallada de tareas de cada una, con el orden y cuándo está lista cada una, está en [`TASKS.md`](TASKS.md): léela para saber qué le toca a la persona con la que trabajas.
 
-| Módulo | Responsable (sugerido) | Qué construye | Contrato (API) | Requisitos |
+| Módulo | Responsable | Qué construye | Contrato (API) | Requisitos |
 |---|---|---|---|---|
 | **Búsqueda** | Hazel Martínez | Barra de búsqueda por ingrediente, filtro por categoría (el selector se llena desde la API), mensaje cuando no hay resultados | `GET /api/recetas`, `GET /api/categorias` | RF-03, RF-04, RF-05 |
 | **Favoritos** | Brandon Aguilar | Botón de corazón en las fichas y en el detalle, pantalla "Favoritos", quitar de favoritos | `/api/favoritos` | RF-15, RF-16, RF-17 |
@@ -61,7 +61,7 @@ Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos*
 | Favoritos | `frontend/js/favoritos.js`, `frontend/css/favoritos.css`, `docs/decisiones/favoritos.md` |
 | Calificaciones | `frontend/js/calificaciones.js`, `frontend/css/calificaciones.css`, `docs/decisiones/calificaciones.md` |
 | Acceso y publicar | `frontend/js/acceso.js`, `frontend/js/publicar.js`, `frontend/css/acceso.css`, `docs/decisiones/acceso-publicar.md` |
-| Fernando | `backend/`, `frontend/js/api.js`, `frontend/js/api-prueba.js`, `frontend/js/catalogo.js`, `frontend/js/app.js`, `docs/10-contrato-api.md`, `docker-compose.yml`, este archivo |
+| Fernando | `backend/`, `frontend/js/api.js`, `frontend/js/api-prueba.js`, `frontend/js/catalogo.js`, `frontend/js/app.js`, `docs/` (salvo `docs/decisiones/` de cada módulo), `docker-compose.yml`, `README.md`, `TASKS.md`, este archivo |
 
 ### Archivos compartidos (cuidado)
 
@@ -102,8 +102,8 @@ Los módulos no se llaman entre sí ni editan los archivos de otros. Se coordina
 - La galería la dibuja `catalogo.js`. Para volver a dibujarla con filtros, llama a `catalogo.cargar({ categoria, ingrediente })`.
 - El detalle de una receta es la ruta `#/receta/<id>`. Los enlaces a una receta deben apuntar ahí.
 - Las pantallas "Mejor valoradas", "Favoritos" y "Crear cuenta" ya existen vacías en `index.html`: rellena la tuya.
-- **Envuelve todo tu archivo JS en `(() => { ... })();`**, como en los archivos de cada módulo. Si no, tus variables chocan con las de otros módulos y se rompe la página.
-- Cada archivo `.js` de módulo ya tiene los `TODO` de lo que le toca.
+- **Envuelve todo tu archivo JS en `(() => { ... })();`**, como ya están los archivos de cada módulo. Si no, tus variables chocan con las de otros módulos y se rompe la página. La excepción es `publicar.js`, que todavía no está envuelto: envuélvelo la primera vez que lo modifiques. Ningún otro archivo usa sus variables, así que se puede hacer sin romper nada.
+- Cada archivo `.js` de módulo ya tiene los `TODO` de lo que le toca. Los de `publicar.js` están al inicio de `acceso.js`.
 
 ## 7. Reglas de código (interfaz)
 
@@ -161,8 +161,8 @@ Aplican a quien trabaje en `backend/` (solo Fernando). Se sigue el mismo modo de
 
 **Estado actual:**
 
-- Documentación de las unidades 1 y 2 hecha.
-- Interfaz con galería y detalle dibujados desde la API (con datos de prueba), formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
+- Documentación de las unidades 1 y 2 hecha, y `docs/` al día con el backend y la interfaz.
+- Interfaz con galería y detalle dibujados desde la API (con datos de prueba), exportación de la receta en JSON y XML desde el detalle, formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
 - Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Editar, borrar y "mis recetas" implementados. El servidor valida la foto (formato real y tamaño). Exportación en JSON, XML y CSV implementada (`api.descargarReceta`, `api.descargarFavoritos`). Tiene pruebas automatizadas con xUnit (`backend/RecetaSecreta.Api.Tests`).
 
 **Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Cada módulo se desarrolla primero con datos de prueba y se conecta a la API real cuando el backend lo tenga.
