@@ -17,7 +17,7 @@ Esta carpeta es la fuente de verdad de la documentación. Se edita en Markdown y
 | [07-plan-de-trabajo.md](07-plan-de-trabajo.md) | Plan del semestre y entregables por parcial |
 | [08-conceptos.md](08-conceptos.md) | Conceptos de aplicaciones web aplicados al proyecto |
 | [09-referencias.md](09-referencias.md) | Referencias |
-| [10-contrato-api.md](10-contrato-api.md) | Contrato de la API: endpoints, datos y errores (borrador) |
+| [10-contrato-api.md](10-contrato-api.md) | Contrato de la API: endpoints, datos y errores |
 | [../TAREAS.md](../TAREAS.md) | Tareas de cada integrante del equipo |
 | [decisiones/](decisiones/) | Decisiones técnicas de cada módulo (cada responsable mantiene el suyo) |
 
@@ -26,14 +26,13 @@ Esta carpeta es la fuente de verdad de la documentación. Se edita en Markdown y
 | Tema | Parcial | Estado |
 |---|---|---|
 | 1. Introducción a las aplicaciones web | 1 | Documentación en esta carpeta |
-| 2. HTML, XML y CSS | 1 | Interfaz estática en la raíz del repo (galería, fichas y formulario) |
-| 3. Programación del lado del cliente | 2 | Pendiente (búsqueda, calificación, favoritos) |
-| 4. Programación del lado del servidor | 2 | Pendiente |
+| 2. HTML, XML y CSS | 1 | Interfaz en `frontend/` (galería, fichas y formulario) |
+| 3. Programación del lado del cliente | 2 | En curso: búsqueda, calificaciones, favoritos y acceso, un módulo por persona (ver [TAREAS.md](../TAREAS.md)). La galería, el detalle y publicar ya usan la API |
+| 4. Programación del lado del servidor | 2 | API en .NET con PostgreSQL: recetas, categorías, cuentas con JWT, favoritos, calificaciones, edición y borrado, validación de fotos, exportación en JSON, XML y CSV, y pruebas automatizadas. Falta conectar la interfaz a la API real |
 | 5. Cómputo en la nube y servicios | 3 | Pendiente |
 
 ## Puntos por decidir
 
-- **Cómo se construye el frontend.** Vistas Razor del servidor o SPA que consume la API REST. Hoy la interfaz es una SPA estática con HTML, CSS y JavaScript. Ver [05-arquitectura.md](05-arquitectura.md).
 - **Requisitos opcionales.** Marcar cuáles requisitos no funcionales son obligatorios y cuáles opcionales para el tiempo del semestre.
 - **Rol de administrador.** Solo se incluirá si forma parte de la versión final.
 - **Figma.** Agregar capturas de las pantallas diseñadas a [06-diseno-interfaz.md](06-diseno-interfaz.md).

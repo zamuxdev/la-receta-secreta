@@ -1,4 +1,4 @@
-# 10. Contrato de la API (borrador)
+# 10. Contrato de la API
 
 Este documento es el acuerdo entre la interfaz y el backend: qué se pide, qué se responde y quién puede hacerlo. La interfaz se construye contra este contrato y el backend lo cumple.
 
@@ -281,7 +281,7 @@ El correo se guarda sin espacios y en minúsculas, así que `Alex@Correo.com` y 
   { "title": "Unauthorized", "status": 401, "detail": "Correo o contraseña incorrectos." }
   ```
 
-La interfaz guarda el token y lo envía en `Authorization: Bearer <token>` en cada petición que requiera sesión. Cuando el token vence, la API responde 401 y se vuelve a pedir inicio de sesión.
+La interfaz guarda el token y lo envía en `Authorization: Bearer <token>` en cada petición que requiera sesión. El token dura 24 horas (`Jwt:MinutosDeVida` en `appsettings.json`) y su vencimiento viene en `expiraEn`. Cuando vence, la API responde 401 y se vuelve a pedir inicio de sesión.
 
 ### GET /api/auth/yo
 
