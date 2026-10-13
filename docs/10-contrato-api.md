@@ -94,15 +94,18 @@ Incluye todo lo de `RecetaResumen` más los ingredientes y los pasos.
   "ingredientes": ["6 tortillas de maíz", "1 taza de frijoles cocidos", "1 aguacate", "Salsa al gusto"],
   "pasos": ["Calienta los frijoles en una sartén.", "Calienta las tortillas por ambos lados.", "Rellena con frijoles, agrega aguacate y termina con salsa."],
   "promedio": null,
-  "totalCalificaciones": 0
+  "totalCalificaciones": 0,
+  "autor": "Alex",
+  "esMia": false,
+  "miCalificacion": null
 }
 ```
 
-> Propuesto para cuando exista autenticación: agregar tres campos a `RecetaDetalle`:
->
-> - `autor`: nombre del usuario que la publicó.
-> - `esMia`: `true` si la receta es del usuario con sesión (siempre `false` sin sesión). Sirve para mostrar editar y borrar, y para ocultar el control de calificar.
-> - `miCalificacion`: la puntuación del usuario con sesión, o `null` si no ha calificado.
+- `autor`: nombre del usuario que la publicó, o `null` en las recetas de ejemplo, que no tienen autor.
+- `esMia`: `true` si la receta es del usuario con sesión (siempre `false` sin sesión). Sirve para mostrar editar y borrar, y para ocultar el control de calificar.
+- `miCalificacion`: la puntuación del usuario con sesión, o `null` si no ha calificado (o no hay sesión).
+
+`GET /api/recetas/{id}` es público. Si la petición trae un token válido, se usa para llenar `esMia` y `miCalificacion`.
 
 ### RecetaCrear
 
@@ -144,7 +147,7 @@ Lo que se envía al publicar o editar. Son los mismos campos que el JSON que exp
 |---|---|---|
 | `GET /api/recetas` | Cualquiera | Implementado |
 | `GET /api/recetas/{id}` | Cualquiera | Implementado |
-| `POST /api/recetas` | Hoy cualquiera. Con sesión cuando exista autenticación | Implementado (sin sesión) |
+| `POST /api/recetas` | Con sesión | Implementado |
 | `GET /api/recetas/mejor-valoradas` | Cualquiera | Propuesto |
 | `GET /api/recetas/mias` | Con sesión | Propuesto |
 | `PUT /api/recetas/{id}` | Con sesión, solo el autor | Propuesto |
@@ -169,9 +172,11 @@ Se pueden combinar. Si nada coincide, devuelve `[]` y la interfaz muestra el men
 ### POST /api/recetas
 
 - **Cuerpo:** `RecetaCrear`.
-- **201:** `RecetaDetalle` de la receta creada, con la cabecera `Location` hacia `/api/recetas/{id}`.
+- **201:** `RecetaDetalle` de la receta creada, con la cabecera `Location` hacia `/api/recetas/{id}`. Su `autor` es el usuario con sesión y `esMia` es `true`.
 - **400:** datos no válidos (categoría inexistente, campos fuera de rango, listas vacías).
-- **401** (cuando exista autenticación): sin sesión.
+- **401:** sin sesión, o el token no es válido o venció.
+
+El autor se toma del token, no del cuerpo: no se puede publicar a nombre de otra persona.
 
 ### GET /api/recetas/mejor-valoradas (propuesto)
 
@@ -342,7 +347,7 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 |---|---|:---:|---|
 | GET | `/api/recetas` | No | Implementado |
 | GET | `/api/recetas/{id}` | No | Implementado |
-| POST | `/api/recetas` | Sí* | Implementado (sin sesión) |
+| POST | `/api/recetas` | Sí | Implementado |
 | GET | `/api/recetas/mejor-valoradas` | No | Propuesto |
 | GET | `/api/recetas/mias` | Sí | Propuesto |
 | PUT | `/api/recetas/{id}` | Sí | Propuesto |
@@ -359,7 +364,6 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | GET | `/api/recetas/{id}/exportar` | No | Propuesto |
 | GET | `/api/favoritos/exportar` | Sí | Propuesto |
 
-\* Hoy publicar no exige sesión. Cuando exista autenticación pasa a exigirla (RF-10).
 
 ## 10.10 Requisitos cubiertos
 
