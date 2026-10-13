@@ -54,6 +54,7 @@ Los errores 400 devuelven este formato estándar. La interfaz muestra al usuario
 - Cada clave trae una lista de mensajes.
 - `title` es un texto técnico y la interfaz no debe mostrarlo. Lo que se muestra son los mensajes de `errors`.
 - Esto aplica tanto a las validaciones automáticas (rangos, campos obligatorios, longitudes) como a las reglas del negocio (por ejemplo, una categoría que no existe).
+- Si un campo trae un valor del tipo equivocado (por ejemplo `"puntos": 4.5` o `"tiempo": "mucho"`), su mensaje es "El valor no tiene el formato correcto.". Si la petición llega sin cuerpo o el JSON no se puede leer, el error viene en la clave `cuerpo`.
 - Un error que no es de un campo puede traer `detail` con un mensaje en español listo para mostrar (por ejemplo el 401 del inicio de sesión). Si no trae `errors` ni `detail`, la interfaz muestra un mensaje general según el código.
 
 ## 10.2 Formas de los datos
@@ -148,7 +149,7 @@ Lo que se envía al publicar o editar. Son los mismos campos que el JSON que exp
 | `GET /api/recetas` | Cualquiera | Implementado |
 | `GET /api/recetas/{id}` | Cualquiera | Implementado |
 | `POST /api/recetas` | Con sesión | Implementado |
-| `GET /api/recetas/mejor-valoradas` | Cualquiera | Propuesto |
+| `GET /api/recetas/mejor-valoradas` | Cualquiera | Implementado |
 | `GET /api/recetas/mias` | Con sesión | Propuesto |
 | `PUT /api/recetas/{id}` | Con sesión, solo el autor | Propuesto |
 | `DELETE /api/recetas/{id}` | Con sesión, solo el autor | Propuesto |
@@ -178,9 +179,13 @@ Se pueden combinar. Si nada coincide, devuelve `[]` y la interfaz muestra el men
 
 El autor se toma del token, no del cuerpo: no se puede publicar a nombre de otra persona.
 
-### GET /api/recetas/mejor-valoradas (propuesto)
+### GET /api/recetas/mejor-valoradas
 
-Lista de `RecetaResumen` ordenada por `promedio` de mayor a menor. Solo incluye recetas con al menos una calificación. Parámetro opcional `limite` (por defecto 10).
+Lista de `RecetaResumen` ordenada por `promedio` de mayor a menor. Si dos empatan, va primero la que tiene más calificaciones, y después la más nueva. Solo incluye recetas con al menos una calificación (si ninguna tiene, devuelve `[]`).
+
+| Parámetro (opcional) | Qué hace |
+|---|---|
+| `limite` | Cuántas recetas devolver, de 1 a 50 (por defecto 10). Fuera de ese rango responde 400 |
 
 ### GET /api/recetas/mias (propuesto)
 
@@ -282,7 +287,7 @@ Todos requieren sesión. Los favoritos son personales: nadie ve ni modifica los 
 
 `PUT` y `DELETE` son **idempotentes**: repetirlos no produce errores ni duplicados. Si `recetaId` no existe responden 404. Sin sesión, los tres responden 401.
 
-## 10.7 Calificaciones (propuesto)
+## 10.7 Calificaciones (implementado)
 
 Requieren sesión. Cada usuario tiene como máximo una calificación por receta (RF-20): calificar de nuevo reemplaza la anterior. **Un usuario no puede calificar sus propias recetas**, solo las de otros miembros (CU-05).
 
@@ -304,12 +309,15 @@ Requieren sesión. Cada usuario tiene como máximo una calificación por receta 
   ```
 
 - **400:** `puntos` no es un entero del 1 al 5.
-- **403:** la receta es del propio usuario.
+- **401:** sin sesión.
+- **403:** la receta es del propio usuario. Trae `detail`: "No puedes calificar tus propias recetas.".
 - **404:** la receta no existe.
 
-`DELETE` devuelve el mismo objeto con los valores actualizados.
+`DELETE` devuelve el mismo objeto con los valores actualizados (`miCalificacion` en `null`). Es idempotente: si el usuario no había calificado, responde 200 igual. Responde 404 si la receta no existe.
 
-Para que la interfaz oculte o deshabilite el control de calificar en las recetas propias, `RecetaDetalle` incluirá `esMia` (ver sección 10.2).
+`promedio` no viene redondeado (por ejemplo `3.6666666666666665`): la interfaz decide cuántos decimales mostrar. Es `null` si nadie ha calificado.
+
+Para que la interfaz oculte o deshabilite el control de calificar en las recetas propias, `RecetaDetalle` incluye `esMia` (ver sección 10.2).
 
 ## 10.8 Exportación (propuesto)
 
@@ -348,7 +356,7 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | GET | `/api/recetas` | No | Implementado |
 | GET | `/api/recetas/{id}` | No | Implementado |
 | POST | `/api/recetas` | Sí | Implementado |
-| GET | `/api/recetas/mejor-valoradas` | No | Propuesto |
+| GET | `/api/recetas/mejor-valoradas` | No | Implementado |
 | GET | `/api/recetas/mias` | Sí | Propuesto |
 | PUT | `/api/recetas/{id}` | Sí | Propuesto |
 | DELETE | `/api/recetas/{id}` | Sí | Propuesto |
@@ -359,8 +367,8 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | GET | `/api/favoritos` | Sí | Implementado |
 | PUT | `/api/favoritos/{recetaId}` | Sí | Implementado |
 | DELETE | `/api/favoritos/{recetaId}` | Sí | Implementado |
-| PUT | `/api/recetas/{id}/calificacion` | Sí | Propuesto |
-| DELETE | `/api/recetas/{id}/calificacion` | Sí | Propuesto |
+| PUT | `/api/recetas/{id}/calificacion` | Sí | Implementado |
+| DELETE | `/api/recetas/{id}/calificacion` | Sí | Implementado |
 | GET | `/api/recetas/{id}/exportar` | No | Propuesto |
 | GET | `/api/favoritos/exportar` | Sí | Propuesto |
 
