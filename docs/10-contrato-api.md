@@ -134,7 +134,7 @@ Lo que se envía al publicar o editar. Son los mismos campos que el JSON que exp
 | `porciones` | entero | De 1 a 100 |
 | `ingredientes` | lista de textos | Al menos uno; los textos vacíos se descartan |
 | `pasos` | lista de textos | Al menos uno; los textos vacíos se descartan |
-| `foto` | texto o `null` | Opcional. Una ruta de las fotos incluidas, o una imagen en formato `data:image/...;base64,` en JPG, PNG o WebP, de máximo 2 MB |
+| `foto` | texto o `null` | Opcional. Una ruta de las fotos incluidas (`fotos/tacos.jpg`, `fotos/avena.jpg`, `fotos/ensalada.jpg`), o una imagen en formato `data:image/...;base64,` en JPG, PNG o WebP, de máximo 2 MB. El servidor decodifica la imagen y revisa que su contenido sea del formato que dice |
 
 ### Usuario
 
@@ -178,6 +178,15 @@ Se pueden combinar. Si nada coincide, devuelve `[]` y la interfaz muestra el men
 - **401:** sin sesión, o el token no es válido o venció.
 
 El autor se toma del token, no del cuerpo: no se puede publicar a nombre de otra persona.
+
+Mensajes posibles en `errors.foto` (también al editar):
+
+| Mensaje | Cuándo |
+|---|---|
+| "La foto debe ser JPG, PNG o WebP de hasta 2 MB." | No es una foto incluida ni una data URL de esos tres formatos (por ejemplo un GIF o una URL externa) |
+| "La foto no puede pasar de 2 MB." | La imagen decodificada pesa más de 2 MB |
+| "La foto no es una imagen válida." | El base64 está dañado |
+| "La foto no es una imagen JPG, PNG o WebP válida." | El contenido no coincide con el formato (por ejemplo un JPG enviado como `image/png`) |
 
 ### GET /api/recetas/mejor-valoradas
 

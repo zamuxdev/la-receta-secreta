@@ -6,6 +6,7 @@ using RecetaSecreta.Api.Data;
 using RecetaSecreta.Api.Dtos;
 using RecetaSecreta.Api.Models;
 using RecetaSecreta.Api.Seguridad;
+using RecetaSecreta.Api.Validaciones;
 
 namespace RecetaSecreta.Api.Controllers;
 
@@ -168,6 +169,9 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
         var pasos = Limpiar(datos.Pasos);
         if (pasos.Count == 0)
             errores["pasos"] = ["Se necesita al menos un paso."];
+
+        if (!string.IsNullOrWhiteSpace(datos.Foto) && ValidadorFoto.Revisar(datos.Foto) is { } errorFoto)
+            errores["foto"] = [errorFoto];
 
         return errores.Count > 0 ? (null, errores) : (new DatosRevisados(categoria!, ingredientes, pasos), errores);
     }
