@@ -1,0 +1,56 @@
+# Revisión automática de cada Pull Request hacia main (y de cada cambio que llega a main).
+# Si algo falla, el PR muestra una cruz roja y el detalle aparece en la pestaña "Checks".
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Si se sube otro commit al mismo PR, se cancela la revisión anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  interfaz:
+    name: Revisión de la interfaz
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reglas de AGENTS.md
+        run: bash .github/scripts/revisar-interfaz.sh
+
+  backend:
+    name: Pruebas del backend
+    runs-on: ubuntu-latest
+    # Un PostgreSQL temporal con las mismas credenciales de desarrollo que docker-compose.yml.
+    services:
+      db:
+        image: postgres:17
+        env:
+          POSTGRES_DB: receta_secreta_pruebas
+          POSTGRES_USER: receta
+          POSTGRES_PASSWORD: receta_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U receta -d receta_secreta_pruebas"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      RECETA_PRUEBAS_DB: Host=localhost;Port=5432;Database=receta_secreta_pruebas;Username=receta;Password=receta_dev
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_NOLOGO: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Compilar y correr las pruebas
+        run: dotnet test backend/RecetaSecreta.Api.Tests --logger "console;verbosity=normal"

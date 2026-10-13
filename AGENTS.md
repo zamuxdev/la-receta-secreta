@@ -37,6 +37,7 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 - Antes de empezar: `git switch main`, `git pull` y luego `git switch -c <rama>`.
 - Commits pequeños, con mensaje claro que diga **qué** cambió.
 - Al terminar: `git push -u origin <rama>` y abrir un **Pull Request** hacia `main`. Fernando lo revisa y lo une. Nadie del equipo une su propio PR; Fernando une los suyos.
+- **El PR debe pasar el CI** (sección 9). Si sale una cruz roja, abre el detalle en la pestaña *Checks* del PR, corrige lo que dice y sube otro commit a la misma rama.
 - **No toques archivos de otro módulo** (sección 4). Si necesitas un cambio ahí, pídelo en el PR o avisa a su responsable.
 - Si hay un conflicto de git, **no lo resuelvas a ciegas**: avisa a Fernando.
 - No subas contraseñas, tokens ni claves. No subas archivos de `bin/`, `obj/`, `node_modules/` ni PDFs.
@@ -139,6 +140,15 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
 - Para reiniciar la base con los datos de ejemplo: `docker compose down -v`, y de nuevo los pasos anteriores.
 - **Pruebas automatizadas del backend:** con Docker abierto y la base arriba (`docker compose up -d`), corre `dotnet test backend/RecetaSecreta.Api.Tests`. Usan su propia base (`receta_secreta_pruebas`), que borran y crean de nuevo en cada corrida, así que no tocan tus datos. No necesitan la API corriendo ni la clave de user-secrets. Si cambias algo del backend, córrelas antes de abrir el PR.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
+
+### Revisión automática (CI)
+
+En cada Pull Request hacia `main`, GitHub Actions corre dos revisiones (`.github/workflows/ci.yml`, lo mantiene Fernando):
+
+- **Revisión de la interfaz:** comprueba las reglas que se pueden revisar solas: nada de `fetch` fuera de `api.js`, ni `console.log`, ni `innerHTML`; cada módulo envuelto en `(() => { ... })();`; imágenes con `alt`; JavaScript sin errores de sintaxis, y nada de `bin/`, `obj/`, `node_modules/` ni PDFs. Córrela antes de abrir el PR, en Git Bash: `bash .github/scripts/revisar-interfaz.sh`.
+- **Pruebas del backend:** compila la API y corre `dotnet test` con un PostgreSQL temporal.
+
+Pasar el CI no significa que la tarea esté terminada: hay que probarla en el navegador igual.
 
 ## 10. Reglas para el backend
 
