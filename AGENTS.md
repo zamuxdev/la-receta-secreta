@@ -168,7 +168,7 @@ Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con 
 
 - Documentación de las unidades 1 y 2 hecha.
 - Interfaz con galería y detalle dibujados desde la API (con datos de prueba), formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
-- Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`) implementado. Le faltan calificaciones y exportación.
+- Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Le faltan editar y borrar recetas, "mis recetas" y exportación.
 
 **Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Cada módulo se desarrolla primero con datos de prueba y se conecta a la API real cuando el backend lo tenga.
 

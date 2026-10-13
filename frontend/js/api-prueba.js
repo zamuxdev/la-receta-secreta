@@ -216,7 +216,7 @@ const apiPrueba = (() => {
       return leer().recetas
         .map(resumen)
         .filter((r) => r.totalCalificaciones > 0)
-        .sort((a, b) => b.promedio - a.promedio || b.totalCalificaciones - a.totalCalificaciones)
+        .sort((a, b) => b.promedio - a.promedio || b.totalCalificaciones - a.totalCalificaciones || b.id - a.id)
         .slice(0, limite);
     },
 

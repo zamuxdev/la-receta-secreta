@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,17 +12,55 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<RecetaDbContext>(opciones =>
     opciones.UseNpgsql(builder.Configuration.GetConnectionString("RecetaDb")));
-builder.Services.AddControllers().ConfigureApiBehaviorOptions(opciones =>
+builder.Services.AddControllers(opciones =>
+{
+    // Mensajes en español cuando un valor de la URL no se puede convertir (por ejemplo ?limite=abc).
+    var mensajes = opciones.ModelBindingMessageProvider;
+    mensajes.SetAttemptedValueIsInvalidAccessor((valor, _) => $"El valor '{valor}' no es válido.");
+    mensajes.SetNonPropertyAttemptedValueIsInvalidAccessor(valor => $"El valor '{valor}' no es válido.");
+    mensajes.SetValueMustBeANumberAccessor(_ => "Debe ser un número.");
+    mensajes.SetNonPropertyValueMustBeANumberAccessor(() => "Debe ser un número.");
+    mensajes.SetValueMustNotBeNullAccessor(_ => "Este dato es obligatorio.");
+    mensajes.SetMissingKeyOrValueAccessor(() => "Este dato es obligatorio.");
+}).ConfigureApiBehaviorOptions(opciones =>
 {
     // Los errores de validación automática usan las mismas claves en camelCase
     // que el resto de la API (por ejemplo "tiempo" y no "Tiempo").
     opciones.InvalidModelStateResponseFactory = contexto =>
     {
-        var errores = contexto.ModelState
-            .Where(campo => campo.Value?.Errors.Count > 0)
-            .ToDictionary(
-                campo => JsonNamingPolicy.CamelCase.ConvertName(campo.Key),
-                campo => campo.Value!.Errors.Select(error => error.ErrorMessage).ToArray());
+        var errores = new Dictionary<string, string[]>();
+        // La clave "" aparece cuando la petición llegó sin cuerpo.
+        var jsonIlegible = contexto.ModelState.Keys.Any(clave => clave.Length == 0 || clave.StartsWith('$'));
+        foreach (var (clave, estado) in contexto.ModelState)
+        {
+            if (estado.Errors.Count == 0)
+                continue;
+
+            if (clave.Length == 0)
+            {
+                errores["cuerpo"] = ["Faltan los datos de la petición."];
+            }
+            else if (clave.StartsWith('$'))
+            {
+                // "$.puntos" o "$.ingredientes[0]": el JSON trae un valor del tipo equivocado,
+                // como 4.5 donde va un entero. El mensaje de .NET viene en inglés y con detalles internos.
+                var campo = Regex.Match(clave, @"^\$\.?([^.\[]*)").Groups[1].Value;
+                if (campo.Length == 0)
+                    errores["cuerpo"] = ["El cuerpo de la petición no es un JSON válido."];
+                else
+                    errores[JsonNamingPolicy.CamelCase.ConvertName(campo)] = ["El valor no tiene el formato correcto."];
+            }
+            else if (jsonIlegible && !clave.Contains('.') && estado.Errors.All(e => e.ErrorMessage.EndsWith("field is required.")))
+            {
+                // Cuando el JSON no se pudo leer, .NET además reporta el parámetro completo
+                // ("datos") como faltante. Ese error sobra: el campo culpable ya está arriba.
+                continue;
+            }
+            else
+            {
+                errores[JsonNamingPolicy.CamelCase.ConvertName(clave)] = estado.Errors.Select(e => e.ErrorMessage).ToArray();
+            }
+        }
         return new BadRequestObjectResult(new ValidationProblemDetails(errores));
     };
 });
