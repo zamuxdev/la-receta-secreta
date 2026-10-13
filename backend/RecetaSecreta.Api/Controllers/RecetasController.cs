@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecetaSecreta.Api.Data;
 using RecetaSecreta.Api.Dtos;
+using RecetaSecreta.Api.Exportacion;
 using RecetaSecreta.Api.Models;
 using RecetaSecreta.Api.Seguridad;
 using RecetaSecreta.Api.Validaciones;
@@ -65,6 +66,33 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
     {
         var receta = await Detalle(id);
         return receta is null ? NotFound() : receta;
+    }
+
+    // GET api/recetas/5/exportar?formato=xml
+    // Es público, como ver la receta. Responde con un archivo para descargar (RF-23).
+    [HttpGet("{id:int}/exportar")]
+    public async Task<IActionResult> Exportar(int id, string formato = "json")
+    {
+        formato = formato.ToLowerInvariant();
+        if (formato is not ("json" or "xml"))
+            return ValidationProblem(new ValidationProblemDetails(new Dictionary<string, string[]>
+            {
+                ["formato"] = ["El formato debe ser json o xml."],
+            }));
+
+        var receta = await db.Recetas.AsNoTracking()
+            .Where(r => r.Id == id)
+            .Select(r => new RecetaCrear(
+                r.Nombre, r.Descripcion, r.Categoria.Nombre, r.Tiempo, r.Porciones,
+                r.Ingredientes.OrderBy(i => i.Id).Select(i => i.Texto).ToList(), r.Pasos, r.Foto))
+            .FirstOrDefaultAsync();
+        if (receta is null)
+            return NotFound();
+
+        // File() agrega la cabecera Content-Disposition, que le dice al navegador que lo descargue con ese nombre.
+        return formato == "xml"
+            ? File(Exportador.Xml(receta), "application/xml", Exportador.NombreArchivo(receta.Nombre, "xml"))
+            : File(Exportador.Json(receta), "application/json", Exportador.NombreArchivo(receta.Nombre, "json"));
     }
 
     // POST api/recetas

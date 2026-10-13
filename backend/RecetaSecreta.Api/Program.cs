@@ -91,7 +91,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // La interfaz estática corre en otro origen durante el desarrollo.
 builder.Services.AddCors(opciones => opciones.AddPolicy("Desarrollo",
-    politica => politica.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+    politica => politica.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()
+        // Sin esto, el navegador no deja que la interfaz lea el nombre del archivo exportado.
+        .WithExposedHeaders("Content-Disposition")));
 
 var app = builder.Build();
 

@@ -4,6 +4,7 @@
 // Uso:
 //   const recetas = await api.listarRecetas({ categoria: 'Postre' });
 //   try { await api.calificar(3, 5); } catch (error) { mostrar(error.textoParaUsuario()); }
+//   await api.descargarReceta(3, 'xml'); // el navegador descarga el archivo
 
 // true: usa datos de prueba que imitan el contrato (js/api-prueba.js).
 // false: usa el backend real. Cámbialo cuando el endpoint que necesitas ya exista.
@@ -70,7 +71,8 @@ const MENSAJES_POR_ESTADO = {
 
 // Implementación real: habla con el backend por HTTP.
 const apiReal = (() => {
-  async function peticion(metodo, ruta, cuerpo) {
+  // Con comoArchivo, una respuesta correcta se devuelve como { archivo, nombre } en lugar de JSON.
+  async function peticion(metodo, ruta, cuerpo, { comoArchivo = false } = {}) {
     const cabeceras = {};
     if (cuerpo !== undefined) cabeceras['Content-Type'] = 'application/json';
     if (sesion.token()) cabeceras.Authorization = 'Bearer ' + sesion.token();
@@ -87,6 +89,7 @@ const apiReal = (() => {
     }
 
     if (respuesta.status === 204) return null;
+    if (respuesta.ok && comoArchivo) return { archivo: await respuesta.blob(), nombre: nombreDelArchivo(respuesta) };
     let datos = null;
     try { datos = await respuesta.json(); } catch { /* respuesta sin cuerpo JSON */ }
 
@@ -98,6 +101,15 @@ const apiReal = (() => {
       throw new ErrorApi(respuesta.status, mensaje, (datos && datos.errors) || {});
     }
     return datos;
+  }
+
+  // El servidor manda el nombre en la cabecera Content-Disposition (filename*=UTF-8''nombre.xml).
+  function nombreDelArchivo(respuesta) {
+    const cabecera = respuesta.headers.get('Content-Disposition') || '';
+    const codificado = /filename\*=UTF-8''([^;]+)/i.exec(cabecera);
+    if (codificado) return decodeURIComponent(codificado[1]);
+    const simple = /filename="?([^";]+)"?/i.exec(cabecera);
+    return simple ? simple[1] : 'archivo';
   }
 
   function consulta(parametros) {
@@ -128,6 +140,10 @@ const apiReal = (() => {
 
     calificar: (recetaId, puntos) => peticion('PUT', `/recetas/${recetaId}/calificacion`, { puntos }),
     quitarCalificacion: (recetaId) => peticion('DELETE', `/recetas/${recetaId}/calificacion`),
+
+    descargarReceta: (recetaId, formato) =>
+      peticion('GET', `/recetas/${recetaId}/exportar` + consulta({ formato }), undefined, { comoArchivo: true }),
+    descargarFavoritos: () => peticion('GET', '/favoritos/exportar', undefined, { comoArchivo: true }),
   };
 })();
 
@@ -143,6 +159,18 @@ async function llamar(nombre, ...argumentos) {
     }
     throw error;
   }
+}
+
+// Hace que el navegador descargue un archivo creado en la página.
+function guardarDescarga({ archivo, nombre }) {
+  const url = URL.createObjectURL(archivo);
+  const enlace = document.createElement('a');
+  enlace.href = url;
+  enlace.download = nombre;
+  document.body.append(enlace);
+  enlace.click();
+  enlace.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 const api = {
@@ -175,4 +203,9 @@ const api = {
   // Calificaciones
   calificar: (recetaId, puntos) => llamar('calificar', recetaId, puntos),
   quitarCalificacion: (recetaId) => llamar('quitarCalificacion', recetaId),
+
+  // Exportación (RF-23): descargan el archivo en el navegador.
+  // formato: 'json' o 'xml'. Los favoritos se descargan en CSV y requieren sesión.
+  descargarReceta: async (recetaId, formato = 'json') => guardarDescarga(await llamar('descargarReceta', recetaId, formato)),
+  descargarFavoritos: async () => guardarDescarga(await llamar('descargarFavoritos')),
 };

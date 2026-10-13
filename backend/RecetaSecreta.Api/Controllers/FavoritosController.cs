@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using RecetaSecreta.Api.Data;
 using RecetaSecreta.Api.Dtos;
+using RecetaSecreta.Api.Exportacion;
 using RecetaSecreta.Api.Models;
 using RecetaSecreta.Api.Seguridad;
 
@@ -27,6 +28,15 @@ public class FavoritosController(RecetaDbContext db) : ControllerBase
             .OrderByDescending(r => r.CreadaEn)
             .Select(Proyecciones.Resumen)
             .ToListAsync();
+    }
+
+    // GET api/favoritos/exportar
+    // Los favoritos del usuario como tabla CSV, en el mismo orden que la lista.
+    [HttpGet("exportar")]
+    public async Task<IActionResult> Exportar()
+    {
+        var favoritos = (await Listar()).Value!;
+        return File(Exportador.Csv(favoritos), "text/csv; charset=utf-8", "favoritos.csv");
     }
 
     // PUT api/favoritos/5

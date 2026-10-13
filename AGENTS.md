@@ -78,7 +78,7 @@ Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos*
 
 - La interfaz se construye contra [`docs/10-contrato-api.md`](docs/10-contrato-api.md): rutas, campos y errores.
 - **No inventes campos ni endpoints.** Si falta algo, abre un PR que cambie el contrato primero, y Fernando lo aprueba.
-- Todas las llamadas al backend pasan por el objeto `api` de `frontend/js/api.js`. **No uses `fetch` directamente en tu módulo.** Lee ese archivo para ver todas las funciones disponibles, por ejemplo `api.listarRecetas({ categoria, ingrediente })`, `api.agregarFavorito(id)` o `api.calificar(id, puntos)`.
+- Todas las llamadas al backend pasan por el objeto `api` de `frontend/js/api.js`. **No uses `fetch` directamente en tu módulo.** Lee ese archivo para ver todas las funciones disponibles, por ejemplo `api.listarRecetas({ categoria, ingrediente })`, `api.agregarFavorito(id)`, `api.calificar(id, puntos)` o `api.descargarReceta(id, 'xml')`.
 - **Modo de prueba:** mientras `USAR_DATOS_DE_PRUEBA` sea `true` en `api.js`, la interfaz usa datos de prueba que imitan el contrato (`api-prueba.js`) y no necesita el backend. Hay un usuario de prueba cuyos datos están al inicio de `api-prueba.js`. Fernando cambia a `false` cuando el backend tenga lo que necesitas, no lo cambies tú.
 - Si una función de `api` falla, lanza un `ErrorApi`. Muestra `error.textoParaUsuario()` al usuario, o los mensajes por campo de `error.errores` (claves en `camelCase`, como los campos del contrato). Revisa `error.estado` para casos como 401 (sin sesión) o 403.
 - La sesión la maneja `api`: `api.haySesion()`, `api.usuarioActual()`, `api.iniciarSesion(...)`, `api.cerrarSesion()`.
@@ -168,7 +168,7 @@ Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con 
 
 - Documentación de las unidades 1 y 2 hecha.
 - Interfaz con galería y detalle dibujados desde la API (con datos de prueba), formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
-- Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Editar, borrar y "mis recetas" implementados. El servidor valida la foto (formato real y tamaño). Le falta la exportación.
+- Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Editar, borrar y "mis recetas" implementados. El servidor valida la foto (formato real y tamaño). Exportación en JSON, XML y CSV implementada (`api.descargarReceta`, `api.descargarFavoritos`). Le faltan las pruebas automatizadas.
 
 **Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Cada módulo se desarrolla primero con datos de prueba y se conecta a la API real cuando el backend lo tenga.
 
