@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,20 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
             .Select(Proyecciones.Resumen)
             .ToListAsync();
     }
+
+    // GET api/recetas/mejor-valoradas?limite=10
+    // Solo las que tienen al menos una calificación. Si empatan en promedio, gana la que tiene más votos.
+    [HttpGet("mejor-valoradas")]
+    public async Task<ActionResult<List<RecetaResumen>>> MejorValoradas(
+        [Range(1, 50, ErrorMessage = "El límite debe estar entre 1 y 50.")] int limite = 10) =>
+        await db.Recetas.AsNoTracking()
+            .Where(r => r.Calificaciones.Any())
+            .OrderByDescending(r => r.Calificaciones.Average(c => c.Puntos))
+            .ThenByDescending(r => r.Calificaciones.Count)
+            .ThenByDescending(r => r.CreadaEn)
+            .Take(limite)
+            .Select(Proyecciones.Resumen)
+            .ToListAsync();
 
     // GET api/recetas/5
     // Es público, pero si llega un token válido se llenan esMia y miCalificacion.
