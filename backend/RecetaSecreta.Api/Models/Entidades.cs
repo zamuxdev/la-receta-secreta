@@ -19,7 +19,7 @@ public class Receta
     public Categoria Categoria { get; set; } = null!;
     public int Tiempo { get; set; }
     public int Porciones { get; set; }
-    // Ruta de una foto incluida o una imagen en data URL (JPG, PNG o WebP).
+    // Ruta de una foto incluida o una imagen en data URL (JPG, PNG o WebP). La revisa ValidadorFoto.
     public string? Foto { get; set; }
     public List<string> Pasos { get; set; } = [];
     public DateTime CreadaEn { get; set; } = DateTime.UtcNow;
