@@ -150,9 +150,9 @@ Lo que se envía al publicar o editar. Son los mismos campos que el JSON que exp
 | `GET /api/recetas/{id}` | Cualquiera | Implementado |
 | `POST /api/recetas` | Con sesión | Implementado |
 | `GET /api/recetas/mejor-valoradas` | Cualquiera | Implementado |
-| `GET /api/recetas/mias` | Con sesión | Propuesto |
-| `PUT /api/recetas/{id}` | Con sesión, solo el autor | Propuesto |
-| `DELETE /api/recetas/{id}` | Con sesión, solo el autor | Propuesto |
+| `GET /api/recetas/mias` | Con sesión | Implementado |
+| `PUT /api/recetas/{id}` | Con sesión, solo el autor | Implementado |
+| `DELETE /api/recetas/{id}` | Con sesión, solo el autor | Implementado |
 
 ### GET /api/recetas
 
@@ -174,7 +174,7 @@ Se pueden combinar. Si nada coincide, devuelve `[]` y la interfaz muestra el men
 
 - **Cuerpo:** `RecetaCrear`.
 - **201:** `RecetaDetalle` de la receta creada, con la cabecera `Location` hacia `/api/recetas/{id}`. Su `autor` es el usuario con sesión y `esMia` es `true`.
-- **400:** datos no válidos (categoría inexistente, campos fuera de rango, listas vacías).
+- **400:** datos no válidos (categoría inexistente, campos fuera de rango, listas vacías). Todos los errores llegan juntos, cada uno en la clave de su campo (`categoria`, `ingredientes`, `pasos`...).
 - **401:** sin sesión, o el token no es válido o venció.
 
 El autor se toma del token, no del cuerpo: no se puede publicar a nombre de otra persona.
@@ -187,21 +187,25 @@ Lista de `RecetaResumen` ordenada por `promedio` de mayor a menor. Si dos empata
 |---|---|
 | `limite` | Cuántas recetas devolver, de 1 a 50 (por defecto 10). Fuera de ese rango responde 400 |
 
-### GET /api/recetas/mias (propuesto)
+### GET /api/recetas/mias
 
-Lista de `RecetaResumen` de las recetas del usuario con sesión.
+- **200:** lista de `RecetaResumen` de las recetas del usuario con sesión, de la más nueva a la más antigua (`[]` si no tiene).
+- **401:** sin sesión.
 
-### PUT /api/recetas/{id} (propuesto)
+### PUT /api/recetas/{id}
 
-- **Cuerpo:** `RecetaCrear` (reemplaza todos los campos).
-- **200:** `RecetaDetalle` actualizado.
-- **403:** la receta es de otro usuario.
+- **Cuerpo:** `RecetaCrear` (reemplaza todos los campos, con las mismas reglas que al publicar).
+- **200:** `RecetaDetalle` actualizado. Las calificaciones y los favoritos que ya tenía se conservan.
+- **400:** datos no válidos.
+- **401:** sin sesión.
+- **403:** la receta es de otro usuario. Trae `detail`: "Solo quien publicó la receta puede editarla.". Las recetas de ejemplo no tienen autor, así que nadie puede editarlas.
 - **404:** no existe.
 
-### DELETE /api/recetas/{id} (propuesto)
+### DELETE /api/recetas/{id}
 
-- **204:** borrada.
-- **403:** la receta es de otro usuario.
+- **204:** borrada, junto con sus favoritos y calificaciones.
+- **401:** sin sesión.
+- **403:** la receta es de otro usuario. Trae `detail`: "Solo quien publicó la receta puede borrarla.".
 - **404:** no existe.
 
 ## 10.4 Categorías (implementado)
@@ -357,9 +361,9 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | GET | `/api/recetas/{id}` | No | Implementado |
 | POST | `/api/recetas` | Sí | Implementado |
 | GET | `/api/recetas/mejor-valoradas` | No | Implementado |
-| GET | `/api/recetas/mias` | Sí | Propuesto |
-| PUT | `/api/recetas/{id}` | Sí | Propuesto |
-| DELETE | `/api/recetas/{id}` | Sí | Propuesto |
+| GET | `/api/recetas/mias` | Sí | Implementado |
+| PUT | `/api/recetas/{id}` | Sí | Implementado |
+| DELETE | `/api/recetas/{id}` | Sí | Implementado |
 | GET | `/api/categorias` | No | Implementado |
 | POST | `/api/auth/registro` | No | Implementado |
 | POST | `/api/auth/login` | No | Implementado |
