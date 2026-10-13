@@ -199,11 +199,11 @@ Lista de `RecetaResumen` de las recetas del usuario con sesión.
 - **403:** la receta es de otro usuario.
 - **404:** no existe.
 
-## 10.4 Categorías (propuesto)
+## 10.4 Categorías (implementado)
 
 ### GET /api/categorias
 
-Devuelve las categorías disponibles. Sirve para llenar el selector del formulario sin dejarlas fijas en la interfaz.
+Cualquiera puede consultarlas. Devuelve las categorías disponibles, ordenadas por `id`. Sirve para llenar el selector del formulario sin dejarlas fijas en la interfaz.
 
 ```json
 [
@@ -352,7 +352,7 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | GET | `/api/recetas/mias` | Sí | Propuesto |
 | PUT | `/api/recetas/{id}` | Sí | Propuesto |
 | DELETE | `/api/recetas/{id}` | Sí | Propuesto |
-| GET | `/api/categorias` | No | Propuesto |
+| GET | `/api/categorias` | No | Implementado |
 | POST | `/api/auth/registro` | No | Implementado |
 | POST | `/api/auth/login` | No | Implementado |
 | GET | `/api/auth/yo` | Sí | Implementado |
