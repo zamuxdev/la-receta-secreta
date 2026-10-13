@@ -17,7 +17,7 @@ Antes de programar se diseñan las pantallas en Figma, que sirven de referencia 
 | Favoritos | Consultar las recetas guardadas | Vacía, en construcción (`#/favoritos`, módulo Favoritos) |
 | Perfil de usuario | Datos de la cuenta y recetas publicadas | No (la API ya tiene `GET /api/recetas/mias`) |
 
-Cada módulo y su responsable están en [`TAREAS.md`](../TAREAS.md).
+Cada módulo y su responsable están en [`TASKS.md`](../TASKS.md).
 
 > Pendiente: agregar aquí capturas de las pantallas en Figma.
 

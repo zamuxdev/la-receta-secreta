@@ -25,5 +25,5 @@ La primera vez hay que crear la clave que firma las sesiones, y para que la inte
 
 ## Cómo trabajamos
 
-- [`TAREAS.md`](TAREAS.md): qué le toca a cada persona del equipo.
+- [`TASKS.md`](TASKS.md): qué le toca a cada persona del equipo.
 - [`AGENTS.md`](AGENTS.md): reglas de trabajo (ramas, Pull Requests, archivos de cada módulo) para las personas y los agentes de programación.

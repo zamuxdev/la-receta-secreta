@@ -28,7 +28,7 @@ Haz estos pasos una sola vez. Si algo no te sale, avisa en el grupo.
 4. **Abre tu agente de programación** (Claude Code, Codex u OpenCode) en la carpeta del proyecto. El agente lee solo las reglas del archivo `AGENTS.md`.
 5. **Dile quién eres.** Tu primer mensaje al agente puede ser:
 
-   > Soy [tu nombre] y mi módulo es [tu módulo]. Lee AGENTS.md y TAREAS.md y ayúdame con mi primera tarea.
+   > Soy [tu nombre] y mi módulo es [tu módulo]. Lee AGENTS.md y TASKS.md y ayúdame con mi primera tarea.
 
 > No necesitas el servidor ni Docker. La interfaz funciona con **datos de prueba**: son recetas falsas que imitan lo que entregará el servidor. Hay un usuario de prueba para probar cosas que requieren sesión. Sus datos están al principio de `frontend/js/api-prueba.js`.
 
@@ -66,8 +66,8 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | # | Tarea | Listo cuando... |
 |---|---|---|
 | H1 | **Barra de búsqueda por ingrediente.** Un campo de texto con su etiqueta y un botón "Buscar". | Escribes "aguacate", pulsas Buscar y solo aparece la receta de tacos. Funciona sin importar mayúsculas. |
-| H2 | **Filtro por categoría.** Un selector con las categorías (pídelas con `api.listarCategorias()`) y la opción "Todas". | Al elegir "Postre" solo se ven postres, y al elegir "Todas" aparecen todas. |
-| H3 | **Combinar los dos filtros** y un botón "Limpiar". | Puedes buscar "arroz" dentro de "Postre", y "Limpiar" regresa a ver todas. |
+| H2 | **Filtro por categoría.** Un selector con las categorías (pídelas con `api.listarCategorias()`) y la opción "Todas". | Al elegir "Desayuno" solo aparece la avena, al elegir "Comida" aparecen los tacos y la ensalada, y al elegir "Todas" aparecen las tres. |
+| H3 | **Combinar los dos filtros** y un botón "Limpiar". | "aguacate" dentro de "Comida" muestra solo los tacos, "aguacate" dentro de "Desayuno" no muestra ninguna, y "Limpiar" regresa a ver todas. |
 | H4 | **Mensaje cuando no hay resultados** (RF-05). | Si buscas "xyz", aparece un mensaje claro como "No encontramos recetas con xyz" en lugar de una pantalla vacía. |
 | H5 | **Cuidar los datos escritos.** Ignora los espacios de más y no busques con el campo vacío por error. | Buscar "  aguacate  " funciona igual que "aguacate". |
 | H6 | **Que se vea bien y sea accesible.** Estilos en tu CSS, etiquetas en los campos, se ve bien en el celular. | Se usa con el teclado y se ve bien en pantalla chica. |
@@ -137,11 +137,14 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | Y3 | **Errores por campo.** Si el servidor rechaza un dato, el mensaje aparece **junto a su campo** (usa `error.errores`; las claves son `nombre`, `correo` y `password`). | Una contraseña de 3 letras muestra el mensaje debajo del campo de contraseña. |
 | Y4 | **Mostrar quién eres y cerrar sesión.** En la pantalla de Acceso, si hay sesión: "Hola, [nombre]" y un botón "Cerrar sesión". | Cierras sesión y la pantalla vuelve a mostrar el formulario de entrada. Responde al evento `sesion-cambiada`. |
 | Y5 | **Enlaces entre pantallas.** Desde Acceso se llega a Crear cuenta y al revés. | Se puede ir de una a otra sin usar el menú. |
-| Y6 | **Publicar: errores del servidor.** Cuando el servidor rechace una receta, muestra los mensajes por campo (lo que hoy se muestra en un solo texto). | Publicar una receta con el tiempo en 0 muestra el mensaje junto al campo de tiempo. |
+| Y6 | **Publicar: errores por campo.** Hoy los errores salen en un solo texto. Muestra cada mensaje junto a su campo, tanto los de la validación en el navegador como los que rechace el servidor (`error.errores`). Ojo: la clave `nombre` corresponde al campo `#titulo` del formulario. | Publicar con el tiempo en 0 muestra el mensaje junto al campo de tiempo, y con el nombre vacío, junto al campo del nombre. |
 | Y7 | **Publicar: aviso si no hay sesión.** Publicar exige sesión (sin ella la API responde 401). Muestra un aviso amable invitando a entrar. | Sin sesión aparece el aviso, con la sesión iniciada no. |
 | Y8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/acceso-publicar.md`. | Los formularios tienen sus etiquetas, se usan con el teclado y se ven bien en el celular. |
 
-**Importante:** en `index.html` el formulario de Acceso que existe es solo un ejemplo con el botón desactivado. Reemplázalo.
+**Importante:**
+
+- En `index.html` el formulario de Acceso que existe es solo un ejemplo con el botón desactivado. Reemplázalo.
+- `publicar.js` todavía no está envuelto en `(() => { ... })();` como los demás módulos. Envuélvelo en la primera tarea en que lo toques (Y6 o Y7).
 
 ---
 
