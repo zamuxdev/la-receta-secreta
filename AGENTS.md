@@ -12,9 +12,9 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 
 ## 2. Cómo trabajar con la persona que te usa
 
-**Modo normal: trabaja con libertad y termina el trabajo.** Es el modo para las cuatro personas que hacen la interfaz. La persona quiere avanzar rápido, no una clase.
+**Trabaja con libertad y termina el trabajo.** Esto aplica a todas las personas del equipo. La persona quiere avanzar rápido, no una clase.
 
-1. **Pregunta una sola vez su nombre y su módulo** (sección 4) si no lo sabes. Si no responde o no queda claro, sigue en modo normal. Trabaja en el módulo de esa persona (archivos de la sección 4).
+1. **Pregunta una sola vez su nombre y su módulo** (sección 4) si no lo sabes. Si no responde o no queda claro, sigue adelante sin insistir. Trabaja en el módulo de esa persona (archivos de la sección 4).
 2. **Escribe tú todo el código.** No le pidas a la persona que escriba código, ni le des pasos para que los haga ella. Si una tarea de [`TAREAS.md`](TAREAS.md) se puede terminar, termínala completa.
 3. **No pidas confirmación en cada paso.** Decide con criterio y sigue adelante. Pregunta solo si estás realmente bloqueado, o si algo contradice el contrato de la API o las reglas de este archivo.
 4. **Prueba lo que hiciste** (abre la página, recorre el flujo) antes de decir que terminó. Si no pudiste probar algo, dilo.
@@ -30,15 +30,13 @@ Recetario social de cocina: se publican, buscan, guardan y califican recetas. Es
 7. **Mantén los cambios dentro del trabajo pedido.** No hagas refactorizaciones grandes ni "mejoras" que nadie pidió, y no inventes endpoints, campos ni pantallas: lo que existe está en el contrato.
 8. **Nunca ocultes un error.** Si algo no funcionó o no lo pudiste probar, dilo.
 
-El modo de enseñanza (sección 10) **solo** aplica cuando la persona es Fernando y trabaja en `backend/`.
-
 ## 3. Reglas de git (obligatorias)
 
-- **Nunca hagas commit ni push directo a `main`.** Cada tarea va en su propia rama.
+- **Nunca hagas commit ni push directo a `main`, sin excepciones y tampoco para Fernando.** Cada tarea, de quien sea, va en su propia rama. Si estás en `main`, crea una rama antes de hacer cualquier cambio.
 - Nombre de la rama: `modulo/descripcion-corta`, por ejemplo `favoritos/boton-corazon`.
 - Antes de empezar: `git switch main`, `git pull` y luego `git switch -c <rama>`.
 - Commits pequeños, con mensaje claro que diga **qué** cambió.
-- Al terminar: `git push -u origin <rama>` y abrir un **Pull Request** hacia `main`. Fernando lo revisa y lo une. Nadie une su propio PR.
+- Al terminar: `git push -u origin <rama>` y abrir un **Pull Request** hacia `main`. Fernando lo revisa y lo une. Nadie del equipo une su propio PR; Fernando une los suyos.
 - **No toques archivos de otro módulo** (sección 4). Si necesitas un cambio ahí, pídelo en el PR o avisa a su responsable.
 - Si hay un conflicto de git, **no lo resuelvas a ciegas**: avisa a Fernando.
 - No subas contraseñas, tokens ni claves. No subas archivos de `bin/`, `obj/`, `node_modules/` ni PDFs.
@@ -141,14 +139,10 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
 - **Pruebas automatizadas del backend:** con Docker abierto y la base arriba (`docker compose up -d`), corre `dotnet test backend/RecetaSecreta.Api.Tests`. Usan su propia base (`receta_secreta_pruebas`), que borran y crean de nuevo en cada corrida, así que no tocan tus datos. No necesitan la API corriendo ni la clave de user-secrets. Si cambias algo del backend, córrelas antes de abrir el PR.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
 
-## 10. Modo enseñanza: solo Fernando, solo en `backend/`
+## 10. Reglas para el backend
 
-**Esta sección aplica únicamente si la persona es Fernando y el trabajo es en `backend/`.** Para todas las demás personas, y para cualquier trabajo de la interfaz, **no uses este modo**: sigue el modo normal de la sección 2.
+Aplican a quien trabaje en `backend/` (solo Fernando). Se sigue el mismo modo de trabajo de la sección 2.
 
-Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con él:
-
-- **Explica cada concepto nuevo** y compáralo con Spring Boot si ayuda (él ya lo conoce).
-- **No escribas todo el código de golpe.** Propón el paso, explica y deja que él lo escriba; ayuda cuando se atore o pida que lo termines.
 - Si cambias el modelo de datos, genera una **migración nueva** (no edites las anteriores): `dotnet ef migrations add <Nombre> --project backend/RecetaSecreta.Api`.
 - Detén la API antes de compilar o generar migraciones, porque bloquea los archivos.
 - Los DTOs **no usan entidades**. Las contraseñas **nunca** se guardan en texto plano. Nada de claves en el código.
@@ -156,7 +150,7 @@ Fernando está aprendiendo .NET a propósito. Cuando trabajes en `backend/` con 
 
 ## 11. Qué NO hacer
 
-- No hagas push a `main`. No borres ramas ni historial. No uses `git push --force`.
+- No hagas commit ni push a `main`, nadie. No borres ramas ni historial. No uses `git push --force`.
 - No modifiques `backend/` si no eres Fernando.
 - No cambies el contrato de la API sin pasar por un PR aprobado.
 - No agregues dependencias ni herramientas nuevas sin preguntar.
