@@ -81,7 +81,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 
 **Dónde trabajas:** las tarjetas de la galería, el detalle de cada receta y la pantalla **Favoritos** (`#/favoritos`).
 **Tus archivos:** `frontend/js/favoritos.js`, `frontend/css/favoritos.css`, `docs/decisiones/favoritos.md`. En `index.html` solo el bloque de la pantalla Favoritos.
-**Funciones que vas a usar:** `api.listarFavoritos()`, `api.agregarFavorito(id)`, `api.quitarFavorito(id)` y `api.haySesion()`.
+**Funciones que vas a usar:** `api.listarFavoritos()`, `api.agregarFavorito(id)`, `api.quitarFavorito(id)`, `api.descargarFavoritos()` y `api.haySesion()`.
 **Dónde se engancha tu botón:** `#detalle-acciones` (en el detalle) y `.tarjeta-acciones` (en cada tarjeta), mediante los eventos `receta-mostrada` y `tarjetas-dibujadas`.
 
 | # | Tarea | Listo cuando... |
@@ -94,6 +94,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | B6 | **Mensajes.** Un texto cuando no tienes favoritos y otro si algo falla (por ejemplo `error.textoParaUsuario()`). | Nunca queda la pantalla en blanco. |
 | B7 | **Reaccionar a la sesión.** Cuando alguien entra o sale de su cuenta, los botones se actualizan (evento `sesion-cambiada`). | Cierras sesión y los botones dejan de mostrar tus favoritas. |
 | B8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/favoritos.md`. | Se ve bien en el celular, se usa con el teclado y el documento responde las 5 preguntas. |
+| B9 | **Descargar los favoritos en CSV** (RF-23). En la pantalla Favoritos, un botón "Descargar en CSV" que llama a `api.descargarFavoritos()`. Solo tiene sentido si hay favoritos: si la lista está vacía, no lo muestres o desactívalo. Mientras se prepara, un mensaje ("Preparando el archivo..."). | Con dos favoritas, el botón descarga un `.csv` que se abre en Excel con las dos recetas y los acentos bien. Sin favoritas el botón no se puede usar. |
 
 **Para probar sin esperar la pantalla de acceso de Yaret:** abre la consola del navegador (F12) y escribe `await api.iniciarSesion('demo@recetasecreta.test', 'demo12345')`.
 
@@ -126,7 +127,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 
 **Dónde trabajas:** las pantallas **Acceso** (`#/acceso`), **Crear cuenta** (`#/registro`) y **Publicar** (`#/publicar`).
 **Tus archivos:** `frontend/js/acceso.js`, `frontend/js/publicar.js`, `frontend/css/acceso.css`, `docs/decisiones/acceso-publicar.md`. En `index.html` solo los bloques de Acceso, Crear cuenta y Publicar.
-**Funciones que vas a usar:** `api.iniciarSesion(correo, password)`, `api.registrar({ nombre, correo, password })`, `api.cerrarSesion()`, `api.usuarioActual()`, `api.haySesion()` y `api.crearReceta(datos)`.
+**Funciones que vas a usar:** `api.iniciarSesion(correo, password)`, `api.registrar({ nombre, correo, password })`, `api.cerrarSesion()`, `api.usuarioActual()`, `api.haySesion()` y `api.crearReceta(datos)`. Para "Mis recetas" (Y9 a Y11): `api.misRecetas()`, `api.obtenerReceta(id)`, `api.actualizarReceta(id, datos)` y `api.eliminarReceta(id)`.
 
 > Tu módulo es el que más personas necesitan: Brandon y Leilani prueban cosas con sesión. Empieza por Y1 y Y2.
 
@@ -140,6 +141,9 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | Y6 | **Publicar: errores por campo.** Hoy los errores salen en un solo texto. Muestra cada mensaje junto a su campo, tanto los de la validación en el navegador como los que rechace el servidor (`error.errores`). Ojo: la clave `nombre` corresponde al campo `#titulo` del formulario. | Publicar con el tiempo en 0 muestra el mensaje junto al campo de tiempo, y con el nombre vacío, junto al campo del nombre. |
 | Y7 | **Publicar: aviso si no hay sesión.** Publicar exige sesión (sin ella la API responde 401). Muestra un aviso amable invitando a entrar. | Sin sesión aparece el aviso, con la sesión iniciada no. |
 | Y8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/acceso-publicar.md`. | Los formularios tienen sus etiquetas, se usan con el teclado y se ven bien en el celular. |
+| Y9 | **Mis recetas** (RF-14). En la pantalla de Acceso, con sesión iniciada y debajo de "Hola, [nombre]", la lista de recetas que publicaste (`api.misRecetas()`). Cada una enlaza a su detalle (`#/receta/<id>`) y tiene los botones "Editar" y "Borrar". Si no tienes recetas, un mensaje que invite a publicar. | Publicas una receta con el usuario de prueba y aparece en la lista. Las tres recetas de ejemplo no aparecen, porque no son tuyas. |
+| Y10 | **Editar una receta.** "Editar" lleva a `#/publicar/<id>`. Al abrirse así, `publicar.js` recibe el `id` en el evento `pantalla-mostrada` (`parametro`), pide la receta con `api.obtenerReceta(id)`, llena el formulario y el botón dice "Guardar cambios". Al enviar se usa `api.actualizarReceta(id, datos)`. Si se abre `#/publicar` sin `id`, el formulario vuelve a estar vacío para publicar una nueva. | Cambias el tiempo de una receta tuya, guardas y el detalle muestra el tiempo nuevo. Si la receta no es tuya (403) o no existe (404), aparece un mensaje claro. |
+| Y11 | **Borrar una receta.** "Borrar" pide confirmación (`confirm()`) y llama a `api.eliminarReceta(id)`. | Confirmas y la receta desaparece de tu lista y de la galería. Si cancelas, no pasa nada. |
 
 **Importante:**
 
