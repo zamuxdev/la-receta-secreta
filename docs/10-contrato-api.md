@@ -270,17 +270,17 @@ La interfaz guarda el token y lo envía en `Authorization: Bearer <token>` en ca
 - **200:** `Usuario` de la sesión.
 - **401:** sin sesión.
 
-## 10.6 Favoritos (propuesto)
+## 10.6 Favoritos (implementado)
 
 Todos requieren sesión. Los favoritos son personales: nadie ve ni modifica los de otra persona.
 
 | Método y ruta | Qué hace | Respuesta |
 |---|---|---|
-| `GET /api/favoritos` | Lista las recetas favoritas del usuario | 200 con una lista de `RecetaResumen` |
+| `GET /api/favoritos` | Lista las recetas favoritas del usuario, de la más nueva a la más antigua | 200 con una lista de `RecetaResumen` (`[]` si no tiene) |
 | `PUT /api/favoritos/{recetaId}` | Agrega la receta a favoritos | 204; si ya estaba, también 204 |
 | `DELETE /api/favoritos/{recetaId}` | La quita de favoritos | 204; si no estaba, también 204 |
 
-`PUT` y `DELETE` son **idempotentes**: repetirlos no produce errores ni duplicados. Si `recetaId` no existe responden 404.
+`PUT` y `DELETE` son **idempotentes**: repetirlos no produce errores ni duplicados. Si `recetaId` no existe responden 404. Sin sesión, los tres responden 401.
 
 ## 10.7 Calificaciones (propuesto)
 
@@ -356,9 +356,9 @@ Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individu
 | POST | `/api/auth/registro` | No | Implementado |
 | POST | `/api/auth/login` | No | Implementado |
 | GET | `/api/auth/yo` | Sí | Implementado |
-| GET | `/api/favoritos` | Sí | Propuesto |
-| PUT | `/api/favoritos/{recetaId}` | Sí | Propuesto |
-| DELETE | `/api/favoritos/{recetaId}` | Sí | Propuesto |
+| GET | `/api/favoritos` | Sí | Implementado |
+| PUT | `/api/favoritos/{recetaId}` | Sí | Implementado |
+| DELETE | `/api/favoritos/{recetaId}` | Sí | Implementado |
 | PUT | `/api/recetas/{id}/calificacion` | Sí | Propuesto |
 | DELETE | `/api/recetas/{id}/calificacion` | Sí | Propuesto |
 | GET | `/api/recetas/{id}/exportar` | No | Propuesto |
