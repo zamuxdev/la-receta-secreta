@@ -270,7 +270,7 @@ const apiPrueba = (() => {
       await esperar();
       const usuario = exigirUsuario();
       const ids = leer().favoritos.filter((f) => f.usuarioId === usuario.id).map((f) => f.recetaId);
-      return leer().recetas.filter((r) => ids.includes(r.id)).map(resumen);
+      return leer().recetas.filter((r) => ids.includes(r.id)).sort((a, b) => b.id - a.id).map(resumen);
     },
 
     async agregarFavorito(recetaId) {

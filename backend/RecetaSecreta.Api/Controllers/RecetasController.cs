@@ -1,11 +1,10 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
 using RecetaSecreta.Api.Data;
 using RecetaSecreta.Api.Dtos;
 using RecetaSecreta.Api.Models;
+using RecetaSecreta.Api.Seguridad;
 
 namespace RecetaSecreta.Api.Controllers;
 
@@ -26,9 +25,7 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
 
         return await consulta
             .OrderByDescending(r => r.CreadaEn)
-            .Select(r => new RecetaResumen(
-                r.Id, r.Nombre, r.Descripcion, r.Categoria.Nombre, r.Tiempo, r.Porciones, r.Foto,
-                r.Calificaciones.Average(c => (double?)c.Puntos), r.Calificaciones.Count))
+            .Select(Proyecciones.Resumen)
             .ToListAsync();
     }
 
@@ -37,7 +34,7 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<RecetaDetalle>> Obtener(int id)
     {
-        var usuarioId = UsuarioActualId();
+        var usuarioId = User.IdDeUsuario();
         var receta = await db.Recetas.AsNoTracking()
             .Where(r => r.Id == id)
             .Select(r => new RecetaDetalle(
@@ -58,7 +55,7 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
     public async Task<ActionResult<RecetaDetalle>> Crear(RecetaCrear datos)
     {
         // El token puede seguir siendo válido aunque la cuenta ya no exista.
-        var autor = await db.Usuarios.FindAsync(UsuarioActualId());
+        var autor = await db.Usuarios.FindAsync(User.IdDeUsuario());
         if (autor is null)
             return Unauthorized();
 
@@ -103,10 +100,6 @@ public class RecetasController(RecetaDbContext db) : ControllerBase
             autor.Nombre, EsMia: true, MiCalificacion: null);
         return CreatedAtAction(nameof(Obtener), new { id = receta.Id }, detalle);
     }
-
-    // El id del usuario viene en "sub" del token; es null si no hay sesión.
-    private int? UsuarioActualId() =>
-        int.TryParse(User.FindFirstValue(JwtRegisteredClaimNames.Sub), out var id) ? id : null;
 
     private static List<string> Limpiar(IEnumerable<string> textos) =>
         textos.Select(t => t.Trim()).Where(t => t.Length > 0).ToList();
