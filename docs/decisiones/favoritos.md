@@ -29,7 +29,7 @@ Un usuario puede ver la misma receta en la galería y abrir su detalle. Si guard
 **¿Por qué se redibuja la pantalla Favoritos cuando se quita el último item?**
 Al quitar el último favorito la lista queda vacía. En lugar de dejar un `<ul>` vacío, se llama a `dibujarPantallaFavoritos()` que muestra el mensaje "Todavía no tienes recetas guardadas" y oculta el botón CSV, que no tiene sentido sin favoritos (B9).
 
-**¿Por qué el botón CSV se desactiva (`disabled`) cuando la lista está vacía?**
+**¿Por qué el botón CSV no se muestra cuando la lista está vacía?**
 El requisito B9 dice que sin favoritos el botón no se puede usar. Se optó por no mostrarlo en ese caso (se redibuja la pantalla con el mensaje vacío) en lugar de mostrarlo desactivado, porque no aporta información al usuario cuando no hay nada que descargar.
 
 ## 4. Cómo se prueba

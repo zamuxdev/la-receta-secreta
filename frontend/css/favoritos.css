@@ -32,7 +32,8 @@
 
 .btn-favorito[aria-pressed="true"]:hover,
 .btn-favorito[aria-pressed="true"]:focus-visible {
-  background-color: #1d3f2c;
+  background-color: #28563c;
+  opacity: 0.85;
 }
 
 .btn-favorito:disabled {
