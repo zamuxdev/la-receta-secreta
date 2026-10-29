@@ -96,7 +96,10 @@
 
     const aviso = document.createElement('p');
     aviso.className = 'favorito-aviso';
-    aviso.innerHTML = '<a href="#/acceso">Inicia sesión</a> para guardar favoritos.';
+    const enlaceAviso = document.createElement('a');
+    enlaceAviso.href = '#/acceso';
+    enlaceAviso.textContent = 'Inicia sesión';
+    aviso.append(enlaceAviso, ' para guardar favoritos.');
 
     if (contenedor) {
       // Reemplazar solo el aviso si ya hay uno
@@ -131,7 +134,10 @@
     if (!api.haySesion()) {
       const aviso = document.createElement('p');
       aviso.className = 'favorito-aviso';
-      aviso.innerHTML = '<a href="#/acceso">Inicia sesión</a> para guardar esta receta en favoritos.';
+      const enlace = document.createElement('a');
+      enlace.href = '#/acceso';
+      enlace.textContent = 'Inicia sesión';
+      aviso.append(enlace, ' para guardar esta receta en favoritos.');
       ranura.append(aviso);
       return;
     }
@@ -153,7 +159,10 @@
       if (!api.haySesion()) {
         const aviso = document.createElement('p');
         aviso.className = 'favorito-aviso';
-        aviso.innerHTML = '<a href="#/acceso">Inicia sesión</a> para guardar.';
+        const enlace = document.createElement('a');
+        enlace.href = '#/acceso';
+        enlace.textContent = 'Inicia sesión';
+        aviso.append(enlace, ' para guardar.');
         acciones.append(aviso);
         return;
       }
@@ -178,7 +187,10 @@
     if (!api.haySesion()) {
       const aviso = document.createElement('p');
       aviso.className = 'favorito-aviso';
-      aviso.innerHTML = '<a href="#/acceso">Inicia sesión</a> para ver tus recetas favoritas.';
+      const enlace = document.createElement('a');
+      enlace.href = '#/acceso';
+      enlace.textContent = 'Inicia sesión';
+      aviso.append(enlace, ' para ver tus recetas favoritas.');
       pantalla.append(aviso);
       return;
     }
@@ -297,7 +309,10 @@
         if (!api.haySesion()) {
           const aviso = document.createElement('p');
           aviso.className = 'favorito-aviso';
-          aviso.innerHTML = '<a href="#/acceso">Inicia sesión</a> para guardar.';
+          const enlace = document.createElement('a');
+          enlace.href = '#/acceso';
+          enlace.textContent = 'Inicia sesión';
+          aviso.append(enlace, ' para guardar.');
           acciones.append(aviso);
         } else {
           acciones.append(crearBoton(recetaId, idsActuales.has(recetaId)));
@@ -318,7 +333,10 @@
           ranura.replaceChildren();
           const aviso = document.createElement('p');
           aviso.className = 'favorito-aviso';
-          aviso.innerHTML = '<a href="#/acceso">Inicia sesión</a> para guardar esta receta en favoritos.';
+          const enlace = document.createElement('a');
+          enlace.href = '#/acceso';
+          enlace.textContent = 'Inicia sesión';
+          aviso.append(enlace, ' para guardar esta receta en favoritos.');
           ranura.append(aviso);
         }
       }
