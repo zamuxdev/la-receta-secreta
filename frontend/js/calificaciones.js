@@ -11,12 +11,22 @@
 // Eventos útiles: 'receta-mostrada' (trae la receta completa) y 'pantalla-mostrada'.
 
 (() => {
-  document.addEventListener('receta-mostrada', () => {
-    // TODO: dibujar las estrellas y el promedio en #detalle-calificacion.
-  });
+  const ranura = document.getElementById('detalle-calificacion');
 
-  document.addEventListener('pantalla-mostrada', (evento) => {
-    if (evento.detail.id !== 'mejor-valoradas') return;
-    // TODO: dibujar la lista de recetas mejor valoradas.
-  });
+  // Texto del promedio con un decimal, como "4.5 de 5 (2 calificaciones)".
+  function textoPromedio(receta) {
+    if (!receta.totalCalificaciones) return 'Sin calificaciones todavía.';
+    const total = receta.totalCalificaciones;
+    const etiqueta = total === 1 ? '1 calificación' : total + ' calificaciones';
+    return receta.promedio.toFixed(1) + ' de 5 (' + etiqueta + ')';
+  }
+
+  function mostrarPromedio({ receta }) {
+    const resumen = document.createElement('p');
+    resumen.className = 'calificaciones-promedio';
+    resumen.textContent = textoPromedio(receta);
+    ranura.replaceChildren(resumen);
+  }
+
+  document.addEventListener('receta-mostrada', (evento) => mostrarPromedio(evento.detail));
 })();
