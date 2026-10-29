@@ -17,6 +17,9 @@
   // Set con los ids de las recetas que son favoritas del usuario actual.
   let idsActuales = new Set();
 
+  // Contador de carga del detalle para evitar condición de carrera (B1/B2)
+  let cargaDetalleFav = 0;
+
   // ── Helpers ────────────────────────────────────────────────────────────────
   function crearBoton(recetaId, esFavorita) {
     const boton = document.createElement('button');
@@ -33,24 +36,45 @@
     boton.textContent = esFavorita ? '♥ Quitar de favoritos' : '♡ Guardar en favoritos';
   }
 
+  // Crea un párrafo de aviso "Inicia sesión para <texto>" con role="status".
+  function crearAvisoSesion(texto) {
+    const aviso = document.createElement('p');
+    aviso.className = 'favorito-aviso';
+    aviso.setAttribute('role', 'status');
+    aviso.setAttribute('aria-live', 'polite');
+    const enlace = document.createElement('a');
+    enlace.href = '#/acceso';
+    enlace.textContent = 'Inicia sesión';
+    aviso.append(enlace, ' ' + texto);
+    return aviso;
+  }
+
   // ── Cargar la lista de favoritos del usuario ────────────────────────────────
+  // Devuelve true si tuvo éxito, false si falló (para que el llamador pueda avisar).
   async function cargarIdsActuales() {
     if (!api.haySesion()) {
       idsActuales = new Set();
-      return;
+      return true;
     }
     try {
       const lista = await api.listarFavoritos();
       idsActuales = new Set(lista.map((r) => r.id));
-    } catch {
+      return true;
+    } catch (error) {
       idsActuales = new Set();
+      return error; // devuelve el error para que el llamador lo muestre si quiere
     }
   }
 
   // ── Toggle favorito (detalle y tarjetas) ───────────────────────────────────
   async function toggleFavorito(boton) {
     if (!api.haySesion()) {
-      mostrarMensajeSinSesion(boton.closest('#detalle-acciones') ? 'detalle' : 'tarjeta');
+      // Mostrar aviso dentro del contenedor del botón
+      const contenedor = boton.parentElement;
+      const avisoExistente = contenedor.querySelector('.favorito-aviso');
+      if (!avisoExistente) {
+        contenedor.append(crearAvisoSesion('para guardar favoritos.'));
+      }
       return;
     }
 
@@ -72,10 +96,13 @@
       }
       // Sincronizar todos los botones con ese id (tarjeta + detalle)
       sincronizarBotones(recetaId, nuevaEsFavorita);
+      // Limpiar error previo si lo había
+      const errorPrevio = boton.parentElement.querySelector('.favorito-error');
+      if (errorPrevio) errorPrevio.remove();
     } catch (error) {
       // Revertir si falló
       actualizarBoton(boton, eraFavorita);
-      mostrarError(boton, error);
+      mostrarError(boton.parentElement, error);
     } finally {
       boton.disabled = false;
     }
@@ -88,68 +115,51 @@
     });
   }
 
-  // ── Mensajes de error y sin sesión ─────────────────────────────────────────
-  function mostrarMensajeSinSesion(contexto) {
-    const contenedor = contexto === 'detalle'
-      ? document.getElementById('detalle-acciones')
-      : null;
-
-    const aviso = document.createElement('p');
-    aviso.className = 'favorito-aviso';
-    const enlaceAviso = document.createElement('a');
-    enlaceAviso.href = '#/acceso';
-    enlaceAviso.textContent = 'Inicia sesión';
-    aviso.append(enlaceAviso, ' para guardar favoritos.');
-
-    if (contenedor) {
-      // Reemplazar solo el aviso si ya hay uno
-      const existente = contenedor.querySelector('.favorito-aviso');
-      if (existente) existente.replaceWith(aviso);
-      else contenedor.append(aviso);
-    }
-  }
-
-  function mostrarError(boton, error) {
+  // ── Mensajes de error ──────────────────────────────────────────────────────
+  // Muestra el error dentro del contenedor dado, reemplazando el anterior si existe.
+  function mostrarError(contenedor, error) {
     const texto = error && typeof error.textoParaUsuario === 'function'
       ? error.textoParaUsuario()
       : 'No se pudo completar la operación.';
-    // Mostrar el error cerca del botón sin romper el layout
-    let aviso = boton.nextElementSibling;
-    if (!aviso || !aviso.classList.contains('favorito-error')) {
+
+    let aviso = contenedor.querySelector('.favorito-error');
+    if (!aviso) {
       aviso = document.createElement('p');
       aviso.className = 'favorito-error';
-      boton.after(aviso);
+      aviso.setAttribute('role', 'alert');
+      aviso.setAttribute('aria-live', 'assertive');
+      contenedor.append(aviso);
     }
     aviso.textContent = texto;
-    // Limpiar después de 4 segundos
-    setTimeout(() => aviso.remove(), 4000);
   }
 
   // ── B1 / B2 / B3 — Botón en el detalle ────────────────────────────────────
   document.addEventListener('receta-mostrada', async (evento) => {
     const receta = evento.detail.receta;
+    const numero = ++cargaDetalleFav;
     const ranura = document.getElementById('detalle-acciones');
     ranura.replaceChildren();
 
     if (!api.haySesion()) {
-      const aviso = document.createElement('p');
-      aviso.className = 'favorito-aviso';
-      const enlace = document.createElement('a');
-      enlace.href = '#/acceso';
-      enlace.textContent = 'Inicia sesión';
-      aviso.append(enlace, ' para guardar esta receta en favoritos.');
-      ranura.append(aviso);
+      ranura.append(crearAvisoSesion('para guardar esta receta en favoritos.'));
       return;
     }
 
-    await cargarIdsActuales();
-    const esFavorita = idsActuales.has(receta.id);
-    ranura.append(crearBoton(receta.id, esFavorita));
+    const resultado = await cargarIdsActuales();
+    // Si llegó una carga más nueva mientras esperábamos, descartar esta
+    if (numero !== cargaDetalleFav) return;
+
+    if (resultado instanceof Error) {
+      mostrarError(ranura, resultado);
+      return;
+    }
+
+    ranura.append(crearBoton(receta.id, idsActuales.has(receta.id)));
   });
 
   // ── B4 — Botón en cada tarjeta ─────────────────────────────────────────────
   document.addEventListener('tarjetas-dibujadas', async () => {
-    await cargarIdsActuales();
+    const resultado = await cargarIdsActuales();
 
     document.querySelectorAll('.tarjeta[data-receta-id]').forEach((tarjeta) => {
       const recetaId = Number(tarjeta.dataset.recetaId);
@@ -157,18 +167,16 @@
       if (!acciones) return;
 
       if (!api.haySesion()) {
-        const aviso = document.createElement('p');
-        aviso.className = 'favorito-aviso';
-        const enlace = document.createElement('a');
-        enlace.href = '#/acceso';
-        enlace.textContent = 'Inicia sesión';
-        aviso.append(enlace, ' para guardar.');
-        acciones.append(aviso);
+        acciones.append(crearAvisoSesion('para guardar.'));
         return;
       }
 
-      const esFavorita = idsActuales.has(recetaId);
-      acciones.append(crearBoton(recetaId, esFavorita));
+      if (resultado instanceof Error) {
+        mostrarError(acciones, resultado);
+        return;
+      }
+
+      acciones.append(crearBoton(recetaId, idsActuales.has(recetaId)));
     });
   });
 
@@ -185,13 +193,7 @@
     pantalla.replaceChildren(h1);
 
     if (!api.haySesion()) {
-      const aviso = document.createElement('p');
-      aviso.className = 'favorito-aviso';
-      const enlace = document.createElement('a');
-      enlace.href = '#/acceso';
-      enlace.textContent = 'Inicia sesión';
-      aviso.append(enlace, ' para ver tus recetas favoritas.');
-      pantalla.append(aviso);
+      pantalla.append(crearAvisoSesion('para ver tus recetas favoritas.'));
       return;
     }
 
@@ -213,7 +215,7 @@
         return;
       }
 
-      // B9 — Botón Descargar CSV
+      // B9 — Botón Descargar CSV (solo visible cuando hay favoritos)
       const btnDescarga = document.createElement('button');
       btnDescarga.type = 'button';
       btnDescarga.id = 'btn-descargar-csv';
@@ -238,7 +240,7 @@
       // Lista de recetas favoritas
       const ul = document.createElement('ul');
       ul.className = 'lista-favoritos';
-      lista.forEach((receta) => ul.append(crearItemFavorito(receta, ul, estado, pantalla)));
+      lista.forEach((receta) => ul.append(crearItemFavorito(receta, ul, estado)));
       pantalla.append(ul);
 
     } catch (error) {
@@ -248,7 +250,7 @@
     }
   }
 
-  function crearItemFavorito(receta, lista, estado, pantalla) {
+  function crearItemFavorito(receta, lista, estado) {
     const li = document.createElement('li');
     li.className = 'favorito-item';
     li.dataset.recetaId = receta.id;
@@ -294,31 +296,24 @@
     // Limpiar el estado en memoria
     idsActuales = new Set();
 
-    // Actualizar botones en las tarjetas visibles
-    const tarjetas = document.querySelectorAll('.tarjeta[data-receta-id]');
-    if (tarjetas.length > 0) {
-      if (api.haySesion()) {
-        await cargarIdsActuales();
-      }
-      tarjetas.forEach((tarjeta) => {
-        const recetaId = Number(tarjeta.dataset.recetaId);
-        const acciones = tarjeta.querySelector('.tarjeta-acciones');
-        if (!acciones) return;
-        acciones.replaceChildren();
-
-        if (!api.haySesion()) {
-          const aviso = document.createElement('p');
-          aviso.className = 'favorito-aviso';
-          const enlace = document.createElement('a');
-          enlace.href = '#/acceso';
-          enlace.textContent = 'Inicia sesión';
-          aviso.append(enlace, ' para guardar.');
-          acciones.append(aviso);
-        } else {
-          acciones.append(crearBoton(recetaId, idsActuales.has(recetaId)));
-        }
-      });
+    // Cargar favoritos si hay sesión activa
+    if (api.haySesion()) {
+      await cargarIdsActuales();
     }
+
+    // Actualizar botones en las tarjetas visibles
+    document.querySelectorAll('.tarjeta[data-receta-id]').forEach((tarjeta) => {
+      const recetaId = Number(tarjeta.dataset.recetaId);
+      const acciones = tarjeta.querySelector('.tarjeta-acciones');
+      if (!acciones) return;
+      acciones.replaceChildren();
+
+      if (!api.haySesion()) {
+        acciones.append(crearAvisoSesion('para guardar.'));
+      } else {
+        acciones.append(crearBoton(recetaId, idsActuales.has(recetaId)));
+      }
+    });
 
     // Actualizar botón en el detalle si está visible
     const ranura = document.getElementById('detalle-acciones');
@@ -327,17 +322,10 @@
       if (botonDetalle) {
         const recetaId = Number(botonDetalle.dataset.recetaId);
         if (api.haySesion()) {
-          await cargarIdsActuales();
           actualizarBoton(botonDetalle, idsActuales.has(recetaId));
         } else {
           ranura.replaceChildren();
-          const aviso = document.createElement('p');
-          aviso.className = 'favorito-aviso';
-          const enlace = document.createElement('a');
-          enlace.href = '#/acceso';
-          enlace.textContent = 'Inicia sesión';
-          aviso.append(enlace, ' para guardar esta receta en favoritos.');
-          ranura.append(aviso);
+          ranura.append(crearAvisoSesion('para guardar esta receta en favoritos.'));
         }
       }
     }
