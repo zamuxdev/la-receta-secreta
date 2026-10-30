@@ -8,14 +8,14 @@ Permite **crear una cuenta**, **entrar** con correo y contraseña, ver **quién 
 
 En la pantalla **Publicar**, cada error aparece **junto a su campo** (por ejemplo, el tiempo en 0 o el nombre vacío), y si no hay sesión se muestra un **aviso** con enlaces para entrar o crear una cuenta.
 
-Pendiente en este módulo: "Mis recetas" con editar y borrar (Y9 a Y11).
+Con la sesión iniciada, la pantalla Acceso muestra **Mis recetas**: la lista de las recetas que publicaste, cada una con su enlace al detalle y los botones **Editar** (abre el formulario lleno, que guarda los cambios) y **Borrar** (pide confirmación).
 
 ## 2. Archivos
 
 | Archivo | Para qué sirve |
 |---|---|
-| `frontend/js/acceso.js` | La lógica de las pantallas Acceso y Crear cuenta: valida los datos, llama a la API, muestra los errores y el saludo. |
-| `frontend/js/publicar.js` | El formulario Publicar: valida la receta, la envía con `api.crearReceta`, muestra los errores por campo y el aviso de sesión. También importa y exporta la receta en JSON. |
+| `frontend/js/acceso.js` | La lógica de las pantallas Acceso y Crear cuenta: valida los datos, llama a la API, muestra los errores y el saludo. También dibuja "Mis recetas" y borra recetas. |
+| `frontend/js/publicar.js` | El formulario Publicar: valida la receta, la envía con `api.crearReceta` (o `api.actualizarReceta` al editar), muestra los errores por campo y el aviso de sesión. También importa y exporta la receta en JSON. |
 | `frontend/css/acceso.css` | Estilos de los mensajes de error (también los de Publicar), del recuadro "Hola, [nombre]", del aviso de sesión y del botón a lo ancho en el celular. |
 | `frontend/index.html` (bloques Acceso, Registro y Publicar) | Los formularios: campos con su `label`, un párrafo de error por campo y el mensaje general con `role="status"`. En Publicar, además, el aviso de sesión. |
 
@@ -36,6 +36,15 @@ Pendiente en este módulo: "Mis recetas" con editar y borrar (Y9 a Y11).
 - **Sin sesión no se llama a la API.** El aviso "Para publicar una receta necesitas una cuenta" aparece arriba desde que se abre la pantalla, y al intentar publicar se lleva el foco a él. Si la API responde 401 (por ejemplo, porque la sesión venció), se muestra el mismo aviso. Importar y exportar JSON sí funciona sin sesión, porque no usa el servidor.
 - **Al importar un JSON con errores** se muestran todos juntos en el mensaje general, porque los datos todavía no están en el formulario.
 - **`publicar.js` se envolvió en `(() => { ... })();`**, como los demás módulos, para que sus variables no choquen con las de otros archivos.
+
+### Mis recetas, editar y borrar (Y9 a Y11)
+
+- **"Mis recetas" está en la pantalla Acceso, debajo del saludo**, y solo aparece con sesión. Se pide con `api.misRecetas()` cada vez que se abre la pantalla o cambia la sesión, así que siempre está al día. Las recetas de ejemplo no salen porque no tienen autor.
+- **Editar reutiliza el formulario de Publicar** en la ruta `#/publicar/<id>`, en lugar de hacer otra pantalla. `publicar.js` recibe el `id` en el evento `pantalla-mostrada`, pide la receta con `api.obtenerReceta(id)`, llena el formulario y cambia el título a "Editar receta" y el botón a "Guardar cambios". Al enviar usa `api.actualizarReceta(id, datos)`. Las mismas validaciones y errores por campo sirven para publicar y para editar.
+- **Si la receta no es tuya, no se llena el formulario**: se revisa `esMia` antes, y si aun así el servidor responde 403 o 404 al guardar, se muestra un mensaje claro. Si al volver a `#/publicar` se venía de editar, el formulario queda vacío para publicar una nueva. Si solo saliste a mirar algo mientras escribías una receta nueva, no se borra lo que llevabas.
+- **Borrar pide confirmación con `confirm()`**, porque no se puede deshacer. Después se vuelve a pedir la lista, y el foco pasa al título "Mis recetas" porque el botón pulsado ya no existe. La galería se actualiza sola, porque `catalogo.js` la vuelve a pedir cada vez que se abre Recetas.
+- **Los botones Editar y Borrar dicen el nombre de la receta a los lectores de pantalla** (`aria-label="Borrar Tacos..."`), porque en una lista con varios "Borrar" no se sabría cuál es cuál.
+- **Si el servidor contesta tarde** (por ejemplo, abriste otra receta antes de que llegara la primera), la respuesta vieja se ignora para no llenar el formulario con datos equivocados.
 
 ## 4. Cómo se prueba
 
@@ -58,8 +67,16 @@ Publicar:
 4. Con todo bien y sin sesión, pulsa **Agregar al recetario**: no se publica y se señala el aviso.
 5. Entra con el usuario de prueba y vuelve a Publicar: el aviso ya no aparece y la receta se publica y abre su detalle.
 
+Mis recetas, editar y borrar:
+
+1. Entra con el usuario de prueba. En Acceso, debajo del saludo, dice "Todavía no has publicado recetas" con un enlace para publicar. Las tres recetas de ejemplo no aparecen.
+2. Publica una receta y vuelve a Acceso: aparece en la lista, y su nombre lleva a su detalle.
+3. Pulsa **Editar**: se abre el formulario lleno, con el título "Editar receta" y el botón "Guardar cambios". Cambia el tiempo y guarda: el detalle muestra el tiempo nuevo.
+4. Abre `#/publicar/1` (una receta de ejemplo): dice "Solo quien publicó la receta puede editarla." Abre `#/publicar/999`: dice que no se encontró.
+5. Abre **Publicar** desde el menú: el formulario está vacío para una receta nueva.
+6. En Acceso, pulsa **Borrar** y cancela: no pasa nada. Pulsa de nuevo y acepta: desaparece de la lista y de la galería.
+
 ## 5. Qué falta o qué limitaciones tiene
 
-- Falta Y9 a Y11 (Mis recetas, editar y borrar).
 - No hay "olvidé mi contraseña", porque la API no lo tiene.
 - Con los datos de prueba, las cuentas se guardan solo en el navegador. Con la API real se guardan en la base de datos.

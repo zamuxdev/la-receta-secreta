@@ -64,3 +64,39 @@
   max-width: 600px;
   margin-bottom: 24px;
 }
+
+/* Mis recetas: cada receta en un renglón con su enlace, sus datos y los botones. */
+.mis-recetas {
+  max-width: 600px;
+  margin-top: 32px;
+}
+.lista-mis-recetas {
+  padding: 0;
+  list-style: none;
+}
+.mi-receta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 12px 16px;
+  border: 1px solid #d9d9cc;
+  border-radius: 8px;
+  background-color: white;
+}
+.mi-receta a {
+  font-weight: bold;
+}
+.mi-receta-meta {
+  color: #555;
+  font-size: 15px;
+}
+.mi-receta-acciones {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.mi-receta-acciones button {
+  margin-top: 0;
+  padding: 8px 14px;
+}

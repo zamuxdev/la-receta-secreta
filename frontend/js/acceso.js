@@ -4,6 +4,7 @@
 //
 // Pantallas de este archivo:
 //   - "Acceso" (#/acceso): entrar con correo y contraseña, ver quién tiene la sesión y cerrarla.
+//     Con sesión, también "Mis recetas": la lista de recetas propias con Editar y Borrar.
 //   - "Crear cuenta" (#/registro): crear una cuenta nueva y entrar con ella.
 //
 // Los errores se muestran junto a su campo: primero los de la validación en el navegador y,
@@ -18,6 +19,10 @@
   const nombreUsuario = document.getElementById('nombre-usuario');
   const botonCerrar = document.getElementById('cerrar-sesion');
   const sinCuenta = document.getElementById('acceso-sin-cuenta');
+  const seccionMisRecetas = document.getElementById('mis-recetas');
+  const estadoMisRecetas = document.getElementById('estado-mis-recetas');
+  const listaMisRecetas = document.getElementById('lista-mis-recetas');
+  const pantallaAcceso = document.getElementById('acceso');
 
   const formularioRegistro = document.getElementById('formulario-registro');
   const estadoRegistro = document.getElementById('estado-registro');
@@ -119,6 +124,104 @@
     formularioAcceso.hidden = Boolean(conSesion);
     sinCuenta.hidden = Boolean(conSesion);
     nombreUsuario.textContent = conSesion ? usuario.nombre : '';
+    seccionMisRecetas.hidden = !conSesion;
+    if (!conSesion) {
+      listaMisRecetas.replaceChildren();
+      estadoMisRecetas.textContent = '';
+    } else if (!pantallaAcceso.hidden) {
+      // Solo se piden las recetas si la pantalla Acceso está a la vista.
+      cargarMisRecetas();
+    }
+  }
+
+  // --- Mis recetas (RF-14) ---
+
+  // Cuenta las cargas para ignorar una respuesta vieja si se pidió otra después.
+  let cargaActual = 0;
+
+  async function cargarMisRecetas() {
+    const carga = ++cargaActual;
+    estadoMisRecetas.textContent = 'Cargando tus recetas...';
+    try {
+      const recetas = await api.misRecetas();
+      if (carga !== cargaActual) return;
+      dibujarMisRecetas(recetas);
+    } catch (error) {
+      if (carga !== cargaActual) return;
+      listaMisRecetas.replaceChildren();
+      estadoMisRecetas.textContent = error instanceof ErrorApi
+        ? error.textoParaUsuario()
+        : 'No se pudieron cargar tus recetas. Inténtalo de nuevo.';
+    }
+  }
+
+  function dibujarMisRecetas(recetas) {
+    listaMisRecetas.replaceChildren();
+    if (!recetas.length) {
+      // Mensaje que invita a publicar, hecho con nodos y no como HTML.
+      const enlace = document.createElement('a');
+      enlace.href = '#/publicar';
+      enlace.textContent = 'Publica tu primera receta';
+      estadoMisRecetas.replaceChildren('Todavía no has publicado recetas. ', enlace, '.');
+      return;
+    }
+    estadoMisRecetas.textContent = recetas.length === 1 ? 'Tienes 1 receta publicada.' : `Tienes ${recetas.length} recetas publicadas.`;
+    for (const receta of recetas) listaMisRecetas.append(elementoReceta(receta));
+  }
+
+  function elementoReceta(receta) {
+    const item = document.createElement('li');
+    item.className = 'mi-receta';
+
+    const enlace = document.createElement('a');
+    enlace.href = '#/receta/' + receta.id;
+    enlace.textContent = receta.nombre;
+
+    const meta = document.createElement('span');
+    meta.className = 'mi-receta-meta';
+    meta.textContent = `${receta.categoria} · ${receta.tiempo} min`;
+
+    // El nombre de la receta va en aria-label para que el lector de pantalla diga qué se edita o borra.
+    const editar = document.createElement('button');
+    editar.type = 'button';
+    editar.textContent = 'Editar';
+    editar.setAttribute('aria-label', 'Editar ' + receta.nombre);
+    editar.addEventListener('click', () => {
+      window.location.hash = '#/publicar/' + receta.id;
+    });
+
+    const borrar = document.createElement('button');
+    borrar.type = 'button';
+    borrar.textContent = 'Borrar';
+    borrar.setAttribute('aria-label', 'Borrar ' + receta.nombre);
+    borrar.addEventListener('click', () => borrarReceta(receta, borrar));
+
+    const acciones = document.createElement('div');
+    acciones.className = 'mi-receta-acciones';
+    acciones.append(editar, borrar);
+
+    item.append(enlace, meta, acciones);
+    return item;
+  }
+
+  async function borrarReceta(receta, boton) {
+    // confirm() pide confirmación porque borrar no se puede deshacer.
+    if (!confirm(`¿Borrar la receta "${receta.nombre}"? Esta acción no se puede deshacer.`)) return;
+    boton.disabled = true;
+    estadoMisRecetas.textContent = 'Borrando la receta...';
+    try {
+      await api.eliminarReceta(receta.id);
+      await cargarMisRecetas();
+      // Se antepone al mensaje de la lista ("Tienes 2 recetas..." o la invitación a publicar).
+      estadoMisRecetas.prepend(`Se borró la receta "${receta.nombre}". `);
+      // El foco vuelve al título de la sección, porque el botón ya no existe.
+      document.getElementById('titulo-mis-recetas').focus();
+    } catch (error) {
+      boton.disabled = false;
+      estadoMisRecetas.textContent = error instanceof ErrorApi
+        ? error.textoParaUsuario()
+        : 'No se pudo borrar la receta. Inténtalo de nuevo.';
+    }
   }
 
   formularioAcceso.addEventListener('submit', async (evento) => {
