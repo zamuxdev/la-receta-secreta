@@ -8,7 +8,7 @@
 //     (receta.esMia) y cada persona tiene una sola calificación por receta (receta.miCalificacion).
 //   - La pantalla "Mejor valoradas" (#/mejor-valoradas): la lista de api.recetasMejorValoradas().
 //
-// Eventos útiles: 'receta-mostrada' (trae la receta completa) y 'pantalla-mostrada'.
+// Eventos útiles: 'receta-mostrada' (trae la receta completa), 'sesion-cambiada' y 'pantalla-mostrada'.
 
 (() => {
   const ranura = document.getElementById('detalle-calificacion');
@@ -66,8 +66,34 @@
     return boton;
   }
 
+  // Habilita o deshabilita las estrellas y el botón de quitar según las reglas.
+  function habilitarControles() {
+    const habilitado = !recetaActual.esMia && api.haySesion();
+    for (const boton of grupoEl.children) boton.disabled = !habilitado;
+    if (!quitarBoton.hidden) quitarBoton.disabled = !habilitado;
+  }
+
+  // Muestra el aviso correcto según las reglas: receta propia o sin sesión.
+  function aplicarReglas() {
+    habilitarControles();
+    if (recetaActual.esMia) {
+      estadoEl.textContent = 'No puedes calificar tus propias recetas.';
+      return;
+    }
+    if (!api.haySesion()) {
+      estadoEl.replaceChildren();
+      const enlace = document.createElement('a');
+      enlace.href = '#/acceso';
+      enlace.textContent = 'Inicia sesión';
+      estadoEl.append(enlace, ' para calificar esta receta.');
+      return;
+    }
+    estadoEl.textContent = '';
+  }
+
   function dibujar(receta) {
     recetaActual = receta;
+    peticion++; // descarta votos en curso si cambia la receta o la sesión
     ranura.replaceChildren();
 
     promedioEl = document.createElement('p');
@@ -92,24 +118,16 @@
     ranura.append(promedioEl, grupoEl, quitarBoton, estadoEl);
     pintarEstrellas(receta.miCalificacion);
     pintarQuitar();
+    aplicarReglas();
   }
 
   async function calificar(puntos) {
-    if (!recetaActual) return;
-
-    // Reglas del contrato: no se puede calificar sin sesión ni la propia receta.
-    if (recetaActual.esMia) {
-      estadoEl.textContent = 'No puedes calificar tus propias recetas.';
-      return;
-    }
-    if (!api.haySesion()) {
-      estadoEl.textContent = 'Inicia sesión para calificar.';
-      return;
-    }
+    if (!recetaActual || recetaActual.esMia || !api.haySesion()) return;
 
     const numero = ++peticion;
     estadoEl.textContent = 'Guardando calificación...';
     for (const boton of grupoEl.children) boton.disabled = true;
+    quitarBoton.disabled = true;
     try {
       const resultado = await api.calificar(recetaActual.id, puntos);
       if (numero !== peticion) return;
@@ -124,9 +142,7 @@
       if (numero !== peticion) return;
       estadoEl.textContent = mensajeDeError(error);
     } finally {
-      if (numero === peticion) {
-        for (const boton of grupoEl.children) boton.disabled = false;
-      }
+      if (numero === peticion) habilitarControles();
     }
   }
 
@@ -135,8 +151,8 @@
 
     const numero = ++peticion;
     estadoEl.textContent = 'Quitando calificación...';
-    quitarBoton.disabled = true;
     for (const boton of grupoEl.children) boton.disabled = true;
+    quitarBoton.disabled = true;
     try {
       const resultado = await api.quitarCalificacion(recetaActual.id);
       if (numero !== peticion) return;
@@ -151,12 +167,20 @@
       if (numero !== peticion) return;
       estadoEl.textContent = mensajeDeError(error);
     } finally {
-      if (numero === peticion) {
-        quitarBoton.disabled = false;
-        for (const boton of grupoEl.children) boton.disabled = false;
-      }
+      if (numero === peticion) habilitarControles();
     }
   }
 
   document.addEventListener('receta-mostrada', (evento) => dibujar(evento.detail.receta));
+
+  // Si alguien entra o sale de su cuenta mientras ve una receta, se refrescan las reglas.
+  document.addEventListener('sesion-cambiada', async () => {
+    if (!recetaActual || ranura.closest('[hidden]')) return;
+    try {
+      const receta = await api.obtenerReceta(recetaActual.id);
+      dibujar(receta);
+    } catch {
+      // Si no se pudo recargar, se queda como estaba.
+    }
+  });
 })();
