@@ -32,6 +32,8 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 - **Sin sesión, se desactivan las estrellas y se muestra un enlace a Acceso.** Así no se intenta calificar sin permiso y la persona sabe cómo seguir. Se usa el mismo estilo de aviso que el módulo de Favoritos.
 - **En una receta propia, las estrellas se desactivan y se explica por qué.** El servidor devuelve 403, pero es mejor prevenir y explicar con "No puedes calificar tus propias recetas." en lugar de dejar que aparezca un error.
 - **Escuchar `sesion-cambiada`.** Si alguien entra o sale de su cuenta mientras ve la receta, se vuelve a pedir la receta para refrescar las reglas y `miCalificacion`.
+- **Si esa recarga falla, no se deja la calificación anterior.** Ya no se sabe cuál es la calificación de la sesión nueva, así que se borran las estrellas marcadas. Sin sesión se muestra el aviso de "Inicia sesión"; con sesión las estrellas quedan desactivadas con el mensaje del error y "Recarga la página para calificar.".
+- **Al pasar el mouse o el foco por una estrella se pintan también las anteriores.** Así se ve cómo quedaría la calificación antes de tocarla. Se hace solo con CSS (`:has()` y `~`), sin cambiar el orden de los botones, para no afectar el teclado ni los lectores de pantalla.
 - **En "Mejor valoradas" se confía en el orden del servidor.** `api.recetasMejorValoradas()` ya entrega las recetas ordenadas por promedio y sin las que no tienen calificaciones, así que no se reordena en la interfaz.
 - **Mensajes de "Mejor valoradas" claros y sin pantalla en blanco.** Mientras carga se muestra "Cargando...", si nadie ha calificado se explica con un enlace al recetario, y si falla se muestra el mensaje del error.
 - **Mostrar el promedio con un decimal.** El contrato entrega el número sin redondear (por ejemplo `3.6666666666666665`); un decimal es fácil de leer y no pierde información importante.
@@ -47,7 +49,8 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 4. Al entrar, las estrellas se activan y puedes calificar. Toca una estrella: el promedio cambia al instante, sin recargar. Toca otra para reemplazarla y "Quitar calificación" para eliminarla.
 5. **Receta propia:** publica una receta con el usuario de prueba y ábrela. Debe decir "No puedes calificar tus propias recetas." con las estrellas desactivadas.
 6. **Mejor valoradas:** abre la pantalla desde el menú. Aparecen solo las recetas con calificaciones, la mejor primero, cada una con su promedio y su enlace. Si ninguna tiene calificaciones, se ve el mensaje de que todavía nadie ha calificado.
-7. **Teclado y celular:** recorre las estrellas con Tab y actívalas con Enter; deben marcarse el foco y funcionar. En una ventana angosta (celular), las estrellas, el botón de quitar y la lista se ven sin desbordarse.
+7. **Teclado y celular:** recorre las estrellas con Tab y actívalas con Enter; deben marcarse el foco y funcionar. Al pasar el mouse (o el foco) por la tercera estrella se pintan las tres primeras.
+8. **Falla al cambiar de sesión:** con una receta abierta, en la consola escribe `api.obtenerReceta = async () => { throw new ErrorApi(500, 'Falló.') }` y luego `api.cerrarSesion()`. Las estrellas deben quedar sin marcar y desactivadas, con el aviso de "Inicia sesión". En una ventana angosta (celular), las estrellas, el botón de quitar y la lista se ven sin desbordarse.
 
 ## 5. Qué falta o qué limitaciones tiene
 
@@ -59,4 +62,5 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 - **Archivos tocados:** `calificaciones.js` dibuja el detalle y la pantalla de mejor valoradas, `calificaciones.css` les da estilo, `index.html` (solo el bloque de mi pantalla) y este documento.
 - **Cómo se conecta:** escucha `receta-mostrada`, `sesion-cambiada` y `pantalla-mostrada`, y usa `api.calificar`, `api.quitarCalificacion`, `api.obtenerReceta` y `api.recetasMejorValoradas`.
 - **Decisiones:** las estrellas son botones accesibles, el orden de "Mejor valoradas" viene del servidor, y todo se actualiza sin recargar.
+- **Ajustes posteriores:** al pasar el mouse se pintan también las estrellas anteriores, y si al cambiar de sesión no se puede recargar la receta, las estrellas se limpian y se desactivan en vez de quedarse como estaban.
 - **Cómo probarlo:** califica varias recetas con el usuario de prueba y abre "Mejor valoradas" para verlas ordenadas; comprueba también los avisos de sesión y de receta propia.
