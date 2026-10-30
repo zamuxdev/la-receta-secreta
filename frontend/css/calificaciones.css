@@ -37,3 +37,17 @@
   min-height: 1.2em;
   margin: 4px 0 0;
 }
+
+.quitar-calificacion {
+  margin: 10px 0 0;
+  padding: 6px 14px;
+  background: none;
+  border: 1px solid #93633a;
+  border-radius: 4px;
+  color: #93633a;
+}
+
+.quitar-calificacion:hover,
+.quitar-calificacion:focus-visible {
+  background-color: #f0e7d4;
+}

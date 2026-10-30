@@ -18,6 +18,7 @@
   let promedioEl = null;
   let estadoEl = null;
   let grupoEl = null;
+  let quitarBoton = null;
   let peticion = 0; // para ignorar respuestas viejas si la persona vota muy rápido
 
   // Texto del promedio con un decimal, como "4.5 de 5 (2 calificaciones)".
@@ -51,6 +52,20 @@
     return boton;
   }
 
+  // El botón de quitar solo se muestra cuando ya hay una calificación.
+  function pintarQuitar() {
+    quitarBoton.hidden = recetaActual.miCalificacion == null;
+  }
+
+  function crearBotonQuitar() {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'quitar-calificacion';
+    boton.textContent = 'Quitar calificación';
+    boton.addEventListener('click', quitar);
+    return boton;
+  }
+
   function dibujar(receta) {
     recetaActual = receta;
     ranura.replaceChildren();
@@ -67,13 +82,16 @@
     grupoEl.setAttribute('aria-label', 'Calificar la receta');
     for (let puntos = 1; puntos <= 5; puntos++) grupoEl.append(crearEstrella(puntos));
 
+    quitarBoton = crearBotonQuitar();
+
     estadoEl = document.createElement('p');
     estadoEl.className = 'calificaciones-estado';
     estadoEl.setAttribute('role', 'status');
     estadoEl.setAttribute('aria-live', 'polite');
 
-    ranura.append(promedioEl, grupoEl, estadoEl);
+    ranura.append(promedioEl, grupoEl, quitarBoton, estadoEl);
     pintarEstrellas(receta.miCalificacion);
+    pintarQuitar();
   }
 
   async function calificar(puntos) {
@@ -100,12 +118,41 @@
       recetaActual.miCalificacion = resultado.miCalificacion;
       promedioEl.textContent = textoPromedio(recetaActual);
       pintarEstrellas(resultado.miCalificacion);
+      pintarQuitar();
       estadoEl.textContent = '';
     } catch (error) {
       if (numero !== peticion) return;
       estadoEl.textContent = mensajeDeError(error);
     } finally {
       if (numero === peticion) {
+        for (const boton of grupoEl.children) boton.disabled = false;
+      }
+    }
+  }
+
+  async function quitar() {
+    if (!recetaActual || recetaActual.miCalificacion == null) return;
+
+    const numero = ++peticion;
+    estadoEl.textContent = 'Quitando calificación...';
+    quitarBoton.disabled = true;
+    for (const boton of grupoEl.children) boton.disabled = true;
+    try {
+      const resultado = await api.quitarCalificacion(recetaActual.id);
+      if (numero !== peticion) return;
+      recetaActual.promedio = resultado.promedio;
+      recetaActual.totalCalificaciones = resultado.totalCalificaciones;
+      recetaActual.miCalificacion = resultado.miCalificacion; // queda en null
+      promedioEl.textContent = textoPromedio(recetaActual);
+      pintarEstrellas(null);
+      pintarQuitar();
+      estadoEl.textContent = 'Calificación quitada.';
+    } catch (error) {
+      if (numero !== peticion) return;
+      estadoEl.textContent = mensajeDeError(error);
+    } finally {
+      if (numero === peticion) {
+        quitarBoton.disabled = false;
         for (const boton of grupoEl.children) boton.disabled = false;
       }
     }
