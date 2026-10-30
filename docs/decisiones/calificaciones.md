@@ -26,6 +26,7 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 - **Escuchar `receta-mostrada` en lugar de leer la URL.** `catalogo.js` ya carga la receta y avisa cuando terminó; así no se hace otra petición y siempre se usa la receta que se está mostrando.
 - **Usar la ranura `#detalle-calificacion`.** Es el hueco que el proyecto reserva para este módulo, así que no se toca el HTML de otras pantallas.
 - **Las estrellas son `<button>` reales, no `div`.** Así se usan con el teclado (con Tab y Enter) sin trabajo extra, y cada una tiene su `aria-label` ("Calificar con 3 estrellas").
+- **Cada estrella mide 44 píxeles y conserva el contorno de foco.** Es el tamaño mínimo recomendado para tocarlas con el dedo en el celular, y el foco visible ayuda a usarlas con el teclado.
 - **Actualizar con la respuesta de `api.calificar`.** El servidor devuelve el promedio nuevo, el total y `miCalificacion`, así que se pintan de nuevo sin recargar ni hacer otra petición.
 - **El botón "Quitar calificación" solo aparece si ya calificaste.** No tiene sentido quitarla si no hay calificación, y `api.quitarCalificacion` devuelve el promedio nuevo para actualizarlo al instante.
 - **Sin sesión, se desactivan las estrellas y se muestra un enlace a Acceso.** Así no se intenta calificar sin permiso y la persona sabe cómo seguir. Se usa el mismo estilo de aviso que el módulo de Favoritos.
@@ -46,11 +47,10 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 4. Al entrar, las estrellas se activan y puedes calificar. Toca una estrella: el promedio cambia al instante, sin recargar. Toca otra para reemplazarla y "Quitar calificación" para eliminarla.
 5. **Receta propia:** publica una receta con el usuario de prueba y ábrela. Debe decir "No puedes calificar tus propias recetas." con las estrellas desactivadas.
 6. **Mejor valoradas:** abre la pantalla desde el menú. Aparecen solo las recetas con calificaciones, la mejor primero, cada una con su promedio y su enlace. Si ninguna tiene calificaciones, se ve el mensaje de que todavía nadie ha calificado.
-7. Revisa que todo se vea bien y se use con el teclado en una ventana angosta (celular).
+7. **Teclado y celular:** recorre las estrellas con Tab y actívalas con Enter; deben marcarse el foco y funcionar. En una ventana angosta (celular), las estrellas, el botón de quitar y la lista se ven sin desbordarse.
 
 ## 5. Qué falta o qué limitaciones tiene
 
-- Revisión final de estilos y accesibilidad en todas las pantallas (tarea L7).
 - El promedio no se muestra todavía en las tarjetas de la galería (opcional L8, coordinar con Favoritos).
 
 ## Resumen para defender
