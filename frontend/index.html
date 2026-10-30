@@ -48,16 +48,30 @@
         <p>Encuentra ideas para cocinar y descubre nuevas combinaciones de ingredientes.</p>
       </section>
     </div>
-
-    <!-- Pantalla: Recetas. Las tarjetas las dibuja js/catalogo.js con los datos de la API. -->
+<!-- Pantalla: Recetas. Las tarjetas las dibuja js/catalogo.js con los datos de la API. -->
     <div class="pantalla" id="recetas" data-titulo="Recetas" hidden>
       <h1>Nuestras recetas</h1>
       <p>Ideas sencillas para tu próxima comida.</p>
       <!-- Módulo Búsqueda: aquí va la barra de búsqueda y los filtros. -->
+      <section id="modulo-busqueda" class="busqueda-contenedor">
+          <div class="busqueda-controles">
+              <label for="input-ingrediente">Ingrediente:</label>
+              <input type="text" id="input-ingrediente" placeholder="Ej. aguacate">
+
+              <label for="select-categoria">Categoría:</label>
+              <select id="select-categoria">
+                  <option value="">Todas</option>
+              </select>
+
+              <button type="button" id="btn-buscar">Buscar</button>
+              <button type="button" id="btn-limpiar">Limpiar</button>
+          </div>
+          <div id="mensaje-resultados" class="mensaje-oculto" aria-live="polite"></div>
+      </section>
       <p id="estado-catalogo" role="status"></p>
       <div class="galeria"></div>
     </div>
-
+    
     <!-- Pantalla: Detalle de una receta (#/receta/<id>). La rellena js/catalogo.js. -->
     <div class="pantalla" id="receta-detalle" data-titulo="Receta" hidden>
       <a href="#/recetas">← Volver a las recetas</a>

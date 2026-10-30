@@ -1,2 +1,80 @@
 /* Estilos del módulo Búsqueda. Usa solo este archivo para tus estilos (ver AGENTS.md).
    Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+.busqueda-contenedor {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.busqueda-controles {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.busqueda-controles label {
+    font-weight: 600;
+    margin-bottom: -6px;
+}
+
+.busqueda-controles input,
+.busqueda-controles select,
+.busqueda-controles button {
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.busqueda-controles button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+.busqueda-controles button:focus,
+.busqueda-controles input:focus,
+.busqueda-controles select:focus {
+    outline: 2px solid #0056b3;
+    outline-offset: 2px;
+}
+
+#btn-limpiar {
+    background-color: #6c757d;
+}
+
+.mensaje-oculto {
+    display: none;
+}
+
+#mensaje-resultados {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* Adaptación para pantallas más grandes */
+@media (min-width: 768px) {
+    .busqueda-controles {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+    
+    .busqueda-controles input,
+    .busqueda-controles select {
+        flex: 1;
+    }
+    
+    .busqueda-controles button {
+        width: auto;
+        padding: 12px 24px;
+    }
+}
