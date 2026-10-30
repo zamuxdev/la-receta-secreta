@@ -1,2 +1,59 @@
 /* Estilos del módulo Acceso. Usa solo este archivo para tus estilos (ver AGENTS.md).
    Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+
+/* Mensaje de error debajo de un campo. El rojo oscuro se lee bien sobre el fondo crema. */
+.error-campo {
+  margin: 6px 0 0;
+  color: #a3261b;
+  font-size: 15px;
+}
+
+/* Borde del campo con error, además del mensaje (no se depende solo del color). */
+#acceso [aria-invalid="true"],
+#registro [aria-invalid="true"] {
+  border: 2px solid #a3261b;
+}
+
+.ayuda-campo {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+/* Mensaje general del formulario (Entrando..., Correo o contraseña incorrectos...). */
+#estado-acceso,
+#estado-registro {
+  font-weight: bold;
+}
+#estado-acceso:empty,
+#estado-registro:empty {
+  display: none;
+}
+
+/* Recuadro con el saludo cuando hay sesión iniciada. */
+.sesion-iniciada {
+  max-width: 600px;
+  padding: 20px;
+  border: 1px solid #d9d9cc;
+  border-radius: 8px;
+  background-color: white;
+}
+.sesion-iniciada p {
+  margin-top: 0;
+  font-size: 20px;
+}
+.sesion-iniciada button {
+  margin-top: 0;
+}
+
+.cambiar-pantalla {
+  margin-top: 24px;
+}
+
+/* En el celular el botón ocupa todo el ancho para tocarlo fácil. */
+@media (max-width: 600px) {
+  #formulario-acceso button[type="submit"],
+  #formulario-registro button[type="submit"] {
+    width: 100%;
+  }
+}
