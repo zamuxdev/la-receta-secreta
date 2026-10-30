@@ -183,4 +183,58 @@
       // Si no se pudo recargar, se queda como estaba.
     }
   });
+
+  // ── Pantalla "Mejor valoradas" ──────────────────────────────────────────
+  function crearItemMejorValorada(receta) {
+    const item = document.createElement('li');
+    item.className = 'mejor-valorada-item';
+
+    const enlace = document.createElement('a');
+    enlace.href = '#/receta/' + receta.id;
+    enlace.textContent = receta.nombre;
+
+    const meta = document.createElement('span');
+    meta.className = 'mejor-valorada-meta';
+    const porciones = receta.porciones === 1 ? 'porción' : 'porciones';
+    meta.textContent = receta.categoria + ' · ' + receta.tiempo + ' min · ' + receta.porciones + ' ' + porciones;
+
+    const promedio = document.createElement('span');
+    promedio.className = 'mejor-valorada-promedio';
+    promedio.textContent = '★ ' + textoPromedio(receta);
+
+    item.append(enlace, meta, promedio);
+    return item;
+  }
+
+  async function dibujarMejorValoradas() {
+    const pantalla = document.getElementById('mejor-valoradas');
+    const titulo = pantalla.querySelector('h1');
+    pantalla.replaceChildren(titulo);
+
+    const estado = document.createElement('p');
+    estado.className = 'mejor-valoradas-estado';
+    estado.setAttribute('role', 'status');
+    estado.setAttribute('aria-live', 'polite');
+    estado.textContent = 'Cargando...';
+    pantalla.append(estado);
+
+    try {
+      const lista = await api.recetasMejorValoradas();
+      estado.textContent = '';
+      if (!lista.length) {
+        estado.textContent = 'Todavía nadie ha calificado una receta.';
+        return;
+      }
+      const listaEl = document.createElement('ol');
+      listaEl.className = 'lista-mejor-valoradas';
+      for (const receta of lista) listaEl.append(crearItemMejorValorada(receta));
+      pantalla.append(listaEl);
+    } catch (error) {
+      estado.textContent = mensajeDeError(error);
+    }
+  }
+
+  document.addEventListener('pantalla-mostrada', (evento) => {
+    if (evento.detail.id === 'mejor-valoradas') dibujarMejorValoradas();
+  });
 })();
