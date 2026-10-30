@@ -222,7 +222,11 @@
       const lista = await api.recetasMejorValoradas();
       estado.textContent = '';
       if (!lista.length) {
-        estado.textContent = 'Todavía nadie ha calificado una receta.';
+        estado.replaceChildren();
+        const enlace = document.createElement('a');
+        enlace.href = '#/recetas';
+        enlace.textContent = 'Explora el recetario';
+        estado.append('Todavía nadie ha calificado una receta. ', enlace, ' y sé la primera persona en calificar.');
         return;
       }
       const listaEl = document.createElement('ol');
