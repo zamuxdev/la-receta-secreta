@@ -106,10 +106,10 @@
       <p id="estado-json" role="status" aria-live="polite"></p>
       <form id="formulario-receta" novalidate>
         <label for="titulo">Nombre de la receta</label>
-        <input id="titulo" type="text" maxlength="100" placeholder="Por ejemplo: arroz con verduras" aria-describedby="error-titulo">
+        <input id="titulo" aria-required="true" type="text" maxlength="100" placeholder="Por ejemplo: arroz con verduras" aria-describedby="error-titulo">
         <p id="error-titulo" class="error-campo" hidden></p>
         <label for="descripcion">Descripción</label>
-        <textarea id="descripcion" rows="3" maxlength="350" aria-describedby="error-descripcion"></textarea>
+        <textarea id="descripcion" aria-required="true" rows="3" maxlength="350" aria-describedby="error-descripcion"></textarea>
         <p id="error-descripcion" class="error-campo" hidden></p>
         <label for="foto">Foto de la receta (opcional)</label>
         <input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ayuda-foto error-foto">
@@ -126,16 +126,16 @@
         </select>
         <p id="error-categoria" class="error-campo" hidden></p>
         <label for="tiempo">Tiempo de preparación (minutos)</label>
-        <input id="tiempo" type="number" min="1" max="1440" aria-describedby="error-tiempo">
+        <input id="tiempo" aria-required="true" type="number" min="1" max="1440" aria-describedby="error-tiempo">
         <p id="error-tiempo" class="error-campo" hidden></p>
         <label for="porciones">Porciones</label>
-        <input id="porciones" type="number" min="1" max="100" aria-describedby="error-porciones">
+        <input id="porciones" aria-required="true" type="number" min="1" max="100" aria-describedby="error-porciones">
         <p id="error-porciones" class="error-campo" hidden></p>
         <label for="ingredientes">Ingredientes (uno por línea, con su cantidad)</label>
-        <textarea id="ingredientes" rows="5" maxlength="4000" aria-describedby="error-ingredientes"></textarea>
+        <textarea id="ingredientes" aria-required="true" rows="5" maxlength="4000" aria-describedby="error-ingredientes"></textarea>
         <p id="error-ingredientes" class="error-campo" hidden></p>
         <label for="pasos">Preparación (un paso por línea)</label>
-        <textarea id="pasos" rows="5" maxlength="8000" aria-describedby="error-pasos"></textarea>
+        <textarea id="pasos" aria-required="true" rows="5" maxlength="8000" aria-describedby="error-pasos"></textarea>
         <p id="error-pasos" class="error-campo" hidden></p>
         <button type="submit">Agregar al recetario</button>
         <button type="button" id="exportar-formulario">Exportar JSON</button>
@@ -157,10 +157,10 @@
       </section>
       <form id="formulario-acceso" novalidate>
         <label for="acceso-correo">Correo electrónico</label>
-        <input id="acceso-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="error-acceso-correo">
+        <input id="acceso-correo" aria-required="true" type="email" autocomplete="email" maxlength="254" aria-describedby="error-acceso-correo">
         <p id="error-acceso-correo" class="error-campo" hidden></p>
         <label for="acceso-password">Contraseña</label>
-        <input id="acceso-password" type="password" autocomplete="current-password" aria-describedby="error-acceso-password">
+        <input id="acceso-password" aria-required="true" type="password" autocomplete="current-password" aria-describedby="error-acceso-password">
         <p id="error-acceso-password" class="error-campo" hidden></p>
         <button type="submit">Entrar</button>
         <p class="cambiar-pantalla">¿Todavía no tienes cuenta? <a href="#/registro">Crea una cuenta</a>.</p>
@@ -174,13 +174,13 @@
       <p id="estado-registro" role="status" aria-live="polite"></p>
       <form id="formulario-registro" novalidate>
         <label for="registro-nombre">Nombre</label>
-        <input id="registro-nombre" type="text" autocomplete="name" maxlength="60" placeholder="Alex" aria-describedby="error-registro-nombre">
+        <input id="registro-nombre" aria-required="true" type="text" autocomplete="name" maxlength="60" placeholder="Alex" aria-describedby="error-registro-nombre">
         <p id="error-registro-nombre" class="error-campo" hidden></p>
         <label for="registro-correo">Correo electrónico</label>
-        <input id="registro-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="error-registro-correo">
+        <input id="registro-correo" aria-required="true" type="email" autocomplete="email" maxlength="254" aria-describedby="error-registro-correo">
         <p id="error-registro-correo" class="error-campo" hidden></p>
         <label for="registro-password">Contraseña</label>
-        <input id="registro-password" type="password" autocomplete="new-password" aria-describedby="ayuda-registro-password error-registro-password">
+        <input id="registro-password" aria-required="true" type="password" autocomplete="new-password" aria-describedby="ayuda-registro-password error-registro-password">
         <small id="ayuda-registro-password" class="ayuda-campo">Mínimo 8 caracteres.</small>
         <p id="error-registro-password" class="error-campo" hidden></p>
         <button type="submit">Crear cuenta</button>

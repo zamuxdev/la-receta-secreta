@@ -46,6 +46,19 @@ Con la sesión iniciada, la pantalla Acceso muestra **Mis recetas**: la lista de
 - **Los botones Editar y Borrar dicen el nombre de la receta a los lectores de pantalla** (`aria-label="Borrar Tacos..."`), porque en una lista con varios "Borrar" no se sabría cuál es cuál.
 - **Si el servidor contesta tarde** (por ejemplo, abriste otra receta antes de que llegara la primera), la respuesta vieja se ignora para no llenar el formulario con datos equivocados.
 
+### Estilos y accesibilidad (Y8)
+
+Se revisaron las pantallas Acceso, Crear cuenta y Publicar (también con la lista de Mis recetas) en una pantalla de 320 px de ancho y en pantalla grande:
+
+- **Cada campo tiene su `label`** y está ligado a su mensaje de error (y a su ayuda, si tiene) con `aria-describedby`. No hay ids repetidos ni referencias rotas.
+- **Los campos obligatorios llevan `aria-required="true"`**, para que el lector de pantalla diga que son obligatorios. No se usa `required` porque mostraría la burbuja del navegador en lugar de nuestros mensajes. La foto dice "(opcional)" en su etiqueta.
+- **Los errores no dependen solo del color**: llevan texto, un borde más grueso y `aria-invalid`. El rojo (`#a3261b`) contrasta bien sobre el fondo crema.
+- **Todo se usa con el teclado**: el orden de Tab sigue el orden de la pantalla, el foco va al primer campo con error y nunca se quita el contorno de foco de `estilos.css`.
+- **Los mensajes generales usan `role="status"`**, así el lector de pantalla los anuncia sin mover el foco.
+- **En el celular** no hay desplazamiento horizontal, y los botones de los formularios ocupan todo el ancho para tocarlos fácil.
+- **Al editar, la pestaña del navegador dice "Editar receta"**, igual que el título de la pantalla.
+- Los estilos están solo en `acceso.css`, con la paleta del proyecto: no se cambió `estilos.css`.
+
 ## 4. Cómo se prueba
 
 Con Live Server abierto en `frontend/index.html`:
