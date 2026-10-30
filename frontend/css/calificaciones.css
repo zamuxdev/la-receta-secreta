@@ -56,3 +56,43 @@
 .quitar-calificacion:focus-visible {
   background-color: #f0e7d4;
 }
+
+.lista-mejor-valoradas {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+
+.mejor-valorada-item {
+  border: 1px solid #d9d9cc;
+  border-radius: 8px;
+  background-color: white;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.mejor-valorada-item a {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.mejor-valorada-meta,
+.mejor-valorada-promedio {
+  display: block;
+  margin-top: 2px;
+}
+
+.mejor-valorada-meta {
+  color: #555;
+  font-size: 14px;
+}
+
+.mejor-valorada-promedio {
+  color: #93633a;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.mejor-valoradas-estado {
+  color: #555;
+}
