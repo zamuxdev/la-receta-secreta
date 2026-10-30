@@ -6,15 +6,18 @@ Responsable: Yaret Juárez. Se actualiza en el mismo Pull Request que el código
 
 Permite **crear una cuenta**, **entrar** con correo y contraseña, ver **quién tiene la sesión iniciada** ("Hola, [nombre]") y **cerrar sesión**. Si algún dato está mal, el mensaje aparece **debajo del campo** que hay que corregir. Desde Acceso se llega a Crear cuenta y al revés.
 
-Pendiente en este módulo: las reglas de sesión de Publicar (Y6, Y7) y "Mis recetas" con editar y borrar (Y9 a Y11).
+En la pantalla **Publicar**, cada error aparece **junto a su campo** (por ejemplo, el tiempo en 0 o el nombre vacío), y si no hay sesión se muestra un **aviso** con enlaces para entrar o crear una cuenta.
+
+Pendiente en este módulo: "Mis recetas" con editar y borrar (Y9 a Y11).
 
 ## 2. Archivos
 
 | Archivo | Para qué sirve |
 |---|---|
 | `frontend/js/acceso.js` | La lógica de las pantallas Acceso y Crear cuenta: valida los datos, llama a la API, muestra los errores y el saludo. |
-| `frontend/css/acceso.css` | Estilos de los mensajes de error, del recuadro "Hola, [nombre]" y del botón a lo ancho en el celular. |
-| `frontend/index.html` (bloques Acceso y Registro) | Los formularios: campos con su `label`, un párrafo de error por campo y el mensaje general con `role="status"`. |
+| `frontend/js/publicar.js` | El formulario Publicar: valida la receta, la envía con `api.crearReceta`, muestra los errores por campo y el aviso de sesión. También importa y exporta la receta en JSON. |
+| `frontend/css/acceso.css` | Estilos de los mensajes de error (también los de Publicar), del recuadro "Hola, [nombre]", del aviso de sesión y del botón a lo ancho en el celular. |
+| `frontend/index.html` (bloques Acceso, Registro y Publicar) | Los formularios: campos con su `label`, un párrafo de error por campo y el mensaje general con `role="status"`. En Publicar, además, el aviso de sesión. |
 
 ## 3. Decisiones y por qué se tomaron
 
@@ -25,6 +28,14 @@ Pendiente en este módulo: las reglas de sesión de Publicar (Y6, Y7) y "Mis rec
 - **El botón se desactiva mientras se espera a la API** ("Entrando...", "Creando tu cuenta...") para no enviar el formulario dos veces.
 - **La pantalla escucha el evento `sesion-cambiada`**: cuando alguien entra, sale o la sesión vence, el saludo y el formulario se actualizan solos.
 - **El nombre del usuario se escribe con `textContent`**, nunca como HTML, para evitar XSS.
+
+### Publicar (Y6 y Y7)
+
+- **La validación de la receta revisa todos los campos a la vez** y devuelve un mensaje por campo, con las mismas claves que usa la API (`nombre`, `descripcion`, `categoria`, `tiempo`, `porciones`, `ingredientes`, `pasos`, `foto`). Así el mismo código pone junto a su campo tanto los errores del navegador como los del servidor. La clave `nombre` se muestra en el campo `#titulo`.
+- **El formulario lleva `novalidate`**: sin él, el navegador mostraba su propia burbuja (por ejemplo con el tiempo en 0) y no dejaba ver nuestros mensajes en español junto al campo.
+- **Sin sesión no se llama a la API.** El aviso "Para publicar una receta necesitas una cuenta" aparece arriba desde que se abre la pantalla, y al intentar publicar se lleva el foco a él. Si la API responde 401 (por ejemplo, porque la sesión venció), se muestra el mismo aviso. Importar y exportar JSON sí funciona sin sesión, porque no usa el servidor.
+- **Al importar un JSON con errores** se muestran todos juntos en el mensaje general, porque los datos todavía no están en el formulario.
+- **`publicar.js` se envolvió en `(() => { ... })();`**, como los demás módulos, para que sus variables no choquen con las de otros archivos.
 
 ## 4. Cómo se prueba
 
@@ -39,8 +50,16 @@ Con Live Server abierto en `frontend/index.html`:
 7. Usa un correo nuevo y una contraseña de 8 caracteres: entras solo y ves "Hola, [tu nombre]". Cierra sesión y vuelve a entrar con esa cuenta.
 8. Repite con la ventana angosta (modo celular, F12) y usando solo el teclado (Tab y Enter).
 
+Publicar:
+
+1. Sin sesión, abre **Publicar**: arriba aparece el aviso para entrar o crear una cuenta.
+2. Pulsa **Agregar al recetario** con todo vacío: cada campo muestra su mensaje y el foco va al nombre.
+3. Llena todo, pero deja el tiempo en 0: el mensaje sale solo junto al tiempo. Corrígelo y borra el nombre: el mensaje sale junto al nombre.
+4. Con todo bien y sin sesión, pulsa **Agregar al recetario**: no se publica y se señala el aviso.
+5. Entra con el usuario de prueba y vuelve a Publicar: el aviso ya no aparece y la receta se publica y abre su detalle.
+
 ## 5. Qué falta o qué limitaciones tiene
 
-- Falta Y6 y Y7 (errores por campo y aviso de sesión en Publicar) y Y9 a Y11 (Mis recetas, editar y borrar).
+- Falta Y9 a Y11 (Mis recetas, editar y borrar).
 - No hay "olvidé mi contraseña", porque la API no lo tiene.
 - Con los datos de prueba, las cuentas se guardan solo en el navegador. Con la API real se guardan en la base de datos.

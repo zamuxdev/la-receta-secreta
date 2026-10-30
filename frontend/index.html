@@ -98,34 +98,45 @@
     <!-- Pantalla: Publicar receta -->
     <div class="pantalla" id="publicar" data-titulo="Publicar receta" hidden>
       <h1>Comparte tu receta</h1>
+      <p id="aviso-publicar-sesion" class="aviso" tabindex="-1" hidden>
+        Para publicar una receta necesitas una cuenta. <a href="#/acceso">Entra a tu cuenta</a> o <a href="#/registro">crea una cuenta</a>.
+      </p>
       <label for="archivo-receta">Importar receta desde un archivo JSON</label>
       <input id="archivo-receta" type="file" accept=".json,application/json" aria-describedby="estado-json">
       <p id="estado-json" role="status" aria-live="polite"></p>
-      <form id="formulario-receta">
+      <form id="formulario-receta" novalidate>
         <label for="titulo">Nombre de la receta</label>
-        <input id="titulo" type="text" maxlength="100" placeholder="Por ejemplo: arroz con verduras">
+        <input id="titulo" type="text" maxlength="100" placeholder="Por ejemplo: arroz con verduras" aria-describedby="error-titulo">
+        <p id="error-titulo" class="error-campo" hidden></p>
         <label for="descripcion">Descripción</label>
-        <textarea id="descripcion" rows="3" maxlength="350"></textarea>
+        <textarea id="descripcion" rows="3" maxlength="350" aria-describedby="error-descripcion"></textarea>
+        <p id="error-descripcion" class="error-campo" hidden></p>
         <label for="foto">Foto de la receta (opcional)</label>
-        <input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ayuda-foto">
+        <input id="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="ayuda-foto error-foto">
         <small id="ayuda-foto">JPG, PNG o WebP. Máximo 2 MB.</small>
+        <p id="error-foto" class="error-campo" hidden></p>
         <img id="vista-foto" class="foto-receta foto-previa" alt="Vista previa de la foto elegida" hidden>
         <button id="quitar-foto" type="button" hidden>Quitar foto</button>
         <label for="categoria">Categoría</label>
-        <select id="categoria">
+        <select id="categoria" aria-describedby="error-categoria">
           <option>Desayuno</option>
           <option>Comida</option>
           <option>Cena</option>
           <option>Postre</option>
         </select>
+        <p id="error-categoria" class="error-campo" hidden></p>
         <label for="tiempo">Tiempo de preparación (minutos)</label>
-        <input id="tiempo" type="number" min="1" max="1440">
+        <input id="tiempo" type="number" min="1" max="1440" aria-describedby="error-tiempo">
+        <p id="error-tiempo" class="error-campo" hidden></p>
         <label for="porciones">Porciones</label>
-        <input id="porciones" type="number" min="1" max="100">
+        <input id="porciones" type="number" min="1" max="100" aria-describedby="error-porciones">
+        <p id="error-porciones" class="error-campo" hidden></p>
         <label for="ingredientes">Ingredientes (uno por línea, con su cantidad)</label>
-        <textarea id="ingredientes" rows="5" maxlength="4000"></textarea>
+        <textarea id="ingredientes" rows="5" maxlength="4000" aria-describedby="error-ingredientes"></textarea>
+        <p id="error-ingredientes" class="error-campo" hidden></p>
         <label for="pasos">Preparación (un paso por línea)</label>
-        <textarea id="pasos" rows="5" maxlength="8000"></textarea>
+        <textarea id="pasos" rows="5" maxlength="8000" aria-describedby="error-pasos"></textarea>
+        <p id="error-pasos" class="error-campo" hidden></p>
         <button type="submit">Agregar al recetario</button>
         <button type="button" id="exportar-formulario">Exportar JSON</button>
       </form>
