@@ -2,7 +2,38 @@
    Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
 
 .calificaciones-promedio {
-  margin: 8px 0 20px;
+  margin: 8px 0 4px;
   color: #93633a;
   font-weight: bold;
+}
+
+.calificaciones-estrellas {
+  display: flex;
+  gap: 2px;
+  margin: 4px 0;
+}
+
+.estrella {
+  margin: 0;
+  padding: 2px 6px;
+  font-size: 26px;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: #d9d9cc;
+}
+
+.estrella:hover,
+.estrella:focus-visible {
+  color: #93633a;
+}
+
+.estrella.marcada {
+  color: #93633a;
+}
+
+.calificaciones-estado {
+  color: #555;
+  min-height: 1.2em;
+  margin: 4px 0 0;
 }
