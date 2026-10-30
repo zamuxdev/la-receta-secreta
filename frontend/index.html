@@ -150,6 +150,11 @@
         <p>Hola, <strong id="nombre-usuario"></strong></p>
         <button type="button" id="cerrar-sesion">Cerrar sesión</button>
       </section>
+      <section id="mis-recetas" class="mis-recetas" aria-labelledby="titulo-mis-recetas" hidden>
+        <h2 id="titulo-mis-recetas" tabindex="-1">Mis recetas</h2>
+        <p id="estado-mis-recetas" role="status" aria-live="polite"></p>
+        <ul id="lista-mis-recetas" class="lista-mis-recetas"></ul>
+      </section>
       <form id="formulario-acceso" novalidate>
         <label for="acceso-correo">Correo electrónico</label>
         <input id="acceso-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="error-acceso-correo">

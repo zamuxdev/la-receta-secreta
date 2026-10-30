@@ -4,6 +4,8 @@
 // - Los errores se muestran junto a su campo: los de la validación en el navegador y los que
 //   rechace el servidor (error.errores). La clave `nombre` corresponde al campo #titulo.
 // - Publicar exige sesión: sin ella se muestra un aviso que invita a entrar.
+// - #/publicar/<id> abre el mismo formulario para editar esa receta (llega en `parametro`
+//   del evento 'pantalla-mostrada'); al guardar se usa api.actualizarReceta.
 
 (() => {
   const formularioReceta = document.getElementById('formulario-receta');
@@ -16,6 +18,13 @@
   const vistaFoto = document.getElementById('vista-foto');
   const quitarFoto = document.getElementById('quitar-foto');
   const fotosIncluidas = ['fotos/tacos.jpg', 'fotos/avena.jpg', 'fotos/ensalada.jpg'];
+  const tituloPantalla = document.querySelector('#publicar h1');
+  const botonEnviar = formularioReceta.querySelector('button[type="submit"]');
+
+  // id de la receta que se está editando, o null si se publica una nueva.
+  let editandoId = null;
+  // Cuenta las veces que se abre la pantalla, para ignorar una receta que llegue tarde.
+  let aperturas = 0;
 
   // Clave de error (la del contrato de la API) → id del campo en el formulario.
   const camposPorClave = {
@@ -264,6 +273,11 @@
       actualizarAvisoSesion();
       estadoJSON.textContent = 'Para publicar necesitas entrar a tu cuenta.';
       avisoSesion.focus();
+    } else if (error instanceof ErrorApi && (error.estado === 403 || error.estado === 404)) {
+      // Al editar: la receta es de otra persona (403) o ya no existe (404).
+      estadoJSON.textContent = error.estado === 404
+        ? 'Esa receta ya no existe. Quizá se borró.'
+        : error.textoParaUsuario();
     } else if (error instanceof ErrorApi && Object.keys(error.errores).length) {
       const sinCampo = mostrarErrores(error.errores);
       estadoJSON.textContent = sinCampo.length ? sinCampo.join(' ') : 'Revisa los datos marcados.';
@@ -299,12 +313,14 @@
         return;
       }
       bloquearArchivos(true);
-      estadoJSON.textContent = 'Publicando la receta...';
-      const creada = await api.crearReceta(receta);
-      estadoJSON.textContent = 'Receta publicada.';
+      estadoJSON.textContent = editandoId ? 'Guardando los cambios...' : 'Publicando la receta...';
+      const guardada = editandoId
+        ? await api.actualizarReceta(editandoId, receta)
+        : await api.crearReceta(receta);
+      estadoJSON.textContent = editandoId ? 'Cambios guardados.' : 'Receta publicada.';
       formularioReceta.reset();
       mostrarFoto('');
-      window.location.hash = '#/receta/' + creada.id;
+      window.location.hash = '#/receta/' + guardada.id;
     } catch (error) {
       mostrarError(error);
     } finally {
@@ -312,10 +328,70 @@
     }
   });
 
+  // --- Editar una receta (#/publicar/<id>) ---
+
+  // Cambia los textos de la pantalla entre "publicar una nueva" y "editar".
+  function modoEdicion(id) {
+    editandoId = id;
+    tituloPantalla.textContent = id ? 'Editar receta' : 'Comparte tu receta';
+    botonEnviar.textContent = id ? 'Guardar cambios' : 'Agregar al recetario';
+  }
+
+  function vaciarFormulario() {
+    formularioReceta.reset();
+    mostrarFoto('');
+  }
+
+  async function abrirParaEditar(id) {
+    const apertura = aperturas;
+    modoEdicion(null);
+    vaciarFormulario();
+    bloquearArchivos(true);
+    estadoJSON.textContent = 'Cargando la receta...';
+    try {
+      const receta = await api.obtenerReceta(id);
+      if (apertura !== aperturas) return;
+      if (!receta.esMia) {
+        // Sin sesión, esMia siempre es false: en ese caso el aviso de sesión explica qué hacer.
+        estadoJSON.textContent = api.haySesion()
+          ? 'Solo quien publicó la receta puede editarla.'
+          : 'Entra a tu cuenta para editar tus recetas.';
+        return;
+      }
+      llenarFormulario(receta);
+      modoEdicion(receta.id);
+      estadoJSON.textContent = 'Cambia lo que necesites y pulsa "Guardar cambios".';
+      bloquearArchivos(false);
+    } catch (error) {
+      if (apertura !== aperturas) return;
+      estadoJSON.textContent = error instanceof ErrorApi && error.estado === 404
+        ? 'No encontramos esa receta. Quizá se borró.'
+        : (error instanceof ErrorApi ? error.textoParaUsuario() : 'No se pudo cargar la receta.');
+    }
+  }
+
   document.addEventListener('pantalla-mostrada', (evento) => {
     if (evento.detail.id !== 'publicar') return;
+    aperturas++;
     limpiarErrores();
     actualizarAvisoSesion();
+    const id = Number(evento.detail.parametro);
+    if (evento.detail.parametro !== undefined) {
+      if (Number.isInteger(id) && id > 0) {
+        abrirParaEditar(id);
+      } else {
+        modoEdicion(null);
+        vaciarFormulario();
+        bloquearArchivos(true);
+        estadoJSON.textContent = 'Ese enlace no corresponde a ninguna receta.';
+      }
+    } else if (editandoId !== null || botonEnviar.disabled) {
+      // Se venía de editar: el formulario vuelve a estar vacío para publicar una nueva.
+      modoEdicion(null);
+      vaciarFormulario();
+      bloquearArchivos(false);
+      estadoJSON.textContent = '';
+    }
   });
 
   document.addEventListener('sesion-cambiada', actualizarAvisoSesion);
