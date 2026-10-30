@@ -10,7 +10,7 @@ Al tocar una estrella se guarda la calificación y el promedio se actualiza al i
 
 Las reglas del sitio se respetan y se explican: sin sesión aparece "Inicia sesión" con un enlace a la pantalla de Acceso, y en una receta propia se avisa "No puedes calificar tus propias recetas." con las estrellas desactivadas.
 
-La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promedio, de mayor a menor, cada una con su promedio y su enlace al detalle. Las recetas sin calificaciones no aparecen, y si nadie ha calificado se muestra un mensaje claro.
+La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promedio, de mayor a menor, cada una con su promedio y su enlace al detalle. Las recetas sin calificaciones no aparecen, y si nadie ha calificado se muestra un mensaje claro con un enlace para explorar el recetario.
 
 ## 2. Archivos
 
@@ -32,6 +32,7 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 - **En una receta propia, las estrellas se desactivan y se explica por qué.** El servidor devuelve 403, pero es mejor prevenir y explicar con "No puedes calificar tus propias recetas." en lugar de dejar que aparezca un error.
 - **Escuchar `sesion-cambiada`.** Si alguien entra o sale de su cuenta mientras ve la receta, se vuelve a pedir la receta para refrescar las reglas y `miCalificacion`.
 - **En "Mejor valoradas" se confía en el orden del servidor.** `api.recetasMejorValoradas()` ya entrega las recetas ordenadas por promedio y sin las que no tienen calificaciones, así que no se reordena en la interfaz.
+- **Mensajes de "Mejor valoradas" claros y sin pantalla en blanco.** Mientras carga se muestra "Cargando...", si nadie ha calificado se explica con un enlace al recetario, y si falla se muestra el mensaje del error.
 - **Mostrar el promedio con un decimal.** El contrato entrega el número sin redondear (por ejemplo `3.6666666666666665`); un decimal es fácil de leer y no pierde información importante.
 - **Distinguir entre cero y una calificación.** "1 calificación" suena natural y evita el error de decir "1 calificaciones".
 - **`role="status"` y `aria-live` en los textos que cambian.** Como cambian sin recargar, así los lectores de pantalla avisan del cambio.
@@ -49,7 +50,6 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 
 ## 5. Qué falta o qué limitaciones tiene
 
-- Revisar los mensajes de "cargando", vacío y error de la pantalla Mejor valoradas (tarea L6, ya están escritos pero conviene probarlos).
 - Revisión final de estilos y accesibilidad en todas las pantallas (tarea L7).
 - El promedio no se muestra todavía en las tarjetas de la galería (opcional L8, coordinar con Favoritos).
 
