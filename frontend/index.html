@@ -131,21 +131,45 @@
       </form>
     </div>
 
-    <!-- Pantalla: Acceso -->
+    <!-- Pantalla: Acceso (módulo Acceso). La maneja js/acceso.js. -->
     <div class="pantalla" id="acceso" data-titulo="Acceso" hidden>
       <h1>Acceso</h1>
-      <form>
-        <label for="nombre">Nombre</label>
-        <input id="nombre" type="text" placeholder="Alex" maxlength="60">
-        <button type="button" disabled>Acceder</button>
+      <p id="estado-acceso" role="status" aria-live="polite"></p>
+      <section id="sesion-iniciada" class="sesion-iniciada" hidden>
+        <p>Hola, <strong id="nombre-usuario"></strong></p>
+        <button type="button" id="cerrar-sesion">Cerrar sesión</button>
+      </section>
+      <form id="formulario-acceso" novalidate>
+        <label for="acceso-correo">Correo electrónico</label>
+        <input id="acceso-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="error-acceso-correo">
+        <p id="error-acceso-correo" class="error-campo" hidden></p>
+        <label for="acceso-password">Contraseña</label>
+        <input id="acceso-password" type="password" autocomplete="current-password" aria-describedby="error-acceso-password">
+        <p id="error-acceso-password" class="error-campo" hidden></p>
+        <button type="submit">Entrar</button>
+        <p class="cambiar-pantalla">¿Todavía no tienes cuenta? <a href="#/registro">Crea una cuenta</a>.</p>
       </form>
-      <p>Puedes <a href="#/recetas">explorar las recetas sin una cuenta</a>.</p>
+      <p id="acceso-sin-cuenta">Puedes <a href="#/recetas">explorar las recetas sin una cuenta</a>.</p>
     </div>
 
-    <!-- Pantalla: Registro (módulo Acceso) -->
+    <!-- Pantalla: Registro (módulo Acceso). La maneja js/acceso.js. -->
     <div class="pantalla" id="registro" data-titulo="Crear cuenta" hidden>
       <h1>Crear cuenta</h1>
-      <p class="en-construccion">Esta pantalla está en construcción.</p>
+      <p id="estado-registro" role="status" aria-live="polite"></p>
+      <form id="formulario-registro" novalidate>
+        <label for="registro-nombre">Nombre</label>
+        <input id="registro-nombre" type="text" autocomplete="name" maxlength="60" placeholder="Alex" aria-describedby="error-registro-nombre">
+        <p id="error-registro-nombre" class="error-campo" hidden></p>
+        <label for="registro-correo">Correo electrónico</label>
+        <input id="registro-correo" type="email" autocomplete="email" maxlength="254" aria-describedby="error-registro-correo">
+        <p id="error-registro-correo" class="error-campo" hidden></p>
+        <label for="registro-password">Contraseña</label>
+        <input id="registro-password" type="password" autocomplete="new-password" aria-describedby="ayuda-registro-password error-registro-password">
+        <small id="ayuda-registro-password" class="ayuda-campo">Mínimo 8 caracteres.</small>
+        <p id="error-registro-password" class="error-campo" hidden></p>
+        <button type="submit">Crear cuenta</button>
+        <p class="cambiar-pantalla">¿Ya tienes cuenta? <a href="#/acceso">Entra aquí</a>.</p>
+      </form>
     </div>
 
     <div class="pantalla" id="no-encontrada" data-titulo="Página no encontrada" hidden>
