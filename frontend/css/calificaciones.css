@@ -37,6 +37,18 @@
   color: #93633a;
 }
 
+/* Al pasar el mouse (o el foco) por una estrella se pintan también las anteriores,
+   y las siguientes se apagan aunque estén marcadas, para mostrar cómo quedaría. */
+.estrella:not(:disabled):has(~ .estrella:hover:not(:disabled)),
+.estrella:not(:disabled):has(~ .estrella:focus-visible) {
+  color: #93633a;
+}
+
+.estrella:hover:not(:disabled) ~ .estrella,
+.estrella:focus-visible ~ .estrella {
+  color: #d9d9cc;
+}
+
 .estrella:disabled {
   cursor: not-allowed;
   opacity: 0.6;

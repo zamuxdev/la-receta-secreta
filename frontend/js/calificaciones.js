@@ -179,8 +179,18 @@
     try {
       const receta = await api.obtenerReceta(recetaActual.id);
       dibujar(receta);
-    } catch {
-      // Si no se pudo recargar, se queda como estaba.
+    } catch (error) {
+      // Sin la receta nueva no se sabe la calificación de esta sesión: se borra la anterior.
+      peticion++;
+      recetaActual.miCalificacion = null;
+      pintarEstrellas(null);
+      pintarQuitar();
+      if (!api.haySesion()) {
+        aplicarReglas();
+        return;
+      }
+      for (const boton of grupoEl.children) boton.disabled = true;
+      estadoEl.textContent = mensajeDeError(error) + ' Recarga la página para calificar.';
     }
   });
 
