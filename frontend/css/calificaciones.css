@@ -23,13 +23,18 @@
   color: #d9d9cc;
 }
 
-.estrella:hover,
+.estrella:hover:not(:disabled),
 .estrella:focus-visible {
   color: #93633a;
 }
 
 .estrella.marcada {
   color: #93633a;
+}
+
+.estrella:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .calificaciones-estado {
