@@ -54,7 +54,8 @@
 /* En el celular el botón ocupa todo el ancho para tocarlo fácil. */
 @media (max-width: 600px) {
   #formulario-acceso button[type="submit"],
-  #formulario-registro button[type="submit"] {
+  #formulario-registro button[type="submit"],
+  #formulario-receta button {
     width: 100%;
   }
 }

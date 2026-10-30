@@ -335,6 +335,8 @@
     editandoId = id;
     tituloPantalla.textContent = id ? 'Editar receta' : 'Comparte tu receta';
     botonEnviar.textContent = id ? 'Guardar cambios' : 'Agregar al recetario';
+    // El título de la pestaña también dice qué se hace, para lectores de pantalla y para el historial.
+    document.title = (id ? 'Editar receta' : 'Publicar receta') + ' | La Receta Secreta';
   }
 
   function vaciarFormulario() {
