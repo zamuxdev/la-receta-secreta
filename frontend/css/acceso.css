@@ -10,7 +10,8 @@
 
 /* Borde del campo con error, además del mensaje (no se depende solo del color). */
 #acceso [aria-invalid="true"],
-#registro [aria-invalid="true"] {
+#registro [aria-invalid="true"],
+#publicar [aria-invalid="true"] {
   border: 2px solid #a3261b;
 }
 
@@ -56,4 +57,10 @@
   #formulario-registro button[type="submit"] {
     width: 100%;
   }
+}
+
+/* Pantalla Publicar: el aviso de sesión deja espacio antes del formulario. */
+#aviso-publicar-sesion {
+  max-width: 600px;
+  margin-bottom: 24px;
 }
