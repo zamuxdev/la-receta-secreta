@@ -160,7 +160,7 @@ Devuelve una lista de `RecetaResumen`, de la más nueva a la más antigua.
 
 | Parámetro (opcional) | Qué hace |
 |---|---|
-| `categoria` | Solo las recetas de esa categoría (`?categoria=Postre`) |
+| `categoria` | Solo las recetas de esa categoría (`?categoria=Postre`). El nombre debe ir tal como lo devuelve `GET /api/categorias`, con mayúscula inicial: `?categoria=postre` devuelve `[]` |
 | `ingrediente` | Solo las que tienen un ingrediente que contenga ese texto, sin distinguir mayúsculas (`?ingrediente=aguacate`) |
 
 Se pueden combinar. Si nada coincide, devuelve `[]` y la interfaz muestra el mensaje de "sin resultados" (RF-05).
@@ -294,7 +294,7 @@ Todos requieren sesión. Los favoritos son personales: nadie ve ni modifica los 
 
 | Método y ruta | Qué hace | Respuesta |
 |---|---|---|
-| `GET /api/favoritos` | Lista las recetas favoritas del usuario, de la más nueva a la más antigua | 200 con una lista de `RecetaResumen` (`[]` si no tiene) |
+| `GET /api/favoritos` | Lista las recetas favoritas del usuario, de la receta publicada más recientemente a la más antigua (no por cuándo se guardó en favoritos) | 200 con una lista de `RecetaResumen` (`[]` si no tiene) |
 | `PUT /api/favoritos/{recetaId}` | Agrega la receta a favoritos | 204; si ya estaba, también 204 |
 | `DELETE /api/favoritos/{recetaId}` | La quita de favoritos | 204; si no estaba, también 204 |
 
@@ -391,7 +391,7 @@ Id,Nombre,Categoria,Tiempo,Porciones
 ```
 
 - Si un texto tiene coma, comillas o saltos de línea, va entre comillas (`"Pozole, rojo"`).
-- Si empieza con `=`, `+`, `-` o `@`, se le antepone `'` para que Excel no lo ejecute como fórmula.
+- Si empieza con `=`, `+`, `-`, `@`, un tabulador o un retorno de carro, se le antepone `'` para que Excel no lo ejecute como fórmula.
 
 Decisión: JSON, XML y CSV se usan así. JSON y XML exportan una receta individual (JSON además es el formato de intercambio de toda la API). CSV exporta los favoritos como tabla.
 
