@@ -42,17 +42,23 @@
         <p>Comidas sencillas para disfrutar en casa, con ingredientes de todos los días.</p>
         <a class="boton" href="#/recetas">Ver recetas</a>
       </section>
-      <section>
+      <section class="inicio-cocina">
         <h2>Bienvenido a nuestra cocina</h2>
-        <p>La Receta Secreta es un proyecto para compartir nuestras recetas favoritas.</p>
-        <p>Encuentra ideas para cocinar y descubre nuevas combinaciones de ingredientes.</p>
+        <p>La Receta Secreta es un proyecto para compartir nuestras recetas favoritas.
+          Encuentra ideas para cocinar y descubre nuevas combinaciones de ingredientes.</p>
+        <ul class="inicio-atajos">
+          <li><a href="#/recetas"><strong>Busca por ingrediente</strong> <span>Filtra el recetario con lo que ya tienes en tu cocina.</span></a></li>
+          <li><a href="#/mejor-valoradas"><strong>Descubre las favoritas</strong> <span>Mira qué recetas tienen las mejores calificaciones.</span></a></li>
+          <li><a href="#/favoritos"><strong>Guarda las que te gusten</strong> <span>Tenlas a la mano y descárgalas cuando quieras.</span></a></li>
+          <li><a href="#/publicar"><strong>Comparte la tuya</strong> <span>Publica tu receta con foto, ingredientes y pasos.</span></a></li>
+        </ul>
       </section>
     </div>
 
     <!-- Pantalla: Recetas. Las tarjetas las dibuja js/catalogo.js con los datos de la API. -->
     <div class="pantalla" id="recetas" data-titulo="Recetas" hidden>
       <h1>Nuestras recetas</h1>
-      <p>Ideas sencillas para tu próxima comida.</p>
+      <p class="entrada">Ideas sencillas para tu próxima comida.</p>
       <!-- Módulo Búsqueda: aquí va la barra de búsqueda y los filtros. -->
       <form id="modulo-busqueda" class="busqueda-contenedor" role="search" novalidate>
         <div class="busqueda-campo">
@@ -77,27 +83,36 @@
 
     <!-- Pantalla: Detalle de una receta (#/receta/<id>). La rellena js/catalogo.js. -->
     <div class="pantalla" id="receta-detalle" data-titulo="Receta" hidden>
-      <a href="#/recetas">← Volver a las recetas</a>
+      <a class="volver" href="#/recetas">← Volver a las recetas</a>
       <h1>Cargando receta...</h1>
       <p id="estado-detalle" role="status"></p>
       <div id="detalle-contenido" hidden>
-        <img id="detalle-foto" class="foto-receta foto-detalle" alt="" width="800" height="600" hidden>
-        <p id="detalle-descripcion"></p>
-        <p><strong id="detalle-meta"></strong></p>
-        <!-- Ranura del módulo Favoritos -->
-        <div id="detalle-acciones"></div>
-        <!-- Ranura del módulo Calificaciones -->
-        <div id="detalle-calificacion"></div>
-        <section>
-          <h2>Ingredientes</h2>
-          <ul id="detalle-ingredientes"></ul>
-        </section>
-        <section>
-          <h2>Preparación</h2>
-          <ol id="detalle-pasos"></ol>
-        </section>
-        <button type="button" id="detalle-exportar">Exportar JSON</button>
-        <button type="button" id="detalle-exportar-xml">Exportar XML</button>
+        <div class="detalle-cabecera">
+          <img id="detalle-foto" class="foto-receta foto-detalle" alt="" width="800" height="600" hidden>
+          <div class="detalle-resumen">
+            <p id="detalle-descripcion"></p>
+            <p class="detalle-meta"><strong id="detalle-meta"></strong></p>
+            <!-- Ranura del módulo Favoritos -->
+            <div id="detalle-acciones"></div>
+            <!-- Ranura del módulo Calificaciones -->
+            <div id="detalle-calificacion"></div>
+          </div>
+        </div>
+        <div class="detalle-cuerpo">
+          <section class="detalle-ingredientes">
+            <h2>Ingredientes</h2>
+            <ul id="detalle-ingredientes"></ul>
+          </section>
+          <section class="detalle-preparacion">
+            <h2>Preparación</h2>
+            <ol id="detalle-pasos"></ol>
+          </section>
+        </div>
+        <div class="detalle-exportar">
+          <p>Descarga esta receta:</p>
+          <button type="button" id="detalle-exportar">Exportar JSON</button>
+          <button type="button" id="detalle-exportar-xml">Exportar XML</button>
+        </div>
       </div>
     </div>
 
@@ -118,8 +133,10 @@
       <p id="aviso-publicar-sesion" class="aviso" tabindex="-1" hidden>
         Para publicar una receta necesitas una cuenta. <a href="#/acceso">Entra a tu cuenta</a> o <a href="#/registro">crea una cuenta</a>.
       </p>
-      <label for="archivo-receta">Importar receta desde un archivo JSON</label>
-      <input id="archivo-receta" type="file" accept=".json,application/json" aria-describedby="estado-json">
+      <div class="importar-receta">
+        <label for="archivo-receta">Importar receta desde un archivo JSON</label>
+        <input id="archivo-receta" type="file" accept=".json,application/json" aria-describedby="estado-json">
+      </div>
       <p id="estado-json" role="status" aria-live="polite"></p>
       <form id="formulario-receta" novalidate>
         <label for="titulo">Nombre de la receta</label>
@@ -134,28 +151,38 @@
         <p id="error-foto" class="error-campo" hidden></p>
         <img id="vista-foto" class="foto-receta foto-previa" alt="Vista previa de la foto elegida" hidden>
         <button id="quitar-foto" type="button" hidden>Quitar foto</button>
-        <label for="categoria">Categoría</label>
-        <select id="categoria" aria-describedby="error-categoria">
-          <option>Desayuno</option>
-          <option>Comida</option>
-          <option>Cena</option>
-          <option>Postre</option>
-        </select>
-        <p id="error-categoria" class="error-campo" hidden></p>
-        <label for="tiempo">Tiempo de preparación (minutos)</label>
-        <input id="tiempo" aria-required="true" type="number" min="1" max="1440" aria-describedby="error-tiempo">
-        <p id="error-tiempo" class="error-campo" hidden></p>
-        <label for="porciones">Porciones</label>
-        <input id="porciones" aria-required="true" type="number" min="1" max="100" aria-describedby="error-porciones">
-        <p id="error-porciones" class="error-campo" hidden></p>
+        <div class="campos-fila">
+          <div class="campo">
+            <label for="categoria">Categoría</label>
+            <select id="categoria" aria-describedby="error-categoria">
+              <option>Desayuno</option>
+              <option>Comida</option>
+              <option>Cena</option>
+              <option>Postre</option>
+            </select>
+            <p id="error-categoria" class="error-campo" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="tiempo">Tiempo de preparación (minutos)</label>
+            <input id="tiempo" aria-required="true" type="number" min="1" max="1440" aria-describedby="error-tiempo">
+            <p id="error-tiempo" class="error-campo" hidden></p>
+          </div>
+          <div class="campo">
+            <label for="porciones">Porciones</label>
+            <input id="porciones" aria-required="true" type="number" min="1" max="100" aria-describedby="error-porciones">
+            <p id="error-porciones" class="error-campo" hidden></p>
+          </div>
+        </div>
         <label for="ingredientes">Ingredientes (uno por línea, con su cantidad)</label>
         <textarea id="ingredientes" aria-required="true" rows="5" aria-describedby="error-ingredientes"></textarea>
         <p id="error-ingredientes" class="error-campo" hidden></p>
         <label for="pasos">Preparación (un paso por línea)</label>
         <textarea id="pasos" aria-required="true" rows="5" aria-describedby="error-pasos"></textarea>
         <p id="error-pasos" class="error-campo" hidden></p>
-        <button type="submit">Agregar al recetario</button>
-        <button type="button" id="exportar-formulario">Exportar JSON</button>
+        <div class="formulario-botones">
+          <button type="submit">Agregar al recetario</button>
+          <button type="button" id="exportar-formulario">Exportar JSON</button>
+        </div>
       </form>
     </div>
 
@@ -207,10 +234,13 @@
 
     <div class="pantalla" id="no-encontrada" data-titulo="Página no encontrada" hidden>
         <h1>Página no encontrada</h1>
-        <p>Ese enlace no corresponde a ninguna pantalla.</p>
-        <a href="#/inicio">Volver al inicio</a>
+        <p class="entrada">Ese enlace no corresponde a ninguna pantalla.</p>
+        <a class="boton" href="#/inicio">Volver al inicio</a>
     </div>
   </main>
-  <footer>La Receta Secreta · Recetas para compartir</footer>
+  <footer>
+    <p class="pie-marca">La Receta Secreta</p>
+    <p>Recetas para compartir · Equipo 05 de Programación Web</p>
+  </footer>
 </body>
 </html>

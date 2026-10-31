@@ -2,7 +2,7 @@
    Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
 
 .calificaciones-promedio {
-  margin: 8px 0 4px;
+  margin: 0 0 4px;
   color: #93633a;
   font-weight: bold;
 }
@@ -10,7 +10,7 @@
 .calificaciones-estrellas {
   display: flex;
   gap: 2px;
-  margin: 4px 0;
+  margin: 4px 0 4px -8px;
 }
 
 .estrella {
@@ -26,6 +26,12 @@
   background: none;
   border: none;
   color: #d9d9cc;
+  cursor: pointer;
+  transition: color 0.1s, transform 0.1s;
+}
+
+.estrella:hover:not(:disabled) {
+  transform: scale(1.15);
 }
 
 .estrella:hover:not(:disabled),
@@ -65,8 +71,11 @@
   padding: 6px 14px;
   background: none;
   border: 1px solid #93633a;
-  border-radius: 4px;
+  border-radius: 6px;
   color: #93633a;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .quitar-calificacion:hover,
@@ -74,23 +83,59 @@
   background-color: #f0e7d4;
 }
 
+/* Lista numerada: el número del lugar va en un círculo a la izquierda. */
 .lista-mejor-valoradas {
   list-style: none;
   padding: 0;
-  margin: 12px 0 0;
+  margin: 24px 0 0;
+  max-width: 720px;
+  counter-reset: lugar;
 }
 
 .mejor-valorada-item {
+  position: relative;
   border: 1px solid #d9d9cc;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: white;
-  padding: 14px 16px;
+  padding: 16px 20px 16px 76px;
   margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+  counter-increment: lugar;
+}
+
+.mejor-valorada-item::before {
+  content: counter(lugar);
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0e7d4;
+  color: #93633a;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 20px;
+  font-weight: bold;
+  transform: translateY(-50%);
+}
+
+/* Los tres primeros lugares resaltan en verde. */
+.mejor-valorada-item:nth-child(-n + 3)::before {
+  background-color: #28563c;
+  color: white;
 }
 
 .mejor-valorada-item a {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 20px;
   font-weight: bold;
   text-decoration: none;
+}
+
+.mejor-valorada-item a:hover {
+  text-decoration: underline;
 }
 
 .mejor-valorada-meta,

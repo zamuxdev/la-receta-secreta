@@ -58,19 +58,23 @@ Los colores se eligieron para transmitir frescura y calidez, sin competir con la
 | Bloque de bienvenida | Verde claro | `#e6ecdb` |
 | Bordes | Gris verdoso | `#d9d9cc` |
 | Foco y avisos | Café | `#93633a` |
+| Pie de página y botón al pasar el mouse | Verde oscuro | `#1d3f2c` |
 
-El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas blancas separan el contenido del fondo. El café aparece solo en elementos que deben destacar, como el contorno de foco y el aviso sin JavaScript. Es coherente con el requisito RNF-08 de colores cálidos y apetitosos.
+El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas blancas separan el contenido del fondo. El café aparece solo en elementos que deben destacar, como el contorno de foco, los avisos, los datos de cada tarjeta y las estrellas. Los colores están como variables al inicio de `css/estilos.css` (`--verde`, `--crema`...), para usar siempre los mismos valores. Es coherente con el requisito RNF-08 de colores cálidos y apetitosos.
 
 ### Tipografía y lectura
 
-- Se usa Arial, disponible en cualquier dispositivo, para que cargue rápido y se vea igual en todos.
+- El texto usa Arial, disponible en cualquier dispositivo, para que cargue rápido y se vea igual en todos.
+- Los títulos usan una letra serif del sistema (Palatino o Georgia, según el equipo). Da el aire de un recetario impreso y tampoco descarga fuentes de internet.
 - El interlineado es de 1.6 y el texto es oscuro sobre fondo claro, para leer listas de ingredientes y pasos cómodamente.
-- El contenido tiene un ancho máximo de 1000 px, para que las líneas de texto no sean demasiado largas.
+- El contenido tiene un ancho máximo de 1080 px, para que las líneas de texto no sean demasiado largas.
 - Los títulos tienen interlineado más corto (1.3) para que no se separen demasiado.
 
 ### Galería y fichas
 
-- Las tarjetas usan `flex-wrap`: se acomodan en varias columnas cuando hay espacio y pasan a una sola en pantallas pequeñas, sin código extra.
+- La galería usa CSS Grid con `auto-fill`: caben tantas columnas como permita la pantalla y pasan a una sola en el celular, sin código extra. Todas las tarjetas de una fila miden lo mismo.
+- Toda la tarjeta abre la receta (el enlace se estira con `::before`), así el objetivo para hacer clic o tocar es grande. El botón de favoritos queda encima y sigue funcionando aparte.
+- En el detalle, la foto y el resumen (descripción, datos, favoritos y calificación) van lado a lado en pantalla grande. Los ingredientes van en un recuadro y los pasos tienen su número en un círculo, para seguirlos mientras se cocina.
 - Todas las fotos tienen proporción 4:3 (`aspect-ratio` y `object-fit: cover`) y llevan `width` y `height`. Así la galería se ve uniforme aunque las imágenes originales sean distintas, y la página no "salta" mientras cargan.
 - Cada ficha muestra primero la descripción y los datos clave (categoría, tiempo y porciones), después los ingredientes (lista) y la preparación (lista numerada). Es el orden en que una persona usa la receta.
 
@@ -84,12 +88,13 @@ El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas
 
 ### Accesibilidad y adaptación
 
-- **Responsivo:** `viewport` configurado, una regla para pantallas de hasta 600 px (menos relleno y títulos más pequeños) y imágenes de ancho fluido.
+- **Responsivo:** `viewport` configurado, reglas para pantallas de hasta 860 px (una sola columna) y 600 px (menos relleno, títulos más pequeños y botones a todo el ancho) y imágenes de ancho fluido.
 - **Semántica:** `header`, `nav`, `main`, `section`, `article` y `footer`, además de `aria-label` en la navegación.
 - **Navegación:** la sección actual se marca con `aria-current="page"` y también en negrita. Al abrir una receta se mantiene marcada "Recetas".
 - **Teclado y lectores de pantalla:** contorno de foco visible (`:focus-visible`), foco en el título al cambiar de pantalla, `role="status"` en los mensajes y texto alternativo en todas las fotos.
 - **Sin JavaScript:** un aviso `noscript` explica que hace falta activarlo.
 - **Contraste:** texto oscuro sobre fondo claro, y botón blanco sobre verde oscuro.
+- **Movimiento:** las animaciones (tarjetas que se elevan, botones) se desactivan si el sistema pide reducir el movimiento (`prefers-reduced-motion`).
 
 ### Decisiones que se tomaron por ahora
 
