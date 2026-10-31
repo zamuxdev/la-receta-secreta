@@ -8,71 +8,80 @@
 //   - Un mensaje claro cuando no hay resultados (RF-05).
 //   - El HTML va en index.html, en el comentario "Módulo Búsqueda" de la pantalla Recetas.
 (() => {
-    let categoriasCargadas = false;
+  const formulario = document.getElementById('modulo-busqueda');
+  const inputIngrediente = document.getElementById('input-ingrediente');
+  const selectCategoria = document.getElementById('select-categoria');
+  const btnLimpiar = document.getElementById('btn-limpiar');
+  const mensajeResultados = document.getElementById('mensaje-resultados');
 
-    document.addEventListener('pantalla-mostrada', async (evento) => {
-        if (evento.detail.id !== 'recetas') return;
+  let categoriasCargadas = false;
+  let avisoCategorias = '';  // se conserva para que no lo borre el siguiente dibujo de la galería
+  let filtrosAplicados = {}; // los de la última búsqueda, para explicar por qué no hubo resultados
 
-        const inputIngrediente = document.getElementById('input-ingrediente');
-        const selectCategoria = document.getElementById('select-categoria');
-        const btnBuscar = document.getElementById('btn-buscar');
-        const btnLimpiar = document.getElementById('btn-limpiar');
-        const mensajeResultados = document.getElementById('mensaje-resultados');
+  function mensajeDeError(error) {
+    return error instanceof ErrorApi ? error.textoParaUsuario() : 'Ocurrió un error inesperado. Inténtalo de nuevo.';
+  }
 
-        // 1. Cargar las categorías solo la primera vez que se abre la pantalla (H2)
-        if (!categoriasCargadas) {
-            try {
-                const categorias = await api.listarCategorias();
-                categorias.forEach(cat => {
-                    const opcion = document.createElement('option');
-                    opcion.value = cat;
-                    opcion.textContent = cat;
-                    selectCategoria.appendChild(opcion);
-                });
-                categoriasCargadas = true;
-            } catch (error) {
-                console.error("Error al cargar categorías", error);
-            }
+  // Las categorías se piden una sola vez (H2). Si fallan, se reintenta la próxima vez que se abra la pantalla.
+  async function cargarCategorias() {
+    try {
+      const categorias = await api.listarCategorias();
+      categorias.forEach((categoria) => {
+        // La API devuelve { id, nombre }; el filtro de recetas usa el nombre.
+        const opcion = document.createElement('option');
+        opcion.value = categoria.nombre;
+        opcion.textContent = categoria.nombre;
+        selectCategoria.append(opcion);
+      });
+      categoriasCargadas = true;
+      avisoCategorias = '';
+    } catch (error) {
+      avisoCategorias = 'No se pudieron cargar las categorías. ' + mensajeDeError(error);
+    }
+    mensajeResultados.textContent = avisoCategorias;
+  }
 
-            // 2. Función para buscar ignorando espacios (H1, H3, H5)
-            const realizarBusqueda = () => {
-                const ingrediente = inputIngrediente.value.trim(); 
-                const categoria = selectCategoria.value;
-                
-                mensajeResultados.classList.add('mensaje-oculto');
-                catalogo.cargar({ categoria, ingrediente });
-            };
+  document.addEventListener('pantalla-mostrada', (evento) => {
+    if (evento.detail.id !== 'recetas' || categoriasCargadas) return;
+    cargarCategorias();
+  });
 
-            btnBuscar.addEventListener('click', realizarBusqueda);
+  // Se usa un <form> para que Enter también busque (H1).
+  formulario.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const ingrediente = inputIngrediente.value.trim(); // ignora los espacios de más (H5)
+    const categoria = selectCategoria.value;
+    inputIngrediente.value = ingrediente;
 
-            // 3. Botón para limpiar los filtros (H3)
-            btnLimpiar.addEventListener('click', () => {
-                inputIngrediente.value = '';
-                selectCategoria.value = '';
-                mensajeResultados.classList.add('mensaje-oculto');
-                catalogo.cargar({ categoria: '', ingrediente: '' });
-            });
-        }
-    });
+    // Evita buscar por error con todo vacío (H5). Para ver todas está el botón Limpiar.
+    if (!ingrediente && !categoria) {
+      mensajeResultados.textContent = 'Escribe un ingrediente o elige una categoría para buscar.';
+      inputIngrediente.focus();
+      return;
+    }
+    filtrosAplicados = { categoria, ingrediente };
+    catalogo.cargar(filtrosAplicados);
+  });
 
-    // 4. Mostrar mensaje cuando no hay resultados (H4)
-    document.addEventListener('tarjetas-dibujadas', (e) => {
-        const recetas = e.detail || [];
-        const mensajeResultados = document.getElementById('mensaje-resultados');
-        const inputIngrediente = document.getElementById('input-ingrediente');
-        
-        // Si no estamos en la pantalla correcta o no existe el elemento, salimos
-        if (!mensajeResultados) return;
+  // Limpiar regresa a ver todas las recetas (H3).
+  btnLimpiar.addEventListener('click', () => {
+    formulario.reset();
+    filtrosAplicados = {};
+    catalogo.cargar(filtrosAplicados);
+  });
 
-        if (recetas.length === 0) {
-            const busqueda = inputIngrediente.value.trim();
-            mensajeResultados.textContent = busqueda 
-                ? `No encontramos recetas con "${busqueda}"` 
-                : "No encontramos recetas en esta categoría.";
-            mensajeResultados.classList.remove('mensaje-oculto');
-        } else {
-            mensajeResultados.classList.add('mensaje-oculto');
-        }
-    });
+  // catalogo.js avisa cada vez que dibuja la galería; si no hubo resultados, se explica por qué (H4).
+  document.addEventListener('tarjetas-dibujadas', (evento) => {
+    const { recetas } = evento.detail;
+    const { categoria, ingrediente } = filtrosAplicados;
+    mensajeResultados.textContent = avisoCategorias;
+    if (recetas.length > 0) return;
+    if (ingrediente && categoria) {
+      mensajeResultados.textContent = `No encontramos recetas con "${ingrediente}" en la categoría ${categoria}.`;
+    } else if (ingrediente) {
+      mensajeResultados.textContent = `No encontramos recetas con "${ingrediente}".`;
+    } else if (categoria) {
+      mensajeResultados.textContent = `No encontramos recetas en la categoría ${categoria}.`;
+    }
+  });
 })();
-

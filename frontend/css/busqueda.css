@@ -1,80 +1,65 @@
 /* Estilos del módulo Búsqueda. Usa solo este archivo para tus estilos (ver AGENTS.md).
    Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
 .busqueda-contenedor {
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid #d9d9cc;
+  border-radius: 8px;
+  background-color: white;
+}
+.busqueda-campo label {
+  margin-top: 0;
+}
+/* Misma altura para campo, selector y botones, para que queden alineados en la fila. */
+.busqueda-contenedor input,
+.busqueda-contenedor select,
+.busqueda-botones button {
+  height: 48px;
+}
+.busqueda-botones {
+  display: flex;
+  gap: 12px;
+}
+.busqueda-botones button {
+  flex: 1;
+  margin-top: 0;
+  border: 1px solid #28563c;
+  border-radius: 4px;
+  color: white;
+  background-color: #28563c;
+}
+.busqueda-botones .busqueda-secundario {
+  color: #28563c;
+  background-color: white;
+}
+.busqueda-contenedor input:focus,
+.busqueda-contenedor select:focus,
+.busqueda-botones button:focus {
+  outline: 3px solid #93633a;
+  outline-offset: 2px;
+}
+/* El mensaje siempre existe (para que el lector de pantalla lo anuncie); solo se ve si tiene texto. */
+.busqueda-mensaje:not(:empty) {
+  padding: 12px;
+  border-left: 4px solid #93633a;
+  border-radius: 4px;
+  background-color: #f0e7d4;
 }
 
-.busqueda-controles {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.busqueda-controles label {
-    font-weight: 600;
-    margin-bottom: -6px;
-}
-
-.busqueda-controles input,
-.busqueda-controles select,
-.busqueda-controles button {
-    padding: 12px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.busqueda-controles button {
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    font-weight: bold;
-}
-
-.busqueda-controles button:focus,
-.busqueda-controles input:focus,
-.busqueda-controles select:focus {
-    outline: 2px solid #0056b3;
-    outline-offset: 2px;
-}
-
-#btn-limpiar {
-    background-color: #6c757d;
-}
-
-.mensaje-oculto {
-    display: none;
-}
-
-#mensaje-resultados {
-    margin-top: 15px;
-    padding: 12px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border-radius: 6px;
-    text-align: center;
-}
-
-/* Adaptación para pantallas más grandes */
+/* En pantallas grandes, todo en una fila. */
 @media (min-width: 768px) {
-    .busqueda-controles {
-        flex-direction: row;
-        align-items: flex-end;
-    }
-    
-    .busqueda-controles input,
-    .busqueda-controles select {
-        flex: 1;
-    }
-    
-    .busqueda-controles button {
-        width: auto;
-        padding: 12px 24px;
-    }
+  .busqueda-contenedor {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+  .busqueda-campo {
+    flex: 1;
+  }
+  .busqueda-botones button {
+    flex: none;
+  }
 }

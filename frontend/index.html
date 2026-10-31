@@ -48,30 +48,33 @@
         <p>Encuentra ideas para cocinar y descubre nuevas combinaciones de ingredientes.</p>
       </section>
     </div>
-<!-- Pantalla: Recetas. Las tarjetas las dibuja js/catalogo.js con los datos de la API. -->
+
+    <!-- Pantalla: Recetas. Las tarjetas las dibuja js/catalogo.js con los datos de la API. -->
     <div class="pantalla" id="recetas" data-titulo="Recetas" hidden>
       <h1>Nuestras recetas</h1>
       <p>Ideas sencillas para tu próxima comida.</p>
       <!-- Módulo Búsqueda: aquí va la barra de búsqueda y los filtros. -->
-      <section id="modulo-busqueda" class="busqueda-contenedor">
-          <div class="busqueda-controles">
-              <label for="input-ingrediente">Ingrediente:</label>
-              <input type="text" id="input-ingrediente" placeholder="Ej. aguacate">
-
-              <label for="select-categoria">Categoría:</label>
-              <select id="select-categoria">
-                  <option value="">Todas</option>
-              </select>
-
-              <button type="button" id="btn-buscar">Buscar</button>
-              <button type="button" id="btn-limpiar">Limpiar</button>
-          </div>
-          <div id="mensaje-resultados" class="mensaje-oculto" aria-live="polite"></div>
-      </section>
+      <form id="modulo-busqueda" class="busqueda-contenedor" role="search" novalidate>
+        <div class="busqueda-campo">
+          <label for="input-ingrediente">Ingrediente</label>
+          <input type="search" id="input-ingrediente" placeholder="Ej. aguacate" maxlength="60">
+        </div>
+        <div class="busqueda-campo">
+          <label for="select-categoria">Categoría</label>
+          <select id="select-categoria">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="busqueda-botones">
+          <button type="submit" id="btn-buscar">Buscar</button>
+          <button type="button" id="btn-limpiar" class="busqueda-secundario">Limpiar</button>
+        </div>
+      </form>
+      <p id="mensaje-resultados" class="busqueda-mensaje" role="status"></p>
       <p id="estado-catalogo" role="status"></p>
       <div class="galeria"></div>
     </div>
-    
+
     <!-- Pantalla: Detalle de una receta (#/receta/<id>). La rellena js/catalogo.js. -->
     <div class="pantalla" id="receta-detalle" data-titulo="Receta" hidden>
       <a href="#/recetas">← Volver a las recetas</a>
@@ -151,7 +154,7 @@
         <label for="pasos">Preparación (un paso por línea)</label>
         <textarea id="pasos" aria-required="true" rows="5" maxlength="8000" aria-describedby="error-pasos"></textarea>
         <p id="error-pasos" class="error-campo" hidden></p>
-        <button type="submit">Agregar al recetario</button>
+        <button type="submit" id="btn-buscar">Agregar al recetario</button>
         <button type="button" id="exportar-formulario">Exportar JSON</button>
       </form>
     </div>
@@ -176,7 +179,7 @@
         <label for="acceso-password">Contraseña</label>
         <input id="acceso-password" aria-required="true" type="password" autocomplete="current-password" aria-describedby="error-acceso-password">
         <p id="error-acceso-password" class="error-campo" hidden></p>
-        <button type="submit">Entrar</button>
+        <button type="submit" id="btn-buscar">Entrar</button>
         <p class="cambiar-pantalla">¿Todavía no tienes cuenta? <a href="#/registro">Crea una cuenta</a>.</p>
       </form>
       <p id="acceso-sin-cuenta">Puedes <a href="#/recetas">explorar las recetas sin una cuenta</a>.</p>
@@ -197,7 +200,7 @@
         <input id="registro-password" aria-required="true" type="password" autocomplete="new-password" aria-describedby="ayuda-registro-password error-registro-password">
         <small id="ayuda-registro-password" class="ayuda-campo">Mínimo 8 caracteres.</small>
         <p id="error-registro-password" class="error-campo" hidden></p>
-        <button type="submit">Crear cuenta</button>
+        <button type="submit" id="btn-buscar">Crear cuenta</button>
         <p class="cambiar-pantalla">¿Ya tienes cuenta? <a href="#/acceso">Entra aquí</a>.</p>
       </form>
     </div>
