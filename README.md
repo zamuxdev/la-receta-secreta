@@ -21,7 +21,7 @@ docker compose up -d
 dotnet run --project backend/RecetaSecreta.Api
 ```
 
-La primera vez hay que crear la clave que firma las sesiones, y para que la interfaz use la API hay que cambiar `USAR_DATOS_DE_PRUEBA` a `false` en `frontend/js/api.js`. Los pasos completos y las pruebas automatizadas están en [`AGENTS.md`](AGENTS.md#9-cómo-correr-el-proyecto).
+La primera vez hay que crear la clave que firma las sesiones. La interfaz ya usa la API real (`USAR_DATOS_DE_PRUEBA = false` en `frontend/js/api.js`), así que necesita el backend corriendo; para trabajar sin él, cambia esa línea a `true` en tu copia y no la subas. Los pasos completos y las pruebas automatizadas están en [`AGENTS.md`](AGENTS.md#9-cómo-correr-el-proyecto).
 
 ## Cómo trabajamos
 

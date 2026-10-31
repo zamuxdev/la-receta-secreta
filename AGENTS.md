@@ -78,7 +78,7 @@ Cada persona es dueña de un módulo. Cada módulo tiene sus **propios archivos*
 - La interfaz se construye contra [`docs/10-contrato-api.md`](docs/10-contrato-api.md): rutas, campos y errores.
 - **No inventes campos ni endpoints.** Si falta algo, abre un PR que cambie el contrato primero, y Fernando lo aprueba.
 - Todas las llamadas al backend pasan por el objeto `api` de `frontend/js/api.js`. **No uses `fetch` directamente en tu módulo.** Lee ese archivo para ver todas las funciones disponibles, por ejemplo `api.listarRecetas({ categoria, ingrediente })`, `api.agregarFavorito(id)`, `api.calificar(id, puntos)` o `api.descargarReceta(id, 'xml')`.
-- **Modo de prueba:** mientras `USAR_DATOS_DE_PRUEBA` sea `true` en `api.js`, la interfaz usa datos de prueba que imitan el contrato (`api-prueba.js`) y no necesita el backend. Hay un usuario de prueba cuyos datos están al inicio de `api-prueba.js`. Fernando cambia a `false` cuando el backend tenga lo que necesitas, no lo cambies tú.
+- **API real y modo de prueba:** `USAR_DATOS_DE_PRUEBA` está en `false` en `api.js`: la interfaz usa la API real y necesita el backend corriendo (sección 9). Con `true` usa datos de prueba que imitan el contrato (`api-prueba.js`) y no necesita el backend; hay un usuario de prueba cuyos datos están al inicio de `api-prueba.js`. Puedes cambiarlo a `true` en tu copia para trabajar sin backend, pero **no subas ese cambio**.
 - Si una función de `api` falla, lanza un `ErrorApi`. Muestra `error.textoParaUsuario()` al usuario, o los mensajes por campo de `error.errores` (claves en `camelCase`, como los campos del contrato). Revisa `error.estado` para casos como 401 (sin sesión) o 403.
 - La sesión la maneja `api`: `api.haySesion()`, `api.usuarioActual()`, `api.iniciarSesion(...)`, `api.cerrarSesion()`.
 
@@ -91,7 +91,7 @@ Los módulos no se llaman entre sí ni editan los archivos de otros. Se coordina
 | `pantalla-mostrada` | `app.js` | `{ id, parametro }` | Iniciar tu pantalla cuando se abre (por ejemplo `id === 'favoritos'`) |
 | `tarjetas-dibujadas` | `catalogo.js` | `{ recetas }` | Agregar botones a cada tarjeta de la galería |
 | `receta-mostrada` | `catalogo.js` | `{ receta }` | Agregar cosas al detalle de una receta |
-| `sesion-cambiada` | `api.js` | nada | Actualizar lo que depende de si hay sesión |
+| `sesion-cambiada` | `api.js` | `{}`, o `{ motivo: 'vencida' }` si el servidor rechazó el token | Actualizar lo que depende de si hay sesión |
 
 | Ranura | Dónde está | Quién la usa |
 |---|---|---|
@@ -130,13 +130,13 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
 
 ## 9. Cómo correr el proyecto
 
-- **Solo la interfaz** (lo normal para los módulos de interfaz): abre la carpeta del proyecto en VS Code, instala la extensión *Live Server*, haz clic derecho en `frontend/index.html` y elige *Open with Live Server*. Con el modo de prueba activado no necesitas nada más.
+- **Interfaz:** abre la carpeta del proyecto en VS Code, instala la extensión *Live Server*, haz clic derecho en `frontend/index.html` y elige *Open with Live Server*. Como usa la API real, levanta también el backend (siguiente punto). Si solo quieres ver la interfaz sin backend, pon `USAR_DATOS_DE_PRUEBA` en `true` en tu copia, sin subirlo.
 - **Con el backend real:**
   1. Abre Docker Desktop.
   2. `docker compose up -d`
   3. **Solo la primera vez**, crea la clave que firma las sesiones (se guarda en tu computadora, no en el repositorio). En la terminal de Git Bash: `dotnet user-secrets set "Jwt:Clave" "$(openssl rand -base64 64 | tr -d '\n')" --project backend/RecetaSecreta.Api`. Sin ella la API no arranca y te dice cómo crearla.
   4. `dotnet run --project backend/RecetaSecreta.Api`
-  5. La API queda en `http://localhost:5166/api/recetas`. Para que la interfaz la use, `USAR_DATOS_DE_PRUEBA` debe ser `false` en `frontend/js/api.js`.
+  5. La API queda en `http://localhost:5166/api/recetas`, y la interfaz ya la usa (`USAR_DATOS_DE_PRUEBA` está en `false` en `frontend/js/api.js`).
 - Para reiniciar la base con los datos de ejemplo: `docker compose down -v`, y de nuevo los pasos anteriores.
 - **Pruebas automatizadas del backend:** con Docker abierto y la base arriba (`docker compose up -d`), corre `dotnet test backend/RecetaSecreta.Api.Tests`. Usan su propia base (`receta_secreta_pruebas`), que borran y crean de nuevo en cada corrida, así que no tocan tus datos. No necesitan la API corriendo ni la clave de user-secrets. Si cambias algo del backend, córrelas antes de abrir el PR.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
@@ -173,9 +173,9 @@ Aplican a quien trabaje en `backend/` (solo Fernando). Se sigue el mismo modo de
 **Estado actual:**
 
 - Documentación de las unidades 1 y 2 hecha, y `docs/` al día con el backend y la interfaz.
-- Interfaz con galería y detalle dibujados desde la API (con datos de prueba), exportación de la receta en JSON y XML desde el detalle, formulario de publicar conectado a la API, y el esqueleto de los cuatro módulos.
+- Interfaz conectada a la API real: galería y detalle, exportación en JSON y XML, y los cuatro módulos terminados (Búsqueda, Favoritos, Calificaciones, Acceso y publicar), probados de punta a punta contra el backend.
 - Backend con recetas (listar, ver, publicar), categorías (`GET /api/categorias`), datos de ejemplo y autenticación (registro, inicio de sesión con JWT y `yo`). Publicar ya exige sesión y liga la receta a su autor. Favoritos (`/api/favoritos`), calificaciones (`/api/recetas/{id}/calificacion`) y mejor valoradas implementados. Editar, borrar y "mis recetas" implementados. El servidor valida la foto (formato real y tamaño). Exportación en JSON, XML y CSV implementada (`api.descargarReceta`, `api.descargarFavoritos`). Tiene pruebas automatizadas con xUnit (`backend/RecetaSecreta.Api.Tests`).
 
-**Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Cada módulo se desarrolla primero con datos de prueba y se conecta a la API real cuando el backend lo tenga.
+**Orden:** el **tema 3** (parcial 2) es la interfaz dinámica: búsqueda, calificación y favoritos con validación en el cliente. Los módulos se desarrollaron con datos de prueba y ya están conectados a la API real.
 
 > Este archivo lo mantiene Fernando. Si algo aquí no funciona o confunde, avísale en lugar de cambiarlo.

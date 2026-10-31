@@ -30,7 +30,7 @@ Haz estos pasos una sola vez. Si algo no te sale, avisa en el grupo.
 
    > Soy [tu nombre] y mi módulo es [tu módulo]. Lee AGENTS.md y TASKS.md y ayúdame con mi primera tarea.
 
-> No necesitas el servidor ni Docker. La interfaz funciona con **datos de prueba**: son recetas falsas que imitan lo que entregará el servidor. Hay un usuario de prueba para probar cosas que requieren sesión. Sus datos están al principio de `frontend/js/api-prueba.js`.
+> La interfaz ya usa la **API real**, así que para probarla hay que levantar el backend (sección 9 de `AGENTS.md`). Si solo quieres ver la interfaz sin servidor, cambia `USAR_DATOS_DE_PRUEBA` a `true` en `frontend/js/api.js` en tu copia (sin subir ese cambio): usa recetas falsas que imitan al servidor y un usuario de prueba cuyos datos están al principio de `frontend/js/api-prueba.js`.
 
 ## Cómo trabajamos con git
 
@@ -165,7 +165,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | F7 | Validar la foto en el servidor (formato real y tamaño) | Hecha |
 | F8 | Exportar en XML y CSV | Hecha |
 | F9 | Pruebas automatizadas del backend | Hecha |
-| F10 | Revisar los Pull Requests, mantener el contrato de la API y activar la API real (`USAR_DATOS_DE_PRUEBA = false`) cuando cada parte esté lista | En curso |
+| F10 | Revisar los Pull Requests, mantener el contrato de la API y activar la API real (`USAR_DATOS_DE_PRUEBA = false`) cuando cada parte esté lista | Hecha (API real activada) |
 
 ---
 
