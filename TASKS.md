@@ -10,6 +10,8 @@ Este archivo dice **qué le toca a cada persona**, en qué orden y cómo saber q
 
 Para que cinco personas trabajen a la vez sin pisarse, **cada una tiene su propio módulo**, con sus propios archivos.
 
+> **Estado al 31 de octubre de 2026:** las tareas de los cuatro módulos (H1 a H7, B1 a B9, L1 a L7 y Y1 a Y11) ya están hechas y unidas a `main`. Solo falta la tarea opcional L8. Las tablas se quedan como referencia de lo que hace cada parte.
+
 | Persona | Módulo | En una frase |
 |---|---|---|
 | **Hazel Martínez** | Búsqueda | Que se pueda encontrar una receta por ingrediente o categoría |
@@ -96,7 +98,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | B8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/favoritos.md`. | Se ve bien en el celular, se usa con el teclado y el documento responde las 5 preguntas. |
 | B9 | **Descargar los favoritos en CSV** (RF-23). En la pantalla Favoritos, un botón "Descargar en CSV" que llama a `api.descargarFavoritos()`. Solo tiene sentido si hay favoritos: si la lista está vacía, no lo muestres o desactívalo. Mientras se prepara, un mensaje ("Preparando el archivo..."). | Con dos favoritas, el botón descarga un `.csv` que se abre en Excel con las dos recetas y los acentos bien. Sin favoritas el botón no se puede usar. |
 
-**Para probar sin esperar la pantalla de acceso de Yaret:** abre la consola del navegador (F12) y escribe `await api.iniciarSesion('demo@recetasecreta.test', 'demo12345')`.
+**Para probar con sesión:** crea una cuenta en **Crear cuenta** (`#/registro`) y entra con ella. El usuario `demo@recetasecreta.test` (contraseña `demo12345`) solo existe con `USAR_DATOS_DE_PRUEBA = true`: la base real no trae usuarios de ejemplo.
 
 ---
 
@@ -117,7 +119,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | L6 | **Mensajes.** Un texto cuando todavía nadie ha calificado, y otro si algo falla. | Nunca queda la pantalla en blanco. |
 | L7 | **Estilos, accesibilidad y tu documento** `docs/decisiones/calificaciones.md`. | Las estrellas se usan con el teclado, se ven bien en el celular y el documento responde las 5 preguntas. |
 
-**Para probar sin esperar la pantalla de acceso de Yaret:** abre la consola (F12) y escribe `await api.iniciarSesion('demo@recetasecreta.test', 'demo12345')`.
+**Para probar con sesión:** crea una cuenta en **Crear cuenta** (`#/registro`) y entra con ella. El usuario `demo@recetasecreta.test` (contraseña `demo12345`) solo existe con `USAR_DATOS_DE_PRUEBA = true`: la base real no trae usuarios de ejemplo.
 
 **Opcional (L8):** mostrar el promedio también en las tarjetas de la galería. Coordínate con Brandon, porque comparten el espacio `.tarjeta-acciones`.
 
@@ -133,7 +135,7 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 
 | # | Tarea | Listo cuando... |
 |---|---|---|
-| Y1 | **Pantalla de Acceso.** Reemplaza el formulario de ejemplo por **correo y contraseña**, con un botón "Entrar". | Entras con el usuario de prueba y la pantalla muestra que tienes sesión. Con una contraseña incorrecta aparece el mensaje del servidor. |
+| Y1 | **Pantalla de Acceso.** Reemplaza el formulario de ejemplo por **correo y contraseña**, con un botón "Entrar". | Entras con tu cuenta y la pantalla muestra que tienes sesión. Con una contraseña incorrecta aparece el mensaje del servidor. |
 | Y2 | **Pantalla Crear cuenta.** Campos de nombre, correo y contraseña (mínimo 8 caracteres), con un botón "Crear cuenta". | Puedes crear una cuenta nueva y luego entrar con ella. Si el correo ya existe, se avisa con claridad. |
 | Y3 | **Errores por campo.** Si el servidor rechaza un dato, el mensaje aparece **junto a su campo** (usa `error.errores`; las claves son `nombre`, `correo` y `password`). | Una contraseña de 3 letras muestra el mensaje debajo del campo de contraseña. |
 | Y4 | **Mostrar quién eres y cerrar sesión.** En la pantalla de Acceso, si hay sesión: "Hola, [nombre]" y un botón "Cerrar sesión". | Cierras sesión y la pantalla vuelve a mostrar el formulario de entrada. Responde al evento `sesion-cambiada`. |
@@ -141,14 +143,15 @@ Una **rama** es una copia de trabajo donde puedes cambiar cosas sin afectar a na
 | Y6 | **Publicar: errores por campo.** Hoy los errores salen en un solo texto. Muestra cada mensaje junto a su campo, tanto los de la validación en el navegador como los que rechace el servidor (`error.errores`). Ojo: la clave `nombre` corresponde al campo `#titulo` del formulario. | Publicar con el tiempo en 0 muestra el mensaje junto al campo de tiempo, y con el nombre vacío, junto al campo del nombre. |
 | Y7 | **Publicar: aviso si no hay sesión.** Publicar exige sesión (sin ella la API responde 401). Muestra un aviso amable invitando a entrar. | Sin sesión aparece el aviso, con la sesión iniciada no. |
 | Y8 | **Estilos, accesibilidad y tu documento** `docs/decisiones/acceso-publicar.md`. | Los formularios tienen sus etiquetas, se usan con el teclado y se ven bien en el celular. |
-| Y9 | **Mis recetas** (RF-14). En la pantalla de Acceso, con sesión iniciada y debajo de "Hola, [nombre]", la lista de recetas que publicaste (`api.misRecetas()`). Cada una enlaza a su detalle (`#/receta/<id>`) y tiene los botones "Editar" y "Borrar". Si no tienes recetas, un mensaje que invite a publicar. | Publicas una receta con el usuario de prueba y aparece en la lista. Las tres recetas de ejemplo no aparecen, porque no son tuyas. |
+| Y9 | **Mis recetas** (RF-14). En la pantalla de Acceso, con sesión iniciada y debajo de "Hola, [nombre]", la lista de recetas que publicaste (`api.misRecetas()`). Cada una enlaza a su detalle (`#/receta/<id>`) y tiene los botones "Editar" y "Borrar". Si no tienes recetas, un mensaje que invite a publicar. | Publicas una receta con tu cuenta y aparece en la lista. Las tres recetas de ejemplo no aparecen, porque no son tuyas. |
 | Y10 | **Editar una receta.** "Editar" lleva a `#/publicar/<id>`. Al abrirse así, `publicar.js` recibe el `id` en el evento `pantalla-mostrada` (`parametro`), pide la receta con `api.obtenerReceta(id)`, llena el formulario y el botón dice "Guardar cambios". Al enviar se usa `api.actualizarReceta(id, datos)`. Si se abre `#/publicar` sin `id`, el formulario vuelve a estar vacío para publicar una nueva. | Cambias el tiempo de una receta tuya, guardas y el detalle muestra el tiempo nuevo. Si la receta no es tuya (403) o no existe (404), aparece un mensaje claro. |
 | Y11 | **Borrar una receta.** "Borrar" pide confirmación (`confirm()`) y llama a `api.eliminarReceta(id)`. | Confirmas y la receta desaparece de tu lista y de la galería. Si cancelas, no pasa nada. |
 
 **Importante:**
 
-- En `index.html` el formulario de Acceso que existe es solo un ejemplo con el botón desactivado. Reemplázalo.
-- `publicar.js` todavía no está envuelto en `(() => { ... })();` como los demás módulos. Envuélvelo en la primera tarea en que lo toques (Y6 o Y7).
+- El formulario de ejemplo de Acceso ya se reemplazó por el de correo y contraseña (Y1).
+- `publicar.js` ya está envuelto en `(() => { ... })();`, como los demás módulos.
+- Con la API real no hay usuario de prueba: para Y9 a Y11, crea una cuenta y publica con ella.
 
 ---
 

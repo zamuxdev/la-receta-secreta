@@ -4,7 +4,7 @@ Responsable: Brandon Aguilar. Se actualiza en el mismo Pull Request que el códi
 
 ## 1. ¿Qué hace el módulo?
 
-Permite al usuario guardar recetas en una lista personal de favoritos y consultarla en la pantalla `/favoritos`. En cada tarjeta de la galería y en el detalle de cada receta aparece un botón que dice "Guardar en favoritos" o "Quitar de favoritos" según el estado actual. Si el usuario no tiene sesión iniciada, el botón se reemplaza por un mensaje amable con enlace a la pantalla de Acceso. La pantalla Favoritos muestra la lista de recetas guardadas, permite quitarlas una a una y descargar el listado en CSV.
+Permite al usuario guardar recetas en una lista personal de favoritos y consultarla en la pantalla Favoritos (`#/favoritos`). En cada tarjeta de la galería y en el detalle de cada receta aparece un botón que dice "Guardar en favoritos" o "Quitar de favoritos" según el estado actual. Si el usuario no tiene sesión iniciada, el botón se reemplaza por un mensaje amable con enlace a la pantalla de Acceso. La pantalla Favoritos muestra la lista de recetas guardadas, permite quitarlas una a una y descargar el listado en CSV.
 
 ## 2. Archivos
 

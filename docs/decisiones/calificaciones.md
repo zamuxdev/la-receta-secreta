@@ -45,9 +45,9 @@ La pantalla **Mejor valoradas** muestra la lista de recetas ordenadas por promed
 
 1. Abre `frontend/index.html` con Live Server.
 2. **Sin sesión:** abre una receta. Se ven las estrellas desactivadas y el aviso "Inicia sesión para calificar esta receta." con enlace a Acceso.
-3. Inicia sesión con el usuario de prueba: en la consola (F12) escribe `await api.iniciarSesion('demo@recetasecreta.test', 'demo12345')`.
+3. Inicia sesión desde **Acceso** (con la API real, primero crea una cuenta en **Crear cuenta**: la base no trae usuarios). El usuario `demo@recetasecreta.test` con contraseña `demo12345` solo existe con `USAR_DATOS_DE_PRUEBA = true`.
 4. Al entrar, las estrellas se activan y puedes calificar. Toca una estrella: el promedio cambia al instante, sin recargar. Toca otra para reemplazarla y "Quitar calificación" para eliminarla.
-5. **Receta propia:** publica una receta con el usuario de prueba y ábrela. Debe decir "No puedes calificar tus propias recetas." con las estrellas desactivadas.
+5. **Receta propia:** publica una receta con tu cuenta y ábrela. Debe decir "No puedes calificar tus propias recetas." con las estrellas desactivadas.
 6. **Mejor valoradas:** abre la pantalla desde el menú. Aparecen solo las recetas con calificaciones, la mejor primero, cada una con su promedio y su enlace. Si ninguna tiene calificaciones, se ve el mensaje de que todavía nadie ha calificado.
 7. **Teclado y celular:** recorre las estrellas con Tab y actívalas con Enter; deben marcarse el foco y funcionar. Al pasar el mouse (o el foco) por la tercera estrella se pintan las tres primeras.
 8. **Falla al cambiar de sesión:** con una receta abierta, en la consola escribe `api.obtenerReceta = async () => { throw new ErrorApi(500, 'Falló.') }` y luego `api.cerrarSesion()`. Las estrellas deben quedar sin marcar y desactivadas, con el aviso de "Inicia sesión". En una ventana angosta (celular), las estrellas, el botón de quitar y la lista se ven sin desbordarse.

@@ -103,9 +103,9 @@ Los módulos no se llaman entre sí ni editan los archivos de otros. Se coordina
 - La galería la dibuja `catalogo.js`. Para volver a dibujarla con filtros, llama a `catalogo.cargar({ categoria, ingrediente })`.
 - El detalle de una receta es la ruta `#/receta/<id>`. Los enlaces a una receta deben apuntar ahí.
 - Para editar una receta se usa la ruta `#/publicar/<id>`: abre la pantalla Publicar y `pantalla-mostrada` trae el `id` en `parametro`.
-- Las pantallas "Mejor valoradas", "Favoritos" y "Crear cuenta" ya existen vacías en `index.html`: rellena la tuya.
-- **Envuelve todo tu archivo JS en `(() => { ... })();`**, como ya están los archivos de cada módulo. Si no, tus variables chocan con las de otros módulos y se rompe la página. La excepción es `publicar.js`, que todavía no está envuelto: envuélvelo la primera vez que lo modifiques. Ningún otro archivo usa sus variables, así que se puede hacer sin romper nada.
-- Cada archivo `.js` de módulo ya tiene los `TODO` de lo que le toca. Los de `publicar.js` están al inicio de `acceso.js`.
+- En `index.html` las pantallas "Mejor valoradas" y "Favoritos" solo tienen su `<h1>`: el resto lo dibujan `calificaciones.js` y `favoritos.js`. "Crear cuenta" ya tiene su formulario, que maneja `acceso.js`.
+- **Envuelve todo tu archivo JS en `(() => { ... })();`**, como ya están todos los archivos de cada módulo, incluido `publicar.js`. Si no, tus variables chocan con las de otros módulos y se rompe la página.
+- El comentario al inicio de cada archivo `.js` de módulo explica qué hace y con qué se conecta.
 
 ## 7. Reglas de código (interfaz)
 

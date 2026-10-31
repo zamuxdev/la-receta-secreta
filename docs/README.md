@@ -27,8 +27,8 @@ Esta carpeta es la fuente de verdad de la documentación. Se edita en Markdown y
 |---|---|---|
 | 1. Introducción a las aplicaciones web | 1 | Documentación en esta carpeta |
 | 2. HTML, XML y CSS | 1 | Interfaz en `frontend/` (galería, fichas y formulario) |
-| 3. Programación del lado del cliente | 2 | En curso: búsqueda, calificaciones, favoritos y acceso, un módulo por persona (ver [TASKS.md](../TASKS.md)). La galería, el detalle y publicar ya usan la API |
-| 4. Programación del lado del servidor | 2 | API en .NET con PostgreSQL: recetas, categorías, cuentas con JWT, favoritos, calificaciones, edición y borrado, validación de fotos, exportación en JSON, XML y CSV, y pruebas automatizadas. Falta conectar la interfaz a la API real |
+| 3. Programación del lado del cliente | 2 | Hecho: búsqueda, calificaciones, favoritos y acceso (con publicar, editar y borrar), un módulo por persona (ver [TASKS.md](../TASKS.md)). Toda la interfaz usa la API real |
+| 4. Programación del lado del servidor | 2 | API en .NET con PostgreSQL: recetas, categorías, cuentas con JWT, favoritos, calificaciones, edición y borrado, validación de fotos, exportación en JSON, XML y CSV, y pruebas automatizadas con xUnit que corren en el CI |
 | 5. Cómputo en la nube y servicios | 3 | Pendiente |
 
 ## Puntos por decidir

@@ -74,6 +74,7 @@ Definen atributos de calidad, restricciones y rendimiento para que la experienci
 
 - **RNF-01. Carga inicial.** La SPA debe cargarse en menos de 2.5 segundos con una conexión de banda ancha estándar.
 - **RNF-02. Búsquedas.** Las búsquedas por ingrediente, categoría o título deben devolver resultados en menos de 1.0 segundo, incluso con volúmenes medianos de datos.
+  - Estado: hoy se busca por ingrediente y por categoría. No hay búsqueda por título.
 - **RNF-03. Imágenes.** Las fotos subidas por los usuarios deben procesarse y comprimirse automáticamente para evitar latencias en la galería.
   - Estado: hoy el servidor revisa que la foto sea JPG, PNG o WebP real y que no pase de 2 MB, pero todavía no la comprime.
 
@@ -82,12 +83,15 @@ Definen atributos de calidad, restricciones y rendimiento para que la experienci
 - **RNF-04. Contraseñas.** No se almacenan en texto plano. Se aplica un algoritmo de hashing robusto con sales únicas.
   - Se usa PBKDF2 con el `PasswordHasher` de ASP.NET Core en lugar de BCrypt. La justificación está en [05-arquitectura.md](05-arquitectura.md#55-justificación-de-las-decisiones-técnicas).
 - **RNF-05. Sesiones.** La comunicación entre la SPA y la API REST se autentica con tokens seguros (por ejemplo JWT) con tiempo de expiración definido.
+  - Se usa JWT. El token dura 24 horas (`Jwt:MinutosDeVida` en `appsettings.json`).
 - **RNF-06. Protección de datos.** Todo se transmite por HTTPS. La validación en el servidor debe prevenir inyecciones SQL y XSS al publicar recetas.
+  - Estado: HTTPS queda para el despliegue (parcial 3). En desarrollo la API corre en `http://localhost:5166`, sin cifrar. Las consultas pasan por Entity Framework, que usa parámetros (evita la inyección SQL), y la interfaz nunca inserta texto del usuario como HTML (evita XSS).
 
 ### Usabilidad y accesibilidad
 
 - **RNF-07. Diseño adaptable.** La interfaz se adapta a móviles, tabletas y escritorio sin perder información.
 - **RNF-08. Claridad visual.** Navegación intuitiva, con jerarquía visual clara y colores cálidos y apetitosos, de modo que cualquier persona pueda publicar o buscar recetas sin capacitación.
+  - En el rediseño se cambió la paleta cálida por la de la talavera (azul cobalto y blanco, con amarillo maíz de acento). La justificación está en [06-diseno-interfaz.md](06-diseno-interfaz.md#identidad-visual-la-loza-de-talavera).
 
 ### Disponibilidad y confiabilidad
 

@@ -7,15 +7,15 @@ Antes de programar se diseñan las pantallas en Figma, que sirven de referencia 
 | Pantalla | Propósito | En la interfaz actual |
 |---|---|---|
 | Inicio | Pantalla principal con acceso a las funciones y recetas | Sí (`#/inicio`) |
-| Registro de usuario | Crear una cuenta | Vacía, en construcción (`#/registro`, módulo Acceso) |
-| Inicio de sesión | Acceder a las funciones que requieren autenticación | Maqueta (`#/acceso`, botón deshabilitado, módulo Acceso) |
-| Galería de recetas | Recetas en tarjetas que facilitan la consulta | Sí (`#/recetas`) |
-| Búsqueda de recetas | Buscar por ingredientes o tipo de comida | No, en la pantalla Recetas (módulo Búsqueda) |
-| Detalle de receta | Nombre, imagen, ingredientes, preparación, tipo, calificación y favoritos | Parcial: con exportación a JSON y XML, sin calificación ni favoritos (`#/receta/<id>`) |
-| Mejor valoradas | Recetas ordenadas por su calificación promedio | Vacía, en construcción (`#/mejor-valoradas`, módulo Calificaciones) |
-| Publicación de receta | Registrar una receta nueva | Sí (`#/publicar`) |
-| Favoritos | Consultar las recetas guardadas | Vacía, en construcción (`#/favoritos`, módulo Favoritos) |
-| Mis recetas | Recetas que publicó el usuario, para editarlas o borrarlas | No, irá en la pantalla Acceso con sesión iniciada, y la edición en `#/publicar/<id>` (módulo Acceso) |
+| Registro de usuario | Crear una cuenta | Sí (`#/registro`, módulo Acceso). Al crear la cuenta se entra solo |
+| Inicio de sesión | Acceder a las funciones que requieren autenticación | Sí (`#/acceso`, módulo Acceso). Con sesión muestra "Hola, [nombre]" y "Cerrar sesión" |
+| Galería de recetas | Recetas en tarjetas que facilitan la consulta | Sí (`#/recetas`), con el botón de favoritos en cada tarjeta |
+| Búsqueda de recetas | Buscar por ingredientes o tipo de comida | Sí, dentro de la pantalla Recetas (módulo Búsqueda) |
+| Detalle de receta | Nombre, imagen, ingredientes, preparación, tipo, calificación y favoritos | Sí (`#/receta/<id>`): con favoritos, estrellas para calificar y exportación a JSON y XML |
+| Mejor valoradas | Recetas ordenadas por su calificación promedio | Sí (`#/mejor-valoradas`, módulo Calificaciones) |
+| Publicación de receta | Registrar una receta nueva | Sí (`#/publicar`); exige sesión |
+| Favoritos | Consultar las recetas guardadas | Sí (`#/favoritos`, módulo Favoritos), con descarga en CSV |
+| Mis recetas | Recetas que publicó el usuario, para editarlas o borrarlas | Sí, en la pantalla Acceso con sesión iniciada. La edición usa `#/publicar/<id>` (módulo Acceso) |
 
 Cada módulo y su responsable están en [`TASKS.md`](../TASKS.md).
 
@@ -78,7 +78,7 @@ La idea se aplica con mesura: **solo un elemento llama la atención**, el "plato
 
 - Títulos en **Alegreya** (negrita 800) y texto en **Alegreya Sans**. Las diseñó Juan Pablo del Peral, de Huerta Tipográfica (Argentina), para textos largos en español; tienen un trazo caligráfico que da el aire de recetario escrito a mano sin perder legibilidad. Son de la misma familia, así que combinan, y se distinguen bien porque una tiene remates (serif) y la otra no.
 - Se cargan desde Google Fonts (un `<link>` en `index.html`). **Si no hay internet**, la página no se rompe: usa las fuentes del sistema que siguen en la lista (Palatino o Georgia para títulos, Segoe UI o Arial para texto).
-- Escala de tamaños fija, en variables (`--t-chico` 15 px, `--t-texto` 18 px, `--t-entrada` 21 px, `--t-h2` 28 px, `--t-h1` 44 px, `--t-portada` 64 px). Cada paso es aproximadamente 1.25 veces el anterior. En el celular se reducen.
+- Escala de tamaños fija, en variables (`--t-chico` 15 px, `--t-texto` 18 px, `--t-entrada` 21 px, `--t-h3` 22 px, `--t-h2` 28 px, `--t-h1` 44 px, `--t-portada` 64 px). Entre los tamaños principales cada uno es de 1.2 a 1.6 veces el anterior; `--t-h3` queda casi igual que la entrada y se distingue por la letra de título. En el celular se reducen.
 - Interlineado de 1.55 en el texto y 1.15 en los títulos. Los párrafos tienen un ancho máximo de 68 caracteres para que las líneas no sean demasiado largas.
 - Se quitó la etiqueta en mayúsculas "RECETAS PARA TODOS LOS DÍAS" de la portada y las mayúsculas de los datos de cada tarjeta: el texto en mayúsculas se lee más lento y no aportaba información.
 
@@ -113,6 +113,6 @@ La idea se aplica con mesura: **solo un elemento llama la atención**, el "plato
 
 ### Decisiones que se tomaron por ahora
 
-- Las recetas publicadas se guardan con la API. Con los datos de prueba se conservan en el navegador (`localStorage`) y sobreviven a recargar la página; con la API real se guardan en la base de datos.
-- La pantalla "Acceso" sigue siendo una maqueta con el botón deshabilitado. La API ya tiene registro e inicio de sesión, y conectarla es tarea del módulo Acceso (tema 3).
-- Búsqueda, calificaciones y favoritos ya tienen su lugar en la interfaz (ranuras y pantallas vacías) y la API ya los ofrece. Los programa cada módulo como entregable del tema 3.
+- Las recetas publicadas se guardan con la API real en la base de datos. Con `USAR_DATOS_DE_PRUEBA = true` se conservan en el navegador (`localStorage`) y sobreviven a recargar la página.
+- Búsqueda, calificaciones, favoritos y acceso ya están programados, cada uno en su módulo, y se conectan con el resto mediante eventos y ranuras (ver `AGENTS.md`, sección 6). Sus decisiones están en [decisiones/](decisiones/).
+- El promedio de calificaciones solo se muestra en el detalle y en "Mejor valoradas", no en las tarjetas de la galería (tarea opcional L8 de [TASKS.md](../TASKS.md)).

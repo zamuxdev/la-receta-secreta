@@ -53,7 +53,7 @@ Se revisaron las pantallas Acceso, Crear cuenta y Publicar (también con la list
 
 - **Cada campo tiene su `label`** y está ligado a su mensaje de error (y a su ayuda, si tiene) con `aria-describedby`. No hay ids repetidos ni referencias rotas.
 - **Los campos obligatorios llevan `aria-required="true"`**, para que el lector de pantalla diga que son obligatorios. No se usa `required` porque mostraría la burbuja del navegador en lugar de nuestros mensajes. La foto dice "(opcional)" en su etiqueta.
-- **Los errores no dependen solo del color**: llevan texto, un borde más grueso y `aria-invalid`. El rojo (`#a3261b`) contrasta bien sobre el fondo crema.
+- **Los errores no dependen solo del color**: llevan texto, un borde más grueso y `aria-invalid`. El rojo (`--error`, `#b42318`) contrasta bien sobre el fondo claro.
 - **Todo se usa con el teclado**: el orden de Tab sigue el orden de la pantalla, el foco va al primer campo con error y nunca se quita el contorno de foco de `estilos.css`.
 - **Los mensajes generales usan `role="status"`**, así el lector de pantalla los anuncia sin mover el foco.
 - **En el celular** no hay desplazamiento horizontal, y los botones de los formularios ocupan todo el ancho para tocarlos fácil.
@@ -62,7 +62,9 @@ Se revisaron las pantallas Acceso, Crear cuenta y Publicar (también con la list
 
 ## 4. Cómo se prueba
 
-Con Live Server abierto en `frontend/index.html`:
+Con el backend corriendo y Live Server abierto en `frontend/index.html`:
+
+> **Usuario para probar:** el usuario `demo@recetasecreta.test` (contraseña `demo12345`) solo existe con `USAR_DATOS_DE_PRUEBA = true`. Con la API real la base no trae usuarios: crea primero una cuenta en **Crear cuenta** y usa ese correo donde aquí dice el usuario de prueba.
 
 1. Ve a **Acceso** y pulsa **Entrar** sin escribir nada: aparece un mensaje debajo de cada campo.
 2. Escribe `demo@recetasecreta.test` con la contraseña `malamala`: aparece "Correo o contraseña incorrectos.".

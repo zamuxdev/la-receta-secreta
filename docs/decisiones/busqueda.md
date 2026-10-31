@@ -33,11 +33,11 @@ Se usa `trim()` para quitar los espacios de más, así "  aguacate  " busca lo m
 `catalogo.js` emite el evento `tarjetas-dibujadas` con `{ recetas }` cada vez que dibuja la galería. Si `recetas` está vacía, se arma el mensaje con los filtros de la última búsqueda, por ejemplo: No encontramos recetas con "xyz". El mensaje se escribe con `textContent`, nunca con `innerHTML`, para que lo que escribe el usuario no se interprete como HTML.
 
 **Accesibilidad y diseño**
-Cada campo tiene su `<label>`. El mensaje está en un párrafo con `role="status"`, que siempre existe en la página, para que el lector de pantalla anuncie cuando cambia. El foco se ve con un contorno café. Los colores son los de la paleta del proyecto (verde, crema y café).
+Cada campo tiene su `<label>`. El mensaje está en un párrafo con `role="status"`, que siempre existe en la página, para que el lector de pantalla anuncie cuando cambia. El foco se ve con el contorno amarillo maíz de `estilos.css`. Los colores son las variables de la paleta del proyecto (cobalto, blanco loza y maíz), así que siguen al rediseño sin cambiar este archivo.
 
 ## 4. Cómo se prueba
 
-1. Abrir `frontend/index.html` con Live Server (modo de prueba) e ir a **Recetas**.
+1. Con el backend corriendo, abrir `frontend/index.html` con Live Server e ir a **Recetas**. (También funciona con `USAR_DATOS_DE_PRUEBA = true`, sin backend.)
 2. El selector muestra Todas, Desayuno, Comida, Cena y Postre.
 3. Escribir "aguacate" y presionar Enter o Buscar: solo aparecen los tacos. "AGUACATE" da lo mismo.
 4. Elegir "Desayuno" y Buscar: solo la avena. "Comida": tacos y ensalada.
@@ -51,4 +51,3 @@ Cada campo tiene su `<label>`. El mensaje está en un párrafo con `role="status
 
 - Se busca un ingrediente a la vez; no se pueden combinar varios ingredientes.
 - La búsqueda es por coincidencia de texto: "aguacates" no encuentra "aguacate".
-- Cuando no hay resultados, `catalogo.js` también muestra su propio texto "No hay recetas que mostrar." debajo del mensaje del módulo.

@@ -19,7 +19,7 @@ Modelo desacoplado en tres capas:
 ## 5.2 Flujo general del sistema
 
 1. **Usuario → interfaz web.** El usuario realiza una acción, como buscar, consultar o publicar una receta.
-2. **Interfaz → API REST.** La interfaz envía una solicitud por HTTP/HTTPS (fetch o AJAX).
+2. **Interfaz → API REST.** La interfaz envía una solicitud por HTTP con `fetch`, siempre a través del objeto `api` de `frontend/js/api.js`. En desarrollo es HTTP en `localhost`; HTTPS queda para el despliegue.
 3. **API → procesamiento.** La API en C# y .NET determina la operación a realizar y valida la información.
 4. **API → base de datos.** Si hace falta, consulta o modifica datos.
 5. **Base de datos → API.** Devuelve la información solicitada.
@@ -28,7 +28,7 @@ Modelo desacoplado en tres capas:
 
 Ejemplos del flujo:
 
-- **Entrada:** el usuario ve la galería con las recetas destacadas o mejor calificadas.
+- **Entrada:** el usuario ve la galería con todas las recetas, de la más nueva a la más antigua. Las mejor calificadas se consultan en la pantalla "Mejor valoradas".
 - **Búsqueda y filtrado:** el cliente pide los resultados de forma asíncrona al backend.
 - **Publicación:** el usuario registrado completa el formulario con foto, ingredientes y pasos. El frontend valida los campos y envía un objeto JSON. ASP.NET Core valida la estructura y guarda los datos. La foto viaja dentro del JSON (como data URL) y el servidor revisa su formato real y su tamaño antes de guardarla.
 - **Valoración y favoritos:** el servidor actualiza el promedio de la receta y guarda las asociaciones de favoritos del usuario.
@@ -54,7 +54,7 @@ Ejemplos del flujo:
 | Docker | Levantar la base de datos en desarrollo |
 | GitHub Actions | Integración continua: en cada Pull Request revisa las reglas de la interfaz y corre las pruebas del backend |
 | Figma | Diseño y prototipado de las interfaces |
-| Azure App Service o AWS Elastic Beanstalk | Despliegue en la nube |
+| Azure App Service o AWS Elastic Beanstalk | Despliegue en la nube (planeado para el parcial 3; todavía no hay nada desplegado ni configurado en el repositorio) |
 
 ## 5.4 Formatos de datos: JSON, XML y CSV
 
