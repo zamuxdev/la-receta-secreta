@@ -38,7 +38,7 @@ Está en la carpeta `frontend/` y no necesita compilarse:
 
 Incluye una galería de recetas, la ficha de cada una (foto, tiempo, porciones, ingredientes y pasos, con botones para exportarla en JSON o XML) y un formulario para publicar con validación. La galería y las fichas no están escritas a mano: se dibujan con los datos que entrega la API (o los datos de prueba), de modo que lo que publica un usuario aparece solo.
 
-Mientras `USAR_DATOS_DE_PRUEBA` es `true` en `js/api.js`, la interfaz usa datos de prueba que imitan el contrato y se guardan en el navegador (`localStorage`). Con `false` usa la API real en `http://localhost:5166`.
+`USAR_DATOS_DE_PRUEBA` está en `false` en `js/api.js`: la interfaz usa la API real en `http://localhost:5166`. Con `true` usa datos de prueba que imitan el contrato y se guardan en el navegador (`localStorage`); así se desarrollaron los módulos antes de conectarlos al backend.
 
 ## 6.3 Justificación de las decisiones de diseño
 

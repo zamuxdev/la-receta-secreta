@@ -8,7 +8,7 @@
 
 // true: usa datos de prueba que imitan el contrato (js/api-prueba.js).
 // false: usa el backend real. Cámbialo cuando el endpoint que necesitas ya exista.
-const USAR_DATOS_DE_PRUEBA = true;
+const USAR_DATOS_DE_PRUEBA = false;
 const URL_API = 'http://localhost:5166/api';
 
 // Error que lanzan todas las funciones de `api` cuando algo sale mal.
@@ -28,6 +28,7 @@ class ErrorApi extends Error {
 
 // Sesión del usuario. Se guarda en localStorage, y en memoria si el navegador no lo permite.
 // Cuando cambia, se avisa con el evento 'sesion-cambiada' en `document`.
+// Si se cerró porque el servidor rechazó el token, el evento trae { motivo: 'vencida' }.
 const sesion = (() => {
   const CLAVE = 'receta-secreta-sesion';
   let memoria = { token: null, usuario: null };
@@ -40,8 +41,8 @@ const sesion = (() => {
     return memoria;
   }
 
-  function avisar() {
-    document.dispatchEvent(new CustomEvent('sesion-cambiada'));
+  function avisar(motivo) {
+    document.dispatchEvent(new CustomEvent('sesion-cambiada', { detail: motivo ? { motivo } : {} }));
   }
 
   return {
@@ -53,10 +54,10 @@ const sesion = (() => {
       try { localStorage.setItem(CLAVE, JSON.stringify(memoria)); } catch { /* ver arriba */ }
       avisar();
     },
-    cerrar() {
+    cerrar(motivo) {
       memoria = { token: null, usuario: null };
       try { localStorage.removeItem(CLAVE); } catch { /* ver arriba */ }
-      avisar();
+      avisar(motivo);
     },
   };
 })();
@@ -155,7 +156,7 @@ async function llamar(nombre, ...argumentos) {
     return await implementacion[nombre](...argumentos);
   } catch (error) {
     if (error instanceof ErrorApi && error.estado === 401 && nombre !== 'iniciarSesion' && sesion.iniciada()) {
-      sesion.cerrar();
+      sesion.cerrar('vencida');
     }
     throw error;
   }

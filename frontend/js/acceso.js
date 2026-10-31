@@ -319,5 +319,11 @@
   });
 
   // Alguien entró o salió (también si la sesión venció): se actualiza la pantalla.
-  document.addEventListener('sesion-cambiada', actualizarVistaAcceso);
+  document.addEventListener('sesion-cambiada', (evento) => {
+    // Si el servidor rechazó el token, se explica por qué hay que volver a entrar.
+    if (evento.detail && evento.detail.motivo === 'vencida') {
+      estadoAcceso.textContent = 'Tu sesión venció. Vuelve a entrar.';
+    }
+    actualizarVistaAcceso();
+  });
 })();

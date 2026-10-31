@@ -26,7 +26,7 @@ Con la sesión iniciada, la pantalla Acceso muestra **Mis recetas**: la lista de
 - **El correo repetido (409) se muestra junto al campo de correo**, aunque la respuesta no traiga errores por campo, porque es ahí donde está el problema.
 - **Después de crear la cuenta se entra automáticamente.** La API no inicia sesión al registrar, así que `acceso.js` llama a `api.iniciarSesion` con los mismos datos y lleva a Acceso, donde ya se ve "Hola, [nombre]". Esto le ahorra un paso a la persona. Si ese inicio falla, se lleva a Acceso con el correo ya escrito.
 - **El botón se desactiva mientras se espera a la API** ("Entrando...", "Creando tu cuenta...") para no enviar el formulario dos veces.
-- **La pantalla escucha el evento `sesion-cambiada`**: cuando alguien entra, sale o la sesión vence, el saludo y el formulario se actualizan solos.
+- **La pantalla escucha el evento `sesion-cambiada`**: cuando alguien entra, sale o la sesión vence, el saludo y el formulario se actualizan solos. Si el servidor rechazó el token (el evento trae `motivo: 'vencida'`), Acceso muestra "Tu sesión venció. Vuelve a entrar." para que la persona sepa por qué salió.
 - **El nombre del usuario se escribe con `textContent`**, nunca como HTML, para evitar XSS.
 
 ### Publicar (Y6 y Y7)
@@ -35,6 +35,7 @@ Con la sesión iniciada, la pantalla Acceso muestra **Mis recetas**: la lista de
 - **El formulario lleva `novalidate`**: sin él, el navegador mostraba su propia burbuja (por ejemplo con el tiempo en 0) y no dejaba ver nuestros mensajes en español junto al campo.
 - **Sin sesión no se llama a la API.** El aviso "Para publicar una receta necesitas una cuenta" aparece arriba desde que se abre la pantalla, y al intentar publicar se lleva el foco a él. Si la API responde 401 (por ejemplo, porque la sesión venció), se muestra el mismo aviso. Importar y exportar JSON sí funciona sin sesión, porque no usa el servidor.
 - **Al importar un JSON con errores** se muestran todos juntos en el mensaje general, porque los datos todavía no están en el formulario.
+- **Ingredientes y pasos no tienen límite de caracteres.** Antes el formulario los limitaba a 4000 y 8000 caracteres, pero ese límite no está en el contrato ni en el servidor, así que se quitó para no rechazar recetas que la API sí acepta.
 - **`publicar.js` se envolvió en `(() => { ... })();`**, como los demás módulos, para que sus variables no choquen con las de otros archivos.
 
 ### Mis recetas, editar y borrar (Y9 a Y11)

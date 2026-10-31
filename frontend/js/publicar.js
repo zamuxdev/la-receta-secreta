@@ -178,14 +178,14 @@
     if (!Number.isInteger(datos.porciones) || datos.porciones < 1 || datos.porciones > 100) {
       errores.porciones = ['Las porciones deben ser un número entero de 1 a 100.'];
     }
-    const listaValida = (lista, limite) => Array.isArray(lista) && lista.length &&
-      lista.every((texto) => typeof texto === 'string' && texto.trim() && !/[\r\n]/.test(texto)) &&
-      lista.join('\n').length <= limite;
-    if (!listaValida(datos.ingredientes, 4000)) {
-      errores.ingredientes = ['Escribe al menos un ingrediente, uno por línea (hasta 4000 caracteres en total).'];
+    // El contrato no limita el largo de las listas, así que aquí tampoco.
+    const listaValida = (lista) => Array.isArray(lista) && lista.length &&
+      lista.every((texto) => typeof texto === 'string' && texto.trim() && !/[\r\n]/.test(texto));
+    if (!listaValida(datos.ingredientes)) {
+      errores.ingredientes = ['Escribe al menos un ingrediente, uno por línea.'];
     }
-    if (!listaValida(datos.pasos, 8000)) {
-      errores.pasos = ['Escribe al menos un paso, uno por línea (hasta 8000 caracteres en total).'];
+    if (!listaValida(datos.pasos)) {
+      errores.pasos = ['Escribe al menos un paso, uno por línea.'];
     }
     if (!fotoValida(datos.foto)) errores.foto = [MENSAJE_FOTO];
     if (Object.keys(errores).length) throw new ErrorValidacion(errores);

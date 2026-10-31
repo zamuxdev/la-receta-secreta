@@ -34,10 +34,10 @@ El requisito B9 dice que sin favoritos el botón no se puede usar. Se optó por 
 
 ## 4. Cómo se prueba
 
-1. Abrir `index.html` en el navegador (sin servidor basta, con `USAR_DATOS_DE_PRUEBA = true`).
+1. Levantar el backend y abrir `index.html` con Live Server (la interfaz usa la API real). Para probar sin backend, poner `USAR_DATOS_DE_PRUEBA = true` en tu copia.
 2. Ir a **Recetas** y verificar que cada tarjeta muestra "Inicia sesión para guardar." (sin sesión).
 3. Ir a **Favoritos** y verificar el mensaje de "Inicia sesión para ver tus recetas favoritas."
-4. Abrir la consola (F12) y ejecutar `await api.iniciarSesion('demo@recetasecreta.test', 'demo12345')`.
+4. Entrar con una cuenta desde **Acceso** (o crearla en **Crear cuenta**). Con datos de prueba existe el usuario `demo@recetasecreta.test` con contraseña `demo12345`.
 5. Volver a **Recetas**: los botones ahora dicen "♡ Guardar en favoritos".
 6. Pulsar el botón en una tarjeta → cambia a "♥ Quitar de favoritos". Abrir el detalle de esa receta → el botón ya dice "♥ Quitar de favoritos" (B2).
 7. Pulsar el botón en el detalle → cambia a "♡ Guardar en favoritos". La tarjeta también se actualiza (B4).

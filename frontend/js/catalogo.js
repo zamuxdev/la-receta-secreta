@@ -81,7 +81,9 @@
       const recetas = await api.listarRecetas(filtros);
       if (numero !== cargaGaleria) return;
       galeria.replaceChildren(...recetas.map(tarjeta));
-      estadoCatalogo.textContent = recetas.length ? '' : 'No hay recetas que mostrar.';
+      // Con filtros, el módulo Búsqueda explica por qué no hubo resultados; aquí no se repite.
+      const hayFiltros = Boolean(filtros.categoria || filtros.ingrediente);
+      estadoCatalogo.textContent = recetas.length || hayFiltros ? '' : 'No hay recetas que mostrar.';
       document.dispatchEvent(new CustomEvent('tarjetas-dibujadas', { detail: { recetas } }));
     } catch (error) {
       if (numero !== cargaGaleria) return;
