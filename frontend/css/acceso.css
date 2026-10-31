@@ -6,6 +6,10 @@
   margin: 6px 0 0;
   color: #a3261b;
   font-size: 15px;
+  font-weight: bold;
+}
+.error-campo::before {
+  content: "⚠ ";
 }
 
 /* Borde del campo con error, además del mensaje (no se depende solo del color). */
@@ -13,6 +17,7 @@
 #registro [aria-invalid="true"],
 #publicar [aria-invalid="true"] {
   border: 2px solid #a3261b;
+  background-color: #fdf6f5;
 }
 
 .ayuda-campo {
@@ -21,9 +26,37 @@
   font-size: 15px;
 }
 
+/* Los formularios de Acceso, Registro y Publicar van dentro de una tarjeta blanca. */
+#formulario-acceso,
+#formulario-registro,
+#formulario-receta {
+  padding: 8px 28px 28px;
+  border: 1px solid #d9d9cc;
+  border-radius: 12px;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+}
+#formulario-acceso,
+#formulario-registro {
+  max-width: 460px;
+}
+#formulario-receta {
+  max-width: 720px;
+}
+#formulario-acceso button[type="submit"],
+#formulario-registro button[type="submit"] {
+  width: 100%;
+  margin-top: 24px;
+}
+
 /* Mensaje general del formulario (Entrando..., Correo o contraseña incorrectos...). */
 #estado-acceso,
 #estado-registro {
+  max-width: 460px;
+  padding: 12px 16px;
+  border-left: 4px solid #93633a;
+  border-radius: 6px;
+  background-color: #f0e7d4;
   font-weight: bold;
 }
 #estado-acceso:empty,
@@ -33,42 +66,108 @@
 
 /* Recuadro con el saludo cuando hay sesión iniciada. */
 .sesion-iniciada {
-  max-width: 600px;
-  padding: 20px;
-  border: 1px solid #d9d9cc;
-  border-radius: 8px;
-  background-color: white;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  max-width: 720px;
+  padding: 20px 24px;
+  border-radius: 12px;
+  background-color: #e6ecdb;
 }
 .sesion-iniciada p {
-  margin-top: 0;
+  margin: 0;
   font-size: 20px;
+}
+.sesion-iniciada strong {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 24px;
+  color: #1d3f2c;
 }
 .sesion-iniciada button {
   margin-top: 0;
 }
 
 .cambiar-pantalla {
-  margin-top: 24px;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid #d9d9cc;
+  text-align: center;
+}
+#acceso-sin-cuenta {
+  max-width: 460px;
+  color: #5b6a60;
+  text-align: center;
 }
 
-/* En el celular el botón ocupa todo el ancho para tocarlo fácil. */
-@media (max-width: 600px) {
-  #formulario-acceso button[type="submit"],
-  #formulario-registro button[type="submit"],
-  #formulario-receta button {
-    width: 100%;
-  }
-}
+/* ── Pantalla Publicar ── */
 
-/* Pantalla Publicar: el aviso de sesión deja espacio antes del formulario. */
+/* El aviso de sesión deja espacio antes del formulario. */
 #aviso-publicar-sesion {
-  max-width: 600px;
+  max-width: 720px;
   margin-bottom: 24px;
 }
 
-/* Mis recetas: cada receta en un renglón con su enlace, sus datos y los botones. */
+/* Recuadro para importar una receta desde JSON. */
+.importar-receta {
+  max-width: 720px;
+  margin: 8px 0 16px;
+  padding: 16px 20px;
+  border: 1px dashed #899789;
+  border-radius: 12px;
+  background-color: #e6ecdb;
+}
+.importar-receta label {
+  margin-top: 0;
+}
+.importar-receta input[type="file"] {
+  background-color: white;
+}
+
+/* Mensaje general de Publicar (Publicando..., Receta publicada...). Solo se ve si tiene texto. */
+#estado-json {
+  max-width: 720px;
+}
+#estado-json:not(:empty) {
+  padding: 12px 16px;
+  border-left: 4px solid #93633a;
+  border-radius: 6px;
+  background-color: #f0e7d4;
+  font-weight: bold;
+}
+
+/* Categoría, tiempo y porciones en una fila cuando hay espacio. */
+.campos-fila {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 16px;
+}
+/* Las tres etiquetas ocupan la misma altura para que los campos queden alineados. */
+.campos-fila label {
+  min-height: 3.2em;
+  display: flex;
+  align-items: flex-end;
+}
+#quitar-foto {
+  margin-top: 12px;
+  padding: 8px 16px;
+}
+.formulario-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #d9d9cc;
+}
+.formulario-botones button {
+  margin-top: 0;
+}
+
+/* ── Mis recetas: cada receta en un renglón con su enlace, sus datos y los botones. ── */
 .mis-recetas {
-  max-width: 600px;
+  max-width: 720px;
   margin-top: 32px;
 }
 .lista-mis-recetas {
@@ -80,16 +179,23 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 4px 12px;
-  padding: 12px 16px;
+  padding: 14px 20px;
   border: 1px solid #d9d9cc;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: white;
+  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
 }
 .mi-receta a {
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-size: 19px;
   font-weight: bold;
+  text-decoration: none;
+}
+.mi-receta a:hover {
+  text-decoration: underline;
 }
 .mi-receta-meta {
-  color: #555;
+  color: #5b6a60;
   font-size: 15px;
 }
 .mi-receta-acciones {
@@ -99,5 +205,49 @@
 }
 .mi-receta-acciones button {
   margin-top: 0;
-  padding: 8px 14px;
+  padding: 8px 16px;
+  font-size: 15px;
+}
+/* Editar con contorno verde; Borrar con contorno café porque no se puede deshacer. */
+.mi-receta-acciones button:first-child {
+  background-color: white;
+  color: #28563c;
+}
+.mi-receta-acciones button:first-child:hover {
+  background-color: #e6ecdb;
+  color: #1d3f2c;
+}
+.mi-receta-acciones button:last-child:not(:disabled) {
+  border-color: #93633a;
+  background-color: white;
+  color: #93633a;
+}
+.mi-receta-acciones button:last-child:not(:disabled):hover {
+  background-color: #93633a;
+  color: white;
+}
+
+/* En el celular los campos van uno debajo de otro y los botones ocupan todo el ancho. */
+@media (max-width: 600px) {
+  #formulario-acceso,
+  #formulario-registro,
+  #formulario-receta {
+    padding: 4px 18px 20px;
+  }
+  .campos-fila {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .campos-fila label {
+    min-height: 0;
+  }
+  .formulario-botones button {
+    width: 100%;
+  }
+  .mi-receta-acciones {
+    width: 100%;
+    margin-left: 0;
+  }
+  .mi-receta-acciones button {
+    flex: 1;
+  }
 }

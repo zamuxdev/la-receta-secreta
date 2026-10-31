@@ -5,11 +5,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 16px;
-  padding: 16px;
+  margin: 24px 0 16px;
+  padding: 20px;
   border: 1px solid #d9d9cc;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: white;
+  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
 }
 .busqueda-campo label {
   margin-top: 0;
@@ -27,14 +28,24 @@
 .busqueda-botones button {
   flex: 1;
   margin-top: 0;
-  border: 1px solid #28563c;
-  border-radius: 4px;
+  padding: 0 22px;
+  border: 2px solid #28563c;
+  border-radius: 6px;
   color: white;
   background-color: #28563c;
+  font-weight: bold;
+}
+.busqueda-botones button:hover {
+  border-color: #1d3f2c;
+  background-color: #1d3f2c;
 }
 .busqueda-botones .busqueda-secundario {
   color: #28563c;
   background-color: white;
+}
+.busqueda-botones .busqueda-secundario:hover {
+  color: #1d3f2c;
+  background-color: #e6ecdb;
 }
 .busqueda-contenedor input:focus,
 .busqueda-contenedor select:focus,
@@ -44,9 +55,9 @@
 }
 /* El mensaje siempre existe (para que el lector de pantalla lo anuncie); solo se ve si tiene texto. */
 .busqueda-mensaje:not(:empty) {
-  padding: 12px;
+  padding: 12px 16px;
   border-left: 4px solid #93633a;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: #f0e7d4;
 }
 
