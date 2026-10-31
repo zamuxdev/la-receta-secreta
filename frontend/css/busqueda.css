@@ -1,16 +1,15 @@
 /* Estilos del módulo Búsqueda. Usa solo este archivo para tus estilos (ver AGENTS.md).
-   Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+   Usa las variables de estilos.css (--cobalto, --tinta, --linea...) en lugar de colores sueltos. */
 .busqueda-contenedor {
   max-width: none;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin: 24px 0 16px;
+  margin: 28px 0 20px;
   padding: 20px;
-  border: 1px solid #d9d9cc;
-  border-radius: 12px;
-  background-color: white;
-  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background-color: var(--blanco);
 }
 .busqueda-campo label {
   margin-top: 0;
@@ -28,37 +27,37 @@
 .busqueda-botones button {
   flex: 1;
   margin-top: 0;
-  padding: 0 22px;
-  border: 2px solid #28563c;
-  border-radius: 6px;
-  color: white;
-  background-color: #28563c;
-  font-weight: bold;
+  padding: 0 24px;
+  border: 2px solid var(--cobalto);
+  border-radius: var(--radio-control);
+  color: var(--blanco);
+  background-color: var(--cobalto);
+  font-weight: 700;
 }
 .busqueda-botones button:hover {
-  border-color: #1d3f2c;
-  background-color: #1d3f2c;
+  border-color: var(--cobalto-oscuro);
+  background-color: var(--cobalto-oscuro);
 }
 .busqueda-botones .busqueda-secundario {
-  color: #28563c;
-  background-color: white;
+  color: var(--cobalto);
+  background-color: var(--blanco);
 }
 .busqueda-botones .busqueda-secundario:hover {
-  color: #1d3f2c;
-  background-color: #e6ecdb;
+  color: var(--cobalto-oscuro);
+  background-color: var(--cobalto-claro);
 }
 .busqueda-contenedor input:focus,
 .busqueda-contenedor select:focus,
-.busqueda-botones button:focus {
-  outline: 3px solid #93633a;
+.busqueda-botones button:focus-visible {
+  outline: 3px solid var(--maiz-oscuro);
   outline-offset: 2px;
 }
 /* El mensaje siempre existe (para que el lector de pantalla lo anuncie); solo se ve si tiene texto. */
 .busqueda-mensaje:not(:empty) {
   padding: 12px 16px;
-  border-left: 4px solid #93633a;
-  border-radius: 6px;
-  background-color: #f0e7d4;
+  border-left: 4px solid var(--maiz);
+  border-radius: var(--radio-control);
+  background-color: var(--maiz-claro);
 }
 
 /* En pantallas grandes, todo en una fila. */

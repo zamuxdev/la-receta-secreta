@@ -1,40 +1,41 @@
 /* Estilos del módulo Favoritos. Responsable: Brandon Aguilar.
-   Paleta: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+   Usa las variables de estilos.css (--cobalto, --tinta, --linea...) en lugar de colores sueltos. */
 
 /* ── Botón de favorito (tarjetas y detalle) ── */
 .btn-favorito {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 14px;
+  padding: 8px 16px;
   margin-top: 0;
-  background-color: #faf8f2;
-  color: #28563c;
-  border: 2px solid #28563c;
+  background-color: var(--blanco);
+  color: var(--cobalto);
+  border: 2px solid var(--cobalto);
   border-radius: 999px;
   font: inherit;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
 }
 
 .btn-favorito:hover,
 .btn-favorito:focus-visible {
-  background-color: #28563c;
-  color: #faf8f2;
+  background-color: var(--cobalto-claro);
+  color: var(--cobalto-oscuro);
 }
 
-/* Cuando la receta YA es favorita (aria-pressed="true") */
+/* Cuando la receta YA es favorita (aria-pressed="true"): relleno, para que el estado se note sin leer. */
 .btn-favorito[aria-pressed="true"] {
-  background-color: #28563c;
-  color: #faf8f2;
+  background-color: var(--cobalto);
+  color: var(--blanco);
 }
 
 .btn-favorito[aria-pressed="true"]:hover,
 .btn-favorito[aria-pressed="true"]:focus-visible {
-  background-color: #28563c;
-  opacity: 0.85;
+  border-color: var(--cobalto-oscuro);
+  background-color: var(--cobalto-oscuro);
+  color: var(--blanco);
 }
 
 .btn-favorito:disabled {
@@ -44,45 +45,47 @@
 
 /* ── Mensajes (sin sesión, errores) ── */
 .favorito-aviso {
-  font-size: 14px;
-  color: #555;
-  margin: 4px 0 0;
+  font-size: var(--t-chico);
+  color: var(--tinta-suave);
+  margin: 6px 0 0;
 }
 
 .favorito-error {
-  font-size: 14px;
-  color: #93633a;
-  margin: 4px 0 0;
+  font-size: var(--t-chico);
+  color: var(--error);
+  font-weight: 700;
+  margin: 6px 0 0;
 }
 
 /* ── Pantalla Favoritos ── */
 #btn-descargar-csv {
   margin-bottom: 16px;
-  padding: 10px 18px;
-  background-color: #28563c;
-  color: #faf8f2;
-  border: none;
-  border-radius: 6px;
+  padding: 11px 20px;
+  background-color: var(--cobalto);
+  color: var(--blanco);
+  border: 2px solid var(--cobalto);
+  border-radius: var(--radio-control);
   font: inherit;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
 }
 
 #btn-descargar-csv:hover,
 #btn-descargar-csv:focus-visible {
-  background-color: #1d3f2c;
+  border-color: var(--cobalto-oscuro);
+  background-color: var(--cobalto-oscuro);
 }
 
 #btn-descargar-csv:disabled {
-  background-color: #e7e7e0;
-  color: #555;
-  border: 1px solid #999;
+  background-color: #eceff5;
+  color: #5c667a;
+  border-color: var(--apagado);
   cursor: not-allowed;
 }
 
 #estado-favoritos {
-  font-size: 15px;
-  color: #555;
+  font-size: var(--t-chico);
+  color: var(--tinta-suave);
   margin: 8px 0 12px;
   min-height: 1.4em;
 }
@@ -91,20 +94,19 @@
   list-style: none;
   padding: 0;
   margin: 16px 0 0;
-  max-width: 720px;
-  border: 1px solid #d9d9cc;
-  border-radius: 12px;
-  background-color: white;
-  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+  max-width: 760px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background-color: var(--blanco);
 }
 
 .favorito-item {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px 12px;
-  padding: 16px 20px;
-  border-bottom: 1px solid #d9d9cc;
+  gap: 8px 14px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--linea);
   margin-bottom: 0;
 }
 
@@ -115,13 +117,13 @@
 /* Corazón decorativo antes del nombre de cada favorito. */
 .favorito-item::before {
   content: "♥";
-  color: #93633a;
+  color: var(--cobalto);
 }
 
 .favorito-item a {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-weight: bold;
-  font-size: 19px;
+  font-family: var(--letra-titulos);
+  font-weight: 800;
+  font-size: 21px;
   text-decoration: none;
 }
 
@@ -130,20 +132,21 @@
 }
 
 .favorito-meta {
-  font-size: 14px;
-  color: #555;
+  font-size: var(--t-chico);
+  color: var(--tinta-suave);
   flex: 1 1 auto;
 }
 
 .btn-quitar-favorito {
   margin-top: 0;
-  padding: 6px 12px;
-  background-color: #faf8f2;
-  color: #93633a;
-  border: 1px solid #93633a;
-  border-radius: 6px;
+  padding: 6px 14px;
+  background-color: var(--blanco);
+  color: var(--error);
+  border: 1.5px solid var(--error);
+  border-radius: var(--radio-control);
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
   flex-shrink: 0;
@@ -151,8 +154,8 @@
 
 .btn-quitar-favorito:hover,
 .btn-quitar-favorito:focus-visible {
-  background-color: #93633a;
-  color: #faf8f2;
+  background-color: var(--error);
+  color: var(--blanco);
 }
 
 .btn-quitar-favorito:disabled {
