@@ -1,12 +1,12 @@
 /* Estilos del módulo Acceso. Usa solo este archivo para tus estilos (ver AGENTS.md).
-   Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+   Usa las variables de estilos.css (--cobalto, --tinta, --linea...) en lugar de colores sueltos. */
 
-/* Mensaje de error debajo de un campo. El rojo oscuro se lee bien sobre el fondo crema. */
+/* Mensaje de error debajo de un campo. */
 .error-campo {
   margin: 6px 0 0;
-  color: #a3261b;
-  font-size: 15px;
-  font-weight: bold;
+  color: var(--error);
+  font-size: var(--t-chico);
+  font-weight: 700;
 }
 .error-campo::before {
   content: "⚠ ";
@@ -16,37 +16,37 @@
 #acceso [aria-invalid="true"],
 #registro [aria-invalid="true"],
 #publicar [aria-invalid="true"] {
-  border: 2px solid #a3261b;
-  background-color: #fdf6f5;
+  border: 2px solid var(--error);
+  background-color: var(--error-claro);
 }
 
 .ayuda-campo {
   display: block;
   margin-top: 4px;
-  font-size: 15px;
+  font-size: var(--t-chico);
 }
 
-/* Los formularios de Acceso, Registro y Publicar van dentro de una tarjeta blanca. */
+/* Los formularios de Acceso, Registro y Publicar van sobre una hoja blanca. */
 #formulario-acceso,
 #formulario-registro,
 #formulario-receta {
-  padding: 8px 28px 28px;
-  border: 1px solid #d9d9cc;
-  border-radius: 12px;
-  background-color: white;
-  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+  padding: 10px 32px 32px;
+  border: 1px solid var(--linea);
+  border-top: 4px solid var(--cobalto);
+  border-radius: var(--radio);
+  background-color: var(--blanco);
 }
 #formulario-acceso,
 #formulario-registro {
   max-width: 460px;
 }
 #formulario-receta {
-  max-width: 720px;
+  max-width: 760px;
 }
 #formulario-acceso button[type="submit"],
 #formulario-registro button[type="submit"] {
   width: 100%;
-  margin-top: 24px;
+  margin-top: 28px;
 }
 
 /* Mensaje general del formulario (Entrando..., Correo o contraseña incorrectos...). */
@@ -54,10 +54,10 @@
 #estado-registro {
   max-width: 460px;
   padding: 12px 16px;
-  border-left: 4px solid #93633a;
-  border-radius: 6px;
-  background-color: #f0e7d4;
-  font-weight: bold;
+  border-left: 4px solid var(--maiz);
+  border-radius: var(--radio-control);
+  background-color: var(--maiz-claro);
+  font-weight: 700;
 }
 #estado-acceso:empty,
 #estado-registro:empty {
@@ -71,33 +71,34 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px 20px;
-  max-width: 720px;
-  padding: 20px 24px;
-  border-radius: 12px;
-  background-color: #e6ecdb;
+  max-width: 760px;
+  padding: 22px 26px;
+  border-radius: var(--radio);
+  background-color: var(--cobalto-claro);
 }
 .sesion-iniciada p {
   margin: 0;
   font-size: 20px;
 }
 .sesion-iniciada strong {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 24px;
-  color: #1d3f2c;
+  font-family: var(--letra-titulos);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--cobalto-oscuro);
 }
 .sesion-iniciada button {
   margin-top: 0;
 }
 
 .cambiar-pantalla {
-  margin: 20px 0 0;
-  padding-top: 16px;
-  border-top: 1px solid #d9d9cc;
+  margin: 24px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--linea);
   text-align: center;
 }
 #acceso-sin-cuenta {
   max-width: 460px;
-  color: #5b6a60;
+  color: var(--tinta-suave);
   text-align: center;
 }
 
@@ -105,36 +106,36 @@
 
 /* El aviso de sesión deja espacio antes del formulario. */
 #aviso-publicar-sesion {
-  max-width: 720px;
+  max-width: 760px;
   margin-bottom: 24px;
 }
 
 /* Recuadro para importar una receta desde JSON. */
 .importar-receta {
-  max-width: 720px;
-  margin: 8px 0 16px;
+  max-width: 760px;
+  margin: 12px 0 16px;
   padding: 16px 20px;
-  border: 1px dashed #899789;
-  border-radius: 12px;
-  background-color: #e6ecdb;
+  border: 1.5px dashed var(--linea-campo);
+  border-radius: var(--radio);
+  background-color: var(--cobalto-claro);
 }
 .importar-receta label {
   margin-top: 0;
 }
 .importar-receta input[type="file"] {
-  background-color: white;
+  background-color: var(--blanco);
 }
 
 /* Mensaje general de Publicar (Publicando..., Receta publicada...). Solo se ve si tiene texto. */
 #estado-json {
-  max-width: 720px;
+  max-width: 760px;
 }
 #estado-json:not(:empty) {
   padding: 12px 16px;
-  border-left: 4px solid #93633a;
-  border-radius: 6px;
-  background-color: #f0e7d4;
-  font-weight: bold;
+  border-left: 4px solid var(--maiz);
+  border-radius: var(--radio-control);
+  background-color: var(--maiz-claro);
+  font-weight: 700;
 }
 
 /* Categoría, tiempo y porciones en una fila cuando hay espacio. */
@@ -157,9 +158,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid #d9d9cc;
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--linea);
 }
 .formulario-botones button {
   margin-top: 0;
@@ -167,36 +168,43 @@
 
 /* ── Mis recetas: cada receta en un renglón con su enlace, sus datos y los botones. ── */
 .mis-recetas {
-  max-width: 720px;
-  margin-top: 32px;
+  max-width: 760px;
+  margin-top: 36px;
 }
 .lista-mis-recetas {
   padding: 0;
   list-style: none;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background-color: var(--blanco);
+}
+.lista-mis-recetas:empty {
+  display: none;
 }
 .mi-receta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 12px;
-  padding: 14px 20px;
-  border: 1px solid #d9d9cc;
-  border-radius: 12px;
-  background-color: white;
-  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+  gap: 4px 14px;
+  margin: 0;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--linea);
+}
+.mi-receta:last-child {
+  border-bottom: none;
 }
 .mi-receta a {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 19px;
-  font-weight: bold;
+  font-family: var(--letra-titulos);
+  font-size: 21px;
+  font-weight: 800;
   text-decoration: none;
 }
 .mi-receta a:hover {
   text-decoration: underline;
 }
 .mi-receta-meta {
-  color: #5b6a60;
-  font-size: 15px;
+  color: var(--tinta-suave);
+  font-size: var(--t-chico);
 }
 .mi-receta-acciones {
   display: flex;
@@ -208,23 +216,23 @@
   padding: 8px 16px;
   font-size: 15px;
 }
-/* Editar con contorno verde; Borrar con contorno café porque no se puede deshacer. */
+/* Editar con contorno cobalto; Borrar en rojo porque no se puede deshacer. */
 .mi-receta-acciones button:first-child {
-  background-color: white;
-  color: #28563c;
+  background-color: var(--blanco);
+  color: var(--cobalto);
 }
 .mi-receta-acciones button:first-child:hover {
-  background-color: #e6ecdb;
-  color: #1d3f2c;
+  background-color: var(--cobalto-claro);
+  color: var(--cobalto-oscuro);
 }
 .mi-receta-acciones button:last-child:not(:disabled) {
-  border-color: #93633a;
-  background-color: white;
-  color: #93633a;
+  border-color: var(--error);
+  background-color: var(--blanco);
+  color: var(--error);
 }
 .mi-receta-acciones button:last-child:not(:disabled):hover {
-  background-color: #93633a;
-  color: white;
+  background-color: var(--error);
+  color: var(--blanco);
 }
 
 /* En el celular los campos van uno debajo de otro y los botones ocupan todo el ancho. */
@@ -232,7 +240,7 @@
   #formulario-acceso,
   #formulario-registro,
   #formulario-receta {
-    padding: 4px 18px 20px;
+    padding: 4px 18px 22px;
   }
   .campos-fila {
     grid-template-columns: minmax(0, 1fr);

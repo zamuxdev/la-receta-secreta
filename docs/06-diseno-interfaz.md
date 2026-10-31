@@ -46,37 +46,52 @@ Incluye una galería de recetas, la ficha de cada una (foto, tiempo, porciones, 
 
 Todas las pantallas viven en `index.html` y `js/app.js` muestra una a la vez según el fragmento de la URL (`#/recetas`, `#/publicar`, etc.). Es el mismo modelo de SPA de la arquitectura propuesta y se puede servir como archivos estáticos, sin servidor propio. Cada pantalla tiene un enlace directo, y el botón de retroceso del navegador funciona. Una receta tiene su propio enlace (`#/receta/5`), que se puede compartir. Si el enlace no existe, se muestra una pantalla de "Página no encontrada".
 
+### Identidad visual: la loza de talavera
+
+El primer diseño usaba fondo crema, verde y títulos serif. Funcionaba, pero es la combinación que más se repite en las páginas de recetas y en las que generan las herramientas de IA, así que el recetario no se distinguía. En el rediseño se tomó la referencia de la **talavera poblana**, la loza azul y blanca en la que se sirve la comida en muchas casas de México. Así la identidad sale del tema del proyecto (cocina mexicana casera), y el azul y el blanco hacen que resalten los colores de la comida en las fotos.
+
+La idea se aplica con mesura: **solo un elemento llama la atención**, el "plato" de la portada (la foto de los tacos dentro de un borde a rayas cobalto con un anillo amarillo, dibujado solo con CSS). El logotipo es ese mismo plato en pequeño. Todo lo demás es sobrio: fondo claro, bordes finos y pocas sombras.
+
 ### Paleta de color
 
-Los colores se eligieron para transmitir frescura y calidez, sin competir con las fotos de comida:
-
-| Uso | Color | Valor |
+| Uso | Nombre (variable) | Valor |
 |---|---|---|
-| Fondo de la página | Crema | `#faf8f2` |
-| Texto | Verde muy oscuro | `#293d32` |
-| Enlaces y botón principal | Verde bosque | `#28563c` |
-| Bloque de bienvenida | Verde claro | `#e6ecdb` |
-| Bordes | Gris verdoso | `#d9d9cc` |
-| Foco y avisos | Café | `#93633a` |
-| Pie de página y botón al pasar el mouse | Verde oscuro | `#1d3f2c` |
+| Fondo de la página | Loza (`--loza`) | `#f4f6fa` |
+| Texto | Tinta (`--tinta`) | `#172a4d` |
+| Texto secundario | Tinta suave (`--tinta-suave`) | `#4a5a78` |
+| Enlaces, botones, marca | Cobalto (`--cobalto`) | `#1f3f8f` |
+| Botón al pasar el mouse, pie de página | Cobalto oscuro (`--cobalto-oscuro`) | `#142c66` |
+| Recuadros suaves (ingredientes, importar, sesión) | Cobalto claro (`--cobalto-claro`) | `#e5ebf7` |
+| Bordes | Línea (`--linea`) | `#d5dcea` |
+| Estrellas y borde del plato (decorativo) | Maíz (`--maiz`) | `#e3a21a` |
+| Texto con acento, contorno de foco | Maíz oscuro (`--maiz-oscuro`) | `#8f5c00` |
+| Fondo de avisos | Maíz claro (`--maiz-claro`) | `#fcf3dc` |
+| Errores y "Borrar" / "Quitar" | Error (`--error`) | `#b42318` |
 
-El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas blancas separan el contenido del fondo. El café aparece solo en elementos que deben destacar, como el contorno de foco, los avisos, los datos de cada tarjeta y las estrellas. Los colores están como variables al inicio de `css/estilos.css` (`--verde`, `--crema`...), para usar siempre los mismos valores. Es coherente con el requisito RNF-08 de colores cálidos y apetitosos.
+- El fondo es un blanco frío, como la porcelana, en lugar de crema.
+- El cobalto es el color de acción: todo lo que se puede tocar (enlaces, botones, favoritos) es azul.
+- El amarillo maíz solo aparece en lo que se califica o destaca (estrellas, promedio, avisos). Como el amarillo claro no se lee bien sobre blanco, el texto usa la versión oscura `#8f5c00` (contraste 5:1).
+- Las acciones que no se pueden deshacer (borrar una receta, quitar un favorito) usan rojo, para distinguirlas de las normales.
+- Los colores están como variables al inicio de `css/estilos.css`. **Los CSS de cada módulo ahora usan esas variables** (`var(--cobalto)`...) en lugar de colores escritos a mano, para que un cambio de color se haga en un solo lugar.
 
 ### Tipografía y lectura
 
-- El texto usa Arial, disponible en cualquier dispositivo, para que cargue rápido y se vea igual en todos.
-- Los títulos usan una letra serif del sistema (Palatino o Georgia, según el equipo). Da el aire de un recetario impreso y tampoco descarga fuentes de internet.
-- El interlineado es de 1.6 y el texto es oscuro sobre fondo claro, para leer listas de ingredientes y pasos cómodamente.
-- El contenido tiene un ancho máximo de 1080 px, para que las líneas de texto no sean demasiado largas.
-- Los títulos tienen interlineado más corto (1.3) para que no se separen demasiado.
+- Títulos en **Alegreya** (negrita 800) y texto en **Alegreya Sans**. Las diseñó Juan Pablo del Peral, de Huerta Tipográfica (Argentina), para textos largos en español; tienen un trazo caligráfico que da el aire de recetario escrito a mano sin perder legibilidad. Son de la misma familia, así que combinan, y se distinguen bien porque una tiene remates (serif) y la otra no.
+- Se cargan desde Google Fonts (un `<link>` en `index.html`). **Si no hay internet**, la página no se rompe: usa las fuentes del sistema que siguen en la lista (Palatino o Georgia para títulos, Segoe UI o Arial para texto).
+- Escala de tamaños fija, en variables (`--t-chico` 15 px, `--t-texto` 18 px, `--t-entrada` 21 px, `--t-h2` 28 px, `--t-h1` 44 px, `--t-portada` 64 px). Cada paso es aproximadamente 1.25 veces el anterior. En el celular se reducen.
+- Interlineado de 1.55 en el texto y 1.15 en los títulos. Los párrafos tienen un ancho máximo de 68 caracteres para que las líneas no sean demasiado largas.
+- Se quitó la etiqueta en mayúsculas "RECETAS PARA TODOS LOS DÍAS" de la portada y las mayúsculas de los datos de cada tarjeta: el texto en mayúsculas se lee más lento y no aportaba información.
 
 ### Galería y fichas
 
 - La galería usa CSS Grid con `auto-fill`: caben tantas columnas como permita la pantalla y pasan a una sola en el celular, sin código extra. Todas las tarjetas de una fila miden lo mismo.
 - Toda la tarjeta abre la receta (el enlace se estira con `::before`), así el objetivo para hacer clic o tocar es grande. El botón de favoritos queda encima y sigue funcionando aparte.
-- En el detalle, la foto y el resumen (descripción, datos, favoritos y calificación) van lado a lado en pantalla grande. Los ingredientes van en un recuadro y los pasos tienen su número en un círculo, para seguirlos mientras se cocina.
+- Las tarjetas ya no "flotan" con sombra ni se elevan al pasar el mouse: solo cambia el borde a cobalto. Indica que se puede abrir sin mover la página.
+- Los radios de las esquinas siguen la jerarquía: 6 px en botones y campos, 10 px en tarjetas y recuadros, y el plato de la portada es un círculo.
+- En el detalle, la foto y el resumen van lado a lado en pantalla grande. La descripción va en letra de título para que se lea como una entrada. Los ingredientes van en un recuadro cobalto claro, separados por líneas para no perder el renglón, y los pasos tienen su número en un círculo (son una secuencia, por eso llevan número).
 - Todas las fotos tienen proporción 4:3 (`aspect-ratio` y `object-fit: cover`) y llevan `width` y `height`. Así la galería se ve uniforme aunque las imágenes originales sean distintas, y la página no "salta" mientras cargan.
 - Cada ficha muestra primero la descripción y los datos clave (categoría, tiempo y porciones), después los ingredientes (lista) y la preparación (lista numerada). Es el orden en que una persona usa la receta.
+- Las listas de Favoritos, Mejor valoradas y Mis recetas son una sola hoja blanca con renglones separados por líneas, en lugar de una tarjeta por elemento. En Mejor valoradas los tres primeros lugares llevan el círculo relleno.
 
 ### Formulario de publicación
 
@@ -88,13 +103,13 @@ El crema da un fondo cálido y el verde evoca ingredientes frescos. Las tarjetas
 
 ### Accesibilidad y adaptación
 
-- **Responsivo:** `viewport` configurado, reglas para pantallas de hasta 860 px (una sola columna) y 600 px (menos relleno, títulos más pequeños y botones a todo el ancho) y imágenes de ancho fluido.
+- **Responsivo:** `viewport` configurado, reglas para pantallas de hasta 860 px (una sola columna, el plato arriba del texto) y 600 px (menos relleno, escala de letra más chica y botones a todo el ancho). El pie de página queda abajo aunque la pantalla tenga poco contenido y imágenes de ancho fluido.
 - **Semántica:** `header`, `nav`, `main`, `section`, `article` y `footer`, además de `aria-label` en la navegación.
-- **Navegación:** la sección actual se marca con `aria-current="page"` y también en negrita. Al abrir una receta se mantiene marcada "Recetas".
-- **Teclado y lectores de pantalla:** contorno de foco visible (`:focus-visible`), foco en el título al cambiar de pantalla, `role="status"` en los mensajes y texto alternativo en todas las fotos.
+- **Navegación:** la sección actual se marca con `aria-current="page"`, con una barra cobalto debajo y en negrita (no solo con color). Al abrir una receta se mantiene marcada "Recetas".
+- **Teclado y lectores de pantalla:** contorno de foco visible (`:focus-visible`, maíz oscuro), foco en el título al cambiar de pantalla, `role="status"` en los mensajes y texto alternativo en todas las fotos. El título que recibe el foco por código no dibuja contorno, porque no es un control y el contorno aparecía sobre la portada al cargar.
 - **Sin JavaScript:** un aviso `noscript` explica que hace falta activarlo.
-- **Contraste:** texto oscuro sobre fondo claro, y botón blanco sobre verde oscuro.
-- **Movimiento:** las animaciones (tarjetas que se elevan, botones) se desactivan si el sistema pide reducir el movimiento (`prefers-reduced-motion`).
+- **Contraste:** texto azul tinta sobre fondo claro y botón blanco sobre cobalto, ambos por arriba de 4.5:1.
+- **Movimiento:** casi no hay animaciones; las transiciones de color de botones y estrellas se desactivan si el sistema pide reducir el movimiento (`prefers-reduced-motion`).
 
 ### Decisiones que se tomaron por ahora
 

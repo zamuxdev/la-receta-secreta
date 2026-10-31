@@ -1,10 +1,10 @@
 /* Estilos del módulo Calificaciones. Usa solo este archivo para tus estilos (ver AGENTS.md).
-   Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+   Usa las variables de estilos.css (--cobalto, --maiz, --linea...) en lugar de colores sueltos. */
 
 .calificaciones-promedio {
   margin: 0 0 4px;
-  color: #93633a;
-  font-weight: bold;
+  color: var(--maiz-oscuro);
+  font-weight: 700;
 }
 
 .calificaciones-estrellas {
@@ -21,11 +21,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1;
   background: none;
   border: none;
-  color: #d9d9cc;
+  color: var(--apagado);
   cursor: pointer;
   transition: color 0.1s, transform 0.1s;
 }
@@ -36,23 +36,23 @@
 
 .estrella:hover:not(:disabled),
 .estrella:focus-visible {
-  color: #93633a;
+  color: var(--maiz);
 }
 
 .estrella.marcada {
-  color: #93633a;
+  color: var(--maiz);
 }
 
 /* Al pasar el mouse (o el foco) por una estrella se pintan también las anteriores,
    y las siguientes se apagan aunque estén marcadas, para mostrar cómo quedaría. */
 .estrella:not(:disabled):has(~ .estrella:hover:not(:disabled)),
 .estrella:not(:disabled):has(~ .estrella:focus-visible) {
-  color: #93633a;
+  color: var(--maiz);
 }
 
 .estrella:hover:not(:disabled) ~ .estrella,
 .estrella:focus-visible ~ .estrella {
-  color: #d9d9cc;
+  color: var(--apagado);
 }
 
 .estrella:disabled {
@@ -61,7 +61,7 @@
 }
 
 .calificaciones-estado {
-  color: #555;
+  color: var(--tinta-suave);
   min-height: 1.2em;
   margin: 4px 0 0;
 }
@@ -69,68 +69,74 @@
 .quitar-calificacion {
   margin: 10px 0 0;
   padding: 6px 14px;
-  background: none;
-  border: 1px solid #93633a;
-  border-radius: 6px;
-  color: #93633a;
+  background: var(--blanco);
+  border: 1.5px solid var(--cobalto);
+  border-radius: var(--radio-control);
+  color: var(--cobalto);
   font: inherit;
   font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
 }
 
 .quitar-calificacion:hover,
 .quitar-calificacion:focus-visible {
-  background-color: #f0e7d4;
+  background-color: var(--cobalto-claro);
 }
 
-/* Lista numerada: el número del lugar va en un círculo a la izquierda. */
+/* El lugar sí es un orden: el número va en un círculo a la izquierda. */
 .lista-mejor-valoradas {
   list-style: none;
   padding: 0;
-  margin: 24px 0 0;
-  max-width: 720px;
+  margin: 28px 0 0;
+  max-width: 760px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background-color: var(--blanco);
   counter-reset: lugar;
 }
 
 .mejor-valorada-item {
   position: relative;
-  border: 1px solid #d9d9cc;
-  border-radius: 12px;
-  background-color: white;
-  padding: 16px 20px 16px 76px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
+  padding: 18px 22px 18px 84px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--linea);
   counter-increment: lugar;
+}
+
+.mejor-valorada-item:last-child {
+  border-bottom: none;
 }
 
 .mejor-valorada-item::before {
   content: counter(lugar);
   position: absolute;
   top: 50%;
-  left: 20px;
+  left: 22px;
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--cobalto);
   border-radius: 50%;
-  background-color: #f0e7d4;
-  color: #93633a;
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 20px;
-  font-weight: bold;
+  background-color: var(--blanco);
+  color: var(--cobalto);
+  font-family: var(--letra-titulos);
+  font-size: 21px;
+  font-weight: 800;
   transform: translateY(-50%);
 }
 
-/* Los tres primeros lugares resaltan en verde. */
+/* Los tres primeros lugares van rellenos de cobalto. */
 .mejor-valorada-item:nth-child(-n + 3)::before {
-  background-color: #28563c;
-  color: white;
+  background-color: var(--cobalto);
+  color: var(--blanco);
 }
 
 .mejor-valorada-item a {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  font-size: 20px;
-  font-weight: bold;
+  font-family: var(--letra-titulos);
+  font-size: 22px;
+  font-weight: 800;
   text-decoration: none;
 }
 
@@ -145,16 +151,16 @@
 }
 
 .mejor-valorada-meta {
-  color: #555;
-  font-size: 14px;
+  color: var(--tinta-suave);
+  font-size: var(--t-chico);
 }
 
 .mejor-valorada-promedio {
-  color: #93633a;
-  font-weight: bold;
+  color: var(--maiz-oscuro);
+  font-weight: 700;
   margin-top: 4px;
 }
 
 .mejor-valoradas-estado {
-  color: #555;
+  color: var(--tinta-suave);
 }

@@ -1,29 +1,45 @@
 /* Estilos compartidos por todas las pantallas.
-   Los colores y medidas están en variables (:root) para usarlos igual en todos lados.
-   La paleta está justificada en docs/06-diseno-interfaz.md. */
+   Idea del diseño: la loza de talavera. Fondo blanco porcelana, azul cobalto y un acento
+   amarillo maíz. Lo único llamativo es el "plato" de la portada; lo demás es sobrio.
+   Los colores y medidas están en variables (:root) y los usan también los CSS de cada módulo.
+   La justificación está en docs/06-diseno-interfaz.md. */
 :root {
-  --crema: #faf8f2;
-  --texto: #293d32;
-  --texto-suave: #5b6a60;
-  --verde: #28563c;
-  --verde-oscuro: #1d3f2c;
-  --verde-claro: #e6ecdb;
-  --borde: #d9d9cc;
-  --borde-campo: #899789;
-  --cafe: #93633a;
-  --cafe-claro: #f0e7d4;
+  /* Color */
+  --loza: #f4f6fa;           /* fondo de la página: blanco frío, como la porcelana */
   --blanco: #ffffff;
-  --error: #a3261b;
+  --tinta: #172a4d;          /* texto: azul tinta, casi negro */
+  --tinta-suave: #4a5a78;    /* texto secundario */
+  --cobalto: #1f3f8f;        /* enlaces, botones, marca */
+  --cobalto-oscuro: #142c66; /* botón al pasar el mouse, pie de página */
+  --cobalto-claro: #e5ebf7;  /* recuadros suaves (ingredientes, importar) */
+  --linea: #d5dcea;          /* bordes */
+  --linea-campo: #8291ae;    /* borde de los campos de formulario */
+  --maiz: #e3a21a;           /* decorativo: estrellas, borde del plato */
+  --maiz-oscuro: #8f5c00;    /* texto con acento (promedio, avisos): contraste 5:1 sobre blanco */
+  --maiz-claro: #fcf3dc;     /* fondo de avisos */
+  --error: #b42318;
+  --error-claro: #fdf1ef;
+  --apagado: #cfd6e4;        /* estrellas vacías, botones deshabilitados */
 
-  --letra-texto: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  /* Serif del sistema para los títulos: da el aire de recetario sin descargar fuentes. */
-  --letra-titulos: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  /* Tipografía: Alegreya (títulos) y Alegreya Sans (texto). Si no hay internet,
+     se usan las fuentes del sistema que siguen en la lista. */
+  --letra-titulos: "Alegreya", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --letra-texto: "Alegreya Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
-  --radio: 12px;
-  --radio-chico: 6px;
-  --sombra: 0 1px 2px rgba(41, 61, 50, 0.06), 0 4px 16px rgba(41, 61, 50, 0.06);
-  --sombra-alta: 0 2px 4px rgba(41, 61, 50, 0.08), 0 12px 28px rgba(41, 61, 50, 0.12);
-  --ancho: 1080px;
+  /* Escala de tamaños (cada paso es ~1.25 veces el anterior). */
+  --t-chico: 15px;
+  --t-texto: 18px;
+  --t-entrada: 21px;
+  --t-h3: 22px;
+  --t-h2: 28px;
+  --t-h1: 44px;
+  --t-portada: 64px;
+
+  /* Radios según jerarquía: controles < tarjetas < bloques grandes. */
+  --radio-control: 6px;
+  --radio: 10px;
+  --radio-bloque: 18px;
+  --ancho: 1120px;
   --margen: 24px;
 }
 
@@ -38,23 +54,29 @@
 body {
   margin: 0;
   font-family: var(--letra-texto);
-  font-size: 17px;
-  line-height: 1.6;
-  color: var(--texto);
-  background-color: var(--crema);
+  font-size: var(--t-texto);
+  line-height: 1.55;
+  color: var(--tinta);
+  background-color: var(--loza);
+  -webkit-font-smoothing: antialiased;
+  /* El pie queda abajo aunque la pantalla tenga poco contenido. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* El encabezado y el pie ocupan todo el ancho; su contenido se alinea con el de main. */
 header,
 footer {
-  padding-block: 18px;
   padding-inline: max(var(--margen), calc((100% - var(--ancho)) / 2 + var(--margen)));
 }
 main {
+  flex: 1;
+  width: 100%;
   max-width: var(--ancho);
   min-height: 65vh;
   margin: auto;
-  padding: 40px var(--margen) 64px;
+  padding: 48px var(--margen) 80px;
 }
 
 /* ── Encabezado y menú ── */
@@ -63,90 +85,103 @@ header {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 32px;
-  border-bottom: 1px solid var(--borde);
+  gap: 8px 32px;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--linea);
   background-color: var(--blanco);
 }
 .marca {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-family: var(--letra-titulos);
-  font-size: 26px;
-  font-weight: bold;
-  color: var(--verde);
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--cobalto);
   text-decoration: none;
-  letter-spacing: -0.01em;
 }
-/* Sello decorativo antes del nombre. */
+.marca:hover {
+  color: var(--cobalto-oscuro);
+}
+/* Un plato pequeño de talavera como logotipo: borde a rayas y centro maíz. */
 .marca::before {
   content: "";
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 50% 50%, var(--cafe-claro) 0 5px, transparent 6px),
-    var(--verde);
-  box-shadow: 0 0 0 3px var(--verde-claro);
+    radial-gradient(circle, var(--maiz) 0 4px, var(--blanco) 4.5px 8px, transparent 8.5px),
+    repeating-conic-gradient(var(--cobalto) 0 15deg, var(--blanco) 15deg 30deg);
+  box-shadow: 0 0 0 2px var(--cobalto);
 }
 nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 2px;
 }
 nav a {
-  padding: 6px 14px;
-  border-radius: 999px;
-  color: var(--texto);
-  font-size: 16px;
+  padding: 8px 12px 6px;
+  border-bottom: 3px solid transparent;
+  color: var(--tinta);
+  font-size: 17px;
   text-decoration: none;
-  transition: background-color 0.15s, color 0.15s;
 }
 nav a:hover {
-  background-color: var(--verde-claro);
-  color: var(--verde-oscuro);
+  color: var(--cobalto);
+  border-bottom-color: var(--linea);
 }
-/* La sección actual se marca con color y negrita, no solo con color. */
+/* La sección actual se marca con barra, color y negrita, no solo con color. */
 nav a[aria-current="page"] {
-  background-color: var(--verde);
-  color: var(--blanco);
-  font-weight: bold;
+  border-bottom-color: var(--cobalto);
+  color: var(--cobalto);
+  font-weight: 700;
 }
 
 /* ── Texto general ── */
 a {
-  color: var(--verde);
+  color: var(--cobalto);
   text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
 a:hover {
-  color: var(--verde-oscuro);
+  color: var(--cobalto-oscuro);
+  text-decoration-thickness: 2px;
 }
 h1,
 h2,
 h3 {
   font-family: var(--letra-titulos);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--tinta);
 }
 h1 {
   margin: 0 0 12px;
-  font-size: 42px;
+  font-size: var(--t-h1);
+  letter-spacing: -0.01em;
 }
 h2 {
-  font-size: 28px;
+  margin: 40px 0 12px;
+  font-size: var(--t-h2);
+}
+h3 {
+  font-size: var(--t-h3);
+}
+p {
+  max-width: 68ch;
 }
 .entrada {
   margin-top: 0;
-  max-width: 60ch;
-  font-size: 19px;
-  color: var(--texto-suave);
+  font-size: var(--t-entrada);
+  color: var(--tinta-suave);
 }
 section {
   margin-bottom: 32px;
 }
 li {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 /* ── Botones ──
@@ -160,22 +195,23 @@ li {
   gap: 8px;
   margin-top: 20px;
   padding: 12px 22px;
-  border: 2px solid var(--verde);
-  border-radius: var(--radio-chico);
-  background-color: var(--verde);
+  border: 2px solid var(--cobalto);
+  border-radius: var(--radio-control);
+  background-color: var(--cobalto);
   color: var(--blanco);
   font: inherit;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 1.2;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 }
 :where(button):hover,
 .boton:hover {
-  border-color: var(--verde-oscuro);
-  background-color: var(--verde-oscuro);
+  border-color: var(--cobalto-oscuro);
+  background-color: var(--cobalto-oscuro);
   color: var(--blanco);
+  text-decoration: none;
 }
 :where(button):active,
 .boton:active {
@@ -184,85 +220,105 @@ li {
 /* Botones secundarios: mismas medidas, pero con contorno en lugar de relleno. */
 :where(#detalle-exportar, #detalle-exportar-xml, #exportar-formulario, #quitar-foto, #cerrar-sesion) {
   background-color: var(--blanco);
-  color: var(--verde);
+  color: var(--cobalto);
 }
 :where(#detalle-exportar, #detalle-exportar-xml, #exportar-formulario, #quitar-foto, #cerrar-sesion):hover {
-  background-color: var(--verde-claro);
-  color: var(--verde-oscuro);
+  background-color: var(--cobalto-claro);
+  color: var(--cobalto-oscuro);
 }
 :where(button):disabled,
 :where(button):disabled:hover {
-  border-color: #b3b3a8;
-  background-color: #e7e7e0;
-  color: #555;
+  border-color: var(--apagado);
+  background-color: #eceff5;
+  color: #5c667a;
   cursor: not-allowed;
   transform: none;
 }
 
-/* ── Inicio ── */
+/* ── Inicio ──
+   El texto a la izquierda y, a la derecha, la foto servida en un plato de talavera.
+   El plato son dos capas en la misma celda: ::before es el borde a rayas y ::after la foto. */
 .bienvenida {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  column-gap: 40px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  /* Las filas 1 y 5 absorben el espacio sobrante, así el texto queda centrado junto al plato. */
+  grid-template-rows: 1fr auto auto auto 1fr;
+  column-gap: 56px;
   align-items: center;
-  overflow: hidden;
-  margin-bottom: 56px;
-  padding: 48px;
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 0% 100%, rgba(255, 255, 255, 0.55) 0 120px, transparent 121px),
-    var(--verde-claro);
+  margin: 0 0 72px;
 }
 .bienvenida > * {
   grid-column: 1;
 }
-/* Foto decorativa a la derecha (no lleva texto, así que no necesita alt). */
+.bienvenida h1 {
+  grid-row: 2;
+}
+.bienvenida p {
+  grid-row: 3;
+}
+.bienvenida .boton {
+  grid-row: 4;
+}
+.bienvenida::before,
 .bienvenida::after {
   content: "";
   grid-column: 2;
-  grid-row: 1 / span 4;
-  align-self: stretch;
-  min-height: 320px;
-  border-radius: 999px 999px var(--radio) var(--radio);
-  background: url("../fotos/tacos.jpg") center / cover;
-  box-shadow: var(--sombra-alta);
+  grid-row: 1 / -1;
+  justify-self: center;
+  width: min(100%, 440px);
+  aspect-ratio: 1;
+  border-radius: 50%;
 }
-.bienvenida p:first-child {
-  margin: 0;
-  color: var(--cafe);
-  font-size: 14px;
-  font-weight: bold;
-  letter-spacing: 0.14em;
+/* Borde del plato: rayas cobalto sobre blanco, con un anillo maíz por dentro. */
+.bienvenida::before {
+  background:
+    radial-gradient(circle, transparent 0 60%, var(--cobalto) 60% 61.5%, var(--maiz) 61.5% 64%, var(--cobalto) 64% 65.5%, transparent 65.5%),
+    repeating-conic-gradient(var(--cobalto) 0 6deg, var(--blanco) 6deg 12deg);
+  box-shadow: 0 0 0 3px var(--cobalto), 0 18px 40px rgba(20, 44, 102, 0.18);
+}
+/* Foto decorativa (no lleva texto, así que no necesita alt). Queda dentro del borde. */
+.bienvenida::after {
+  width: min(78%, 343px);
+  background: url("../fotos/tacos.jpg") center / cover;
+  box-shadow: 0 0 0 6px var(--blanco);
 }
 .bienvenida h1 {
-  margin: 12px 0 16px;
-  font-size: 54px;
-  line-height: 1.05;
-  color: var(--verde-oscuro);
+  margin: 0 0 20px;
+  font-size: var(--t-portada);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--cobalto-oscuro);
 }
 .bienvenida p {
-  margin-top: 0;
-  font-size: 19px;
+  margin: 0 0 8px;
+  font-size: var(--t-entrada);
+  color: var(--tinta-suave);
 }
 .bienvenida .boton {
   justify-self: start;
-  margin-top: 8px;
-  padding: 14px 28px;
+  margin-top: 24px;
+  padding: 15px 30px;
+  font-size: 19px;
 }
 
-.inicio-cocina > p {
-  max-width: 62ch;
-  color: var(--texto-suave);
-  font-size: 18px;
+.inicio-cocina {
+  padding-top: 40px;
+  border-top: 1px solid var(--linea);
 }
 .inicio-cocina h2 {
+  margin-top: 0;
   margin-bottom: 8px;
 }
+.inicio-cocina > p {
+  max-width: 60ch;
+  color: var(--tinta-suave);
+}
+/* Cuatro accesos: no son pasos, así que van sin números, como una lista sencilla en rejilla. */
 .inicio-atajos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin: 24px 0 0;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0 32px;
+  margin: 28px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -272,42 +328,36 @@ li {
 .inicio-atajos a {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   height: 100%;
-  padding: 20px;
-  border: 1px solid var(--borde);
-  border-top: 4px solid var(--cafe);
-  border-radius: var(--radio);
-  background-color: var(--blanco);
-  color: var(--texto);
+  padding: 18px 0 22px;
+  border-top: 3px solid var(--cobalto);
+  color: var(--tinta);
   text-decoration: none;
-  box-shadow: var(--sombra);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.inicio-atajos a:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-alta);
 }
 .inicio-atajos strong {
   font-family: var(--letra-titulos);
-  font-size: 20px;
-  color: var(--verde);
+  font-size: var(--t-h3);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--cobalto);
 }
-.inicio-atajos strong::after {
-  content: "\00a0→";
+.inicio-atajos a:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .inicio-atajos span {
-  color: var(--texto-suave);
-  font-size: 15px;
+  color: var(--tinta-suave);
+  font-size: 17px;
 }
 
 /* ── Galería ──
    Grid con auto-fill: tantas columnas como quepan, y una sola en el celular. */
 .galeria {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
-  margin-top: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 28px;
+  margin-top: 12px;
 }
 .tarjeta {
   position: relative;
@@ -315,52 +365,48 @@ li {
   flex-direction: column;
   overflow: hidden;
   padding-bottom: 20px;
-  border: 1px solid var(--borde);
+  border: 1px solid var(--linea);
   border-radius: var(--radio);
   background-color: var(--blanco);
-  box-shadow: var(--sombra);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: border-color 0.15s;
 }
+/* Al pasar el mouse solo cambia el borde: indica que se puede abrir, sin mover nada. */
 .tarjeta:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sombra-alta);
+  border-color: var(--cobalto);
 }
 .tarjeta > :not(img) {
   margin-inline: 20px;
 }
 .tarjeta .foto-receta {
   border-radius: 0;
-  transition: transform 0.4s;
-}
-.tarjeta:hover .foto-receta {
-  transform: scale(1.03);
+  border-bottom: 1px solid var(--linea);
 }
 .tarjeta h2 {
   margin-top: 18px;
   margin-bottom: 4px;
-  font-size: 23px;
+  font-size: 24px;
 }
 /* Primer párrafo: categoría, tiempo y porciones. */
 .tarjeta h2 + p {
-  margin: 0 20px 8px;
-  color: var(--cafe);
-  font-size: 13px;
-  font-weight: bold;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  margin: 0 20px 10px;
+  color: var(--maiz-oscuro);
+  font-size: var(--t-chico);
+  font-weight: 700;
 }
 .tarjeta h2 + p + p {
   margin-top: 0;
-  color: var(--texto-suave);
-  font-size: 16px;
+  color: var(--tinta-suave);
+  font-size: 17px;
 }
 .tarjeta > a {
   margin-top: auto;
-  font-weight: bold;
+  padding-top: 4px;
+  font-size: 16px;
+  font-weight: 700;
   text-decoration: none;
 }
-.tarjeta > a::after {
-  content: "\00a0→";
+.tarjeta:hover > a {
+  text-decoration: underline;
 }
 /* Toda la tarjeta abre la receta: el enlace se estira para cubrirla. */
 .tarjeta > a::before {
@@ -372,7 +418,7 @@ li {
   outline: none;
 }
 .tarjeta:has(> a:focus-visible) {
-  outline: 3px solid var(--cafe);
+  outline: 3px solid var(--maiz-oscuro);
   outline-offset: 3px;
 }
 
@@ -398,119 +444,139 @@ li {
 .foto-previa {
   max-width: 320px;
   margin-top: 12px;
-  box-shadow: var(--sombra);
+  border: 1px solid var(--linea);
 }
 
 /* ── Detalle de receta ── */
 .volver {
   display: inline-block;
   margin-bottom: 16px;
-  font-weight: bold;
+  font-weight: 700;
   text-decoration: none;
 }
 .volver:hover {
   text-decoration: underline;
 }
+#receta-detalle h1 {
+  max-width: 22ch;
+  font-size: 52px;
+  line-height: 1.05;
+}
 .detalle-cabecera {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 32px 40px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 32px 48px;
   align-items: start;
-  margin: 24px 0 40px;
+  margin: 28px 0 48px;
 }
 /* Si la receta no tiene foto, el resumen ocupa todo el ancho. */
 .detalle-cabecera:has(> .foto-detalle[hidden]) {
   grid-template-columns: minmax(0, 1fr);
 }
-.foto-detalle {
-  box-shadow: var(--sombra-alta);
-}
 .detalle-resumen {
-  padding: 24px;
-  border: 1px solid var(--borde);
-  border-radius: var(--radio);
-  background-color: var(--blanco);
-  box-shadow: var(--sombra);
+  padding-top: 4px;
 }
 #detalle-descripcion {
   margin-top: 0;
-  font-size: 19px;
+  font-family: var(--letra-titulos);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--tinta);
 }
 .detalle-meta strong {
   display: inline-block;
   padding: 6px 14px;
-  border-radius: 999px;
-  background-color: var(--verde-claro);
-  color: var(--verde-oscuro);
-  font-size: 15px;
+  border-radius: var(--radio-control);
+  background-color: var(--cobalto-claro);
+  color: var(--cobalto-oscuro);
+  font-size: 16px;
+}
+#detalle-acciones:not(:empty) {
+  margin-top: 20px;
 }
 #detalle-calificacion:not(:empty) {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--borde);
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--linea);
 }
 .detalle-cuerpo {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: 48px;
 }
 .detalle-cuerpo h2 {
   margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--cafe);
+  margin-bottom: 18px;
+}
+/* Mismo margen superior que el recuadro de ingredientes, para que los dos títulos queden alineados. */
+.detalle-preparacion {
+  padding-top: 26px;
 }
 .detalle-ingredientes {
   align-self: start;
-  padding: 24px;
+  padding: 26px 28px 18px;
   border-radius: var(--radio);
-  background-color: var(--verde-claro);
+  background-color: var(--cobalto-claro);
 }
 #detalle-ingredientes {
-  padding-left: 22px;
+  margin: 0;
+  padding-left: 20px;
+}
+#detalle-ingredientes li {
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(31, 63, 143, 0.15);
+}
+#detalle-ingredientes li:last-child {
+  border-bottom: none;
 }
 #detalle-ingredientes li::marker {
-  color: var(--cafe);
+  color: var(--cobalto);
 }
-/* Pasos con número grande en un círculo, para seguirlos mientras se cocina. */
+/* Los pasos sí son una secuencia: número grande en un círculo, para seguirlos mientras se cocina. */
 #detalle-pasos {
+  margin: 0;
   padding: 0;
   list-style: none;
   counter-reset: paso;
 }
 #detalle-pasos li {
   position: relative;
-  min-height: 36px;
-  margin-bottom: 18px;
-  padding-left: 52px;
+  min-height: 40px;
+  margin-bottom: 22px;
+  padding-left: 60px;
+  padding-top: 6px;
   counter-increment: paso;
 }
 #detalle-pasos li::before {
   content: counter(paso);
   position: absolute;
-  top: -2px;
+  top: 0;
   left: 0;
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--cobalto);
   border-radius: 50%;
-  background-color: var(--verde);
-  color: var(--blanco);
+  background-color: var(--blanco);
+  color: var(--cobalto);
   font-family: var(--letra-titulos);
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 800;
 }
 .detalle-exportar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid var(--borde);
+  border-top: 1px solid var(--linea);
 }
 .detalle-exportar p {
   margin: 0 8px 0 0;
-  color: var(--texto-suave);
+  color: var(--tinta-suave);
 }
 .detalle-exportar button {
   margin-top: 0;
@@ -522,32 +588,36 @@ form {
 }
 label {
   display: block;
-  margin-top: 18px;
+  margin-top: 20px;
   margin-bottom: 6px;
-  font-weight: bold;
+  font-weight: 700;
 }
 input,
 textarea,
 select {
   width: 100%;
-  padding: 11px 12px;
-  border: 1px solid var(--borde-campo);
-  border-radius: var(--radio-chico);
+  padding: 11px 13px;
+  border: 1.5px solid var(--linea-campo);
+  border-radius: var(--radio-control);
   font: inherit;
-  color: var(--texto);
+  color: var(--tinta);
   background-color: var(--blanco);
   transition: border-color 0.15s, box-shadow 0.15s;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #7a869e;
 }
 input:hover,
 textarea:hover,
 select:hover {
-  border-color: var(--verde);
+  border-color: var(--cobalto);
 }
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: var(--verde);
-  box-shadow: 0 0 0 3px var(--verde-claro);
+  border-color: var(--cobalto);
+  box-shadow: 0 0 0 3px var(--cobalto-claro);
 }
 textarea {
   resize: vertical;
@@ -555,43 +625,49 @@ textarea {
 small {
   display: block;
   margin-top: 4px;
-  color: var(--texto-suave);
-  font-size: 15px;
+  color: var(--tinta-suave);
+  font-size: var(--t-chico);
 }
 input[type="file"] {
   padding: 8px;
   border-style: dashed;
-  background-color: var(--crema);
+  background-color: var(--loza);
   cursor: pointer;
 }
 input[type="file"]::file-selector-button {
   margin-right: 12px;
   padding: 8px 14px;
-  border: 2px solid var(--verde);
-  border-radius: var(--radio-chico);
+  border: 2px solid var(--cobalto);
+  border-radius: var(--radio-control);
   background-color: var(--blanco);
-  color: var(--verde);
+  color: var(--cobalto);
   font: inherit;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
 }
 input[type="file"]::file-selector-button:hover {
-  background-color: var(--verde-claro);
+  background-color: var(--cobalto-claro);
 }
 
 /* ── Avisos ── */
 .aviso {
-  padding: 16px 20px;
-  border-left: 4px solid var(--cafe);
-  border-radius: var(--radio-chico);
-  background-color: var(--cafe-claro);
+  padding: 14px 18px;
+  border-left: 4px solid var(--maiz);
+  border-radius: var(--radio-control);
+  background-color: var(--maiz-claro);
 }
 :focus-visible {
-  outline: 3px solid var(--cafe);
+  outline: 3px solid var(--maiz-oscuro);
   outline-offset: 3px;
 }
+/* Los títulos reciben el foco por código al cambiar de pantalla (app.js) para los lectores
+   de pantalla. No son controles, así que no se dibuja el contorno sobre ellos. */
+h1[tabindex="-1"]:focus,
+h2[tabindex="-1"]:focus {
+  outline: none;
+}
 .en-construccion {
-  color: #555;
+  color: var(--tinta-suave);
   font-style: italic;
 }
 
@@ -602,18 +678,18 @@ footer {
   align-items: baseline;
   justify-content: space-between;
   gap: 4px 24px;
-  padding-block: 32px;
-  background-color: var(--verde-oscuro);
-  color: var(--verde-claro);
-  font-size: 15px;
+  padding-block: 36px;
+  background-color: var(--cobalto-oscuro);
+  color: #c9d4ee;
+  font-size: 16px;
 }
 footer p {
   margin: 0;
 }
 .pie-marca {
   font-family: var(--letra-titulos);
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 800;
   color: var(--blanco);
 }
 
@@ -621,72 +697,88 @@ footer p {
 @media (max-width: 860px) {
   .bienvenida {
     grid-template-columns: minmax(0, 1fr);
-    padding: 32px;
+    margin-bottom: 56px;
   }
+  .bienvenida::before,
   .bienvenida::after {
     grid-column: 1;
     grid-row: 1;
-    min-height: 0;
-    aspect-ratio: 16 / 9;
-    margin-bottom: 24px;
-    border-radius: var(--radio);
+    width: min(100%, 320px);
+  }
+  .bienvenida::after {
+    width: min(78%, 250px);
+  }
+  .bienvenida {
+    grid-template-rows: none;
+  }
+  .bienvenida > * {
+    grid-row: auto;
+  }
+  .bienvenida h1 {
+    margin-top: 32px;
+    font-size: 52px;
   }
   .detalle-cabecera,
   .detalle-cuerpo {
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+    gap: 28px;
+  }
+  .detalle-preparacion {
+    padding-top: 0;
   }
 }
 @media (max-width: 600px) {
   :root {
     --margen: 16px;
-  }
-  body {
-    font-size: 16px;
+    --t-texto: 17px;
+    --t-entrada: 19px;
+    --t-h1: 34px;
+    --t-h2: 25px;
   }
   header {
-    padding-block: 14px;
+    padding-block: 12px;
   }
   .marca {
-    font-size: 22px;
+    font-size: 23px;
+  }
+  .marca::before {
+    width: 26px;
+    height: 26px;
   }
   nav {
-    gap: 6px;
+    width: 100%;
+    margin-inline: -8px;
   }
   nav a {
-    padding: 5px 12px;
-    font-size: 15px;
-    border: 1px solid var(--borde);
-  }
-  nav a[aria-current="page"] {
-    border-color: var(--verde);
+    padding: 6px 8px 4px;
+    font-size: 16px;
   }
   main {
-    padding-top: 28px;
-  }
-  h1 {
-    font-size: 32px;
-  }
-  h2 {
-    font-size: 24px;
-  }
-  .entrada {
-    font-size: 17px;
-  }
-  .bienvenida {
-    margin-inline: calc(var(--margen) * -1);
-    padding: 24px var(--margen) 32px;
-    border-radius: 0;
+    padding-top: 32px;
   }
   .bienvenida h1 {
-    font-size: 36px;
+    font-size: 42px;
+  }
+  .bienvenida h1 {
+    margin-top: 24px;
+  }
+  .bienvenida::before {
+    width: min(100%, 250px);
+  }
+  .bienvenida::after {
+    width: min(78%, 195px);
   }
   .bienvenida .boton {
     justify-self: stretch;
   }
-  .detalle-resumen,
+  #receta-detalle h1 {
+    font-size: 38px;
+  }
+  #detalle-descripcion {
+    font-size: 21px;
+  }
   .detalle-ingredientes {
-    padding: 18px;
+    padding: 20px 20px 12px;
   }
   .detalle-exportar p {
     flex-basis: 100%;
