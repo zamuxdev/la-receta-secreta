@@ -236,7 +236,7 @@ Cualquiera puede consultarlas. Devuelve las categorías disponibles, ordenadas p
 
 | Método y ruta | Quién | Qué hace |
 |---|---|---|
-| `POST /api/auth/registro` | Cualquiera | Crea una cuenta |
+| `POST /api/auth/registro` | Cualquiera, si el registro está abierto | Crea una cuenta |
 | `POST /api/auth/login` | Cualquiera | Inicia sesión y entrega el token |
 | `GET /api/auth/yo` | Con sesión | Devuelve el usuario de la sesión |
 
@@ -255,6 +255,9 @@ Cualquiera puede consultarlas. Devuelve las categorías disponibles, ordenadas p
 - **201:** `Usuario`. No inicia sesión automáticamente.
 - **400:** datos no válidos.
 - **409:** ya existe una cuenta con ese correo. Usa el mismo formato que el 400, con el mensaje en `errors.correo`.
+- **403:** el registro está cerrado. Trae `detail`: "El registro de cuentas está cerrado. Pide tu cuenta a quien administra el sitio.". Pasa en el servidor publicado, donde solo entran las cuentas precargadas.
+
+El registro se abre o se cierra con `Registro:Abierto` en la configuración: abierto en desarrollo (`appsettings.Development.json`) y cerrado en cualquier otro entorno (`appsettings.json`). Las cuentas precargadas salen de la sección `CuentasIniciales` (nombre, correo y contraseña de cada una); la API las crea al arrancar si su correo todavía no existe, con las mismas reglas que el registro. Las contraseñas nunca van en el repositorio: en local se ponen con `dotnet user-secrets` y en el servidor como variables de entorno (`CuentasIniciales__0__Correo`, etc.).
 
 El correo se guarda sin espacios y en minúsculas, así que `Alex@Correo.com` y `alex@correo.com` son la misma cuenta.
 

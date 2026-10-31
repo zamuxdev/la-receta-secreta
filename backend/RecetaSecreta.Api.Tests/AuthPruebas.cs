@@ -76,4 +76,33 @@ public class AuthPruebas(ApiDePrueba api) : PruebaDeApi(api)
         Assert.Equal(HttpStatusCode.Unauthorized, (await Anonimo().GetAsync("/api/auth/yo")).StatusCode);
         Assert.Equal(HttpStatusCode.Unauthorized, (await conTokenFalso.GetAsync("/api/auth/yo")).StatusCode);
     }
+
+    [Fact]
+    public async Task Con_el_registro_cerrado_responde_403_y_las_cuentas_precargadas_pueden_entrar()
+    {
+        // Otra API sobre la misma base, configurada como el servidor publicado.
+        // El correo de la lista va con mayúsculas y repetido para revisar que se normaliza y no se duplica.
+        var correo = $"Maestra.{Guid.NewGuid():N}@Escuela.mx";
+        using var publicada = ApiConConfiguracion(new()
+        {
+            ["Registro:Abierto"] = "false",
+            ["CuentasIniciales:0:Nombre"] = "Maestra",
+            ["CuentasIniciales:0:Correo"] = correo,
+            ["CuentasIniciales:0:Password"] = Password,
+            ["CuentasIniciales:1:Nombre"] = "Maestra repetida",
+            ["CuentasIniciales:1:Correo"] = correo.ToLowerInvariant(),
+            ["CuentasIniciales:1:Password"] = "otra-contrasena-larga",
+        });
+        var cliente = publicada.CreateClient();
+
+        var registro = await cliente.PostAsJsonAsync("/api/auth/registro", new RegistroCrear("Intruso", $"{Guid.NewGuid():N}@correo.com", Password));
+        var login = await cliente.PostAsJsonAsync("/api/auth/login", new LoginCrear(correo, Password));
+
+        Assert.Equal(HttpStatusCode.Forbidden, registro.StatusCode);
+        Assert.Equal("El registro de cuentas está cerrado. Pide tu cuenta a quien administra el sitio.", await Detalle(registro));
+        Assert.Equal(HttpStatusCode.OK, login.StatusCode);
+        var sesion = await login.Content.ReadFromJsonAsync<LoginRespuesta>();
+        Assert.Equal("Maestra", sesion!.Usuario.Nombre);
+        Assert.Equal(correo.ToLowerInvariant(), sesion.Usuario.Correo);
+    }
 }
