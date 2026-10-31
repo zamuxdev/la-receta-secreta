@@ -54,6 +54,23 @@
       <h1>Nuestras recetas</h1>
       <p>Ideas sencillas para tu próxima comida.</p>
       <!-- Módulo Búsqueda: aquí va la barra de búsqueda y los filtros. -->
+      <form id="modulo-busqueda" class="busqueda-contenedor" role="search" novalidate>
+        <div class="busqueda-campo">
+          <label for="input-ingrediente">Ingrediente</label>
+          <input type="search" id="input-ingrediente" placeholder="Ej. aguacate" maxlength="60">
+        </div>
+        <div class="busqueda-campo">
+          <label for="select-categoria">Categoría</label>
+          <select id="select-categoria">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="busqueda-botones">
+          <button type="submit" id="btn-buscar">Buscar</button>
+          <button type="button" id="btn-limpiar" class="busqueda-secundario">Limpiar</button>
+        </div>
+      </form>
+      <p id="mensaje-resultados" class="busqueda-mensaje" role="status"></p>
       <p id="estado-catalogo" role="status"></p>
       <div class="galeria"></div>
     </div>

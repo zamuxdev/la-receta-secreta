@@ -1,2 +1,65 @@
 /* Estilos del módulo Búsqueda. Usa solo este archivo para tus estilos (ver AGENTS.md).
    Mantén la paleta de estilos.css: texto #293d32, verde #28563c, crema #faf8f2, café #93633a. */
+.busqueda-contenedor {
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border: 1px solid #d9d9cc;
+  border-radius: 8px;
+  background-color: white;
+}
+.busqueda-campo label {
+  margin-top: 0;
+}
+/* Misma altura para campo, selector y botones, para que queden alineados en la fila. */
+.busqueda-contenedor input,
+.busqueda-contenedor select,
+.busqueda-botones button {
+  height: 48px;
+}
+.busqueda-botones {
+  display: flex;
+  gap: 12px;
+}
+.busqueda-botones button {
+  flex: 1;
+  margin-top: 0;
+  border: 1px solid #28563c;
+  border-radius: 4px;
+  color: white;
+  background-color: #28563c;
+}
+.busqueda-botones .busqueda-secundario {
+  color: #28563c;
+  background-color: white;
+}
+.busqueda-contenedor input:focus,
+.busqueda-contenedor select:focus,
+.busqueda-botones button:focus {
+  outline: 3px solid #93633a;
+  outline-offset: 2px;
+}
+/* El mensaje siempre existe (para que el lector de pantalla lo anuncie); solo se ve si tiene texto. */
+.busqueda-mensaje:not(:empty) {
+  padding: 12px;
+  border-left: 4px solid #93633a;
+  border-radius: 4px;
+  background-color: #f0e7d4;
+}
+
+/* En pantallas grandes, todo en una fila. */
+@media (min-width: 768px) {
+  .busqueda-contenedor {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+  .busqueda-campo {
+    flex: 1;
+  }
+  .busqueda-botones button {
+    flex: none;
+  }
+}
