@@ -24,9 +24,10 @@ Haz estos pasos una sola vez. Si algo no te sale, avisa en el grupo.
 
 1. **Clona el repositorio** y ábrelo en VS Code.
 2. **Instala la extensión *Live Server*** en VS Code.
-3. En el explorador de archivos haz clic derecho en `frontend/index.html` y elige **Open with Live Server**. Debe abrirse el navegador y verse la galería con tres recetas. Si se ve, todo está bien.
-4. **Abre tu agente de programación** (Claude Code, Codex u OpenCode) en la carpeta del proyecto. El agente lee solo las reglas del archivo `AGENTS.md`.
-5. **Dile quién eres.** Tu primer mensaje al agente puede ser:
+3. **Levanta el backend** con los pasos 1 a 3 de [Cómo correrlo](README.md#cómo-correrlo) en el README (Docker, la clave de sesiones y `dotnet run`).
+4. En el explorador de archivos haz clic derecho en `frontend/index.html` y elige **Open with Live Server**. Debe abrirse el navegador y verse la galería con tres recetas. Si se ve, todo está bien.
+5. **Abre tu agente de programación** (Claude Code, Codex u OpenCode) en la carpeta del proyecto. El agente lee solo las reglas del archivo `AGENTS.md`.
+6. **Dile quién eres.** Tu primer mensaje al agente puede ser:
 
    > Soy [tu nombre] y mi módulo es [tu módulo]. Lee AGENTS.md y TASKS.md y ayúdame con mi primera tarea.
 
