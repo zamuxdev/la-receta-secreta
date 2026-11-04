@@ -134,9 +134,12 @@ El tema 3 pide "documentación de las decisiones técnicas". Cada responsable ma
 - **Con el backend real:**
   1. Abre Docker Desktop.
   2. `docker compose up -d`
-  3. **Solo la primera vez**, crea la clave que firma las sesiones (se guarda en tu computadora, no en el repositorio). En la terminal de Git Bash: `dotnet user-secrets set "Jwt:Clave" "$(openssl rand -base64 64 | tr -d '\n')" --project backend/RecetaSecreta.Api`. Sin ella la API no arranca y te dice cómo crearla.
-  4. `dotnet run --project backend/RecetaSecreta.Api`
+  3. **Solo la primera vez**, crea la clave que firma las sesiones (se guarda en tu computadora, no en el repositorio). Sin ella la API no arranca y te dice cómo crearla.
+     - En PowerShell: `$b = New-Object byte[] 64; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($b); dotnet user-secrets set "Jwt:Clave" ([Convert]::ToBase64String($b)) --project backend/RecetaSecreta.Api`
+     - En Git Bash, macOS o Linux: `dotnet user-secrets set "Jwt:Clave" "$(openssl rand -base64 64 | tr -d '\n')" --project backend/RecetaSecreta.Api`. En PowerShell este no sirve, porque no existen `openssl` ni `tr`.
+  4. `dotnet run --project backend/RecetaSecreta.Api`. Al arrancar aplica las migraciones y carga los datos de ejemplo, así que no hay que correr `dotnet ef`.
   5. La API queda en `http://localhost:5166/api/recetas`, y la interfaz ya la usa (`USAR_DATOS_DE_PRUEBA` está en `false` en `frontend/js/api.js`).
+- Cómo ver la base de datos y qué hacer si algo falla está en el [`README.md`](README.md#cómo-correrlo).
 - Para reiniciar la base con los datos de ejemplo: `docker compose down -v`, y de nuevo los pasos anteriores.
 - **Pruebas automatizadas del backend:** con Docker abierto y la base arriba (`docker compose up -d`), corre `dotnet test backend/RecetaSecreta.Api.Tests`. Usan su propia base (`receta_secreta_pruebas`), que borran y crean de nuevo en cada corrida, así que no tocan tus datos. No necesitan la API corriendo ni la clave de user-secrets. Si cambias algo del backend, córrelas antes de abrir el PR.
 - Los datos del modo de prueba se guardan en el navegador (`localStorage`). Para empezar de cero, borra los datos del sitio o usa una ventana de incógnito.
