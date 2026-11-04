@@ -101,13 +101,23 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseCors("Desarrollo");
+}
 
-    // En desarrollo la base se crea, se actualiza y recibe recetas de ejemplo al arrancar.
-    using var alcance = app.Services.CreateScope();
+// Al arrancar, la base se crea o se actualiza y recibe las recetas de ejemplo y las cuentas precargadas.
+// Se hace en todos los entornos para que el servidor publicado quede listo sin pasos a mano.
+using (var alcance = app.Services.CreateScope())
+{
     var db = alcance.ServiceProvider.GetRequiredService<RecetaDbContext>();
     db.Database.Migrate();
     DatosIniciales.Sembrar(db);
+    DatosIniciales.SembrarCuentas(db, alcance.ServiceProvider.GetRequiredService<IPasswordHasher<Usuario>>(),
+        app.Configuration.GetSection("CuentasIniciales").Get<List<CuentaInicial>>() ?? []);
 }
+
+// En el servidor publicado la interfaz vive en wwwroot (el despliegue copia ahí frontend/),
+// así la página y la API comparten sitio y no hace falta CORS. En local no hay wwwroot y no sirve nada.
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // Primero se identifica quién llama (autenticación) y luego se revisa si puede entrar (autorización).
 app.UseAuthentication();

@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using RecetaSecreta.Api.Dtos;
 
 namespace RecetaSecreta.Api.Tests;
@@ -13,6 +15,14 @@ public abstract class PruebaDeApi(ApiDePrueba api)
     protected const string Password = "una-contrasena-larga";
 
     protected HttpClient Anonimo() => api.CreateClient();
+
+    // La misma API sobre la misma base, pero con otros valores de configuración (por ejemplo, como en el servidor publicado).
+    protected WebApplicationFactory<Program> ApiConConfiguracion(Dictionary<string, string> valores) =>
+        api.WithWebHostBuilder(b =>
+        {
+            foreach (var (clave, valor) in valores)
+                b.UseSetting(clave, valor);
+        });
 
     // Registra un usuario nuevo, inicia sesión y devuelve un cliente que ya manda su token.
     protected async Task<HttpClient> UsuarioNuevo(string nombre = "Prueba")

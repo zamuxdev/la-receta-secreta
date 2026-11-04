@@ -1,0 +1,43 @@
+# Publica la API y la interfaz en Azure App Service cada vez que algo llega a main.
+# Necesita en el repositorio (Settings > Secrets and variables > Actions):
+#   - variable AZURE_WEBAPP_NAME: el nombre de la App Service.
+#   - secreto AZURE_WEBAPP_PUBLISH_PROFILE: el perfil de publicación que se descarga del portal.
+# Mientras no exista la variable, el trabajo se salta y no falla.
+name: Desplegar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Un despliegue a la vez; si llega otro commit, espera a que termine el anterior.
+concurrency:
+  group: desplegar
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  azure:
+    name: Publicar en Azure
+    if: vars.AZURE_WEBAPP_NAME != ''
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_NOLOGO: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Compilar la API
+        run: dotnet publish backend/RecetaSecreta.Api -c Release -o publicar
+      # La API sirve la interfaz desde wwwroot (ver Program.cs).
+      - name: Copiar la interfaz
+        run: cp -r frontend publicar/wwwroot
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publicar

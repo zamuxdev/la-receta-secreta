@@ -21,6 +21,10 @@ public class AuthController(
     [HttpPost("registro")]
     public async Task<ActionResult<UsuarioDto>> Registrar(RegistroCrear datos)
     {
+        // En el servidor publicado el registro va cerrado: solo entran las cuentas precargadas (CuentasIniciales).
+        if (!configuracion.GetValue<bool>("Registro:Abierto"))
+            return Problem(statusCode: 403, detail: "El registro de cuentas está cerrado. Pide tu cuenta a quien administra el sitio.");
+
         // En minúsculas para que Alex@Correo.com y alex@correo.com sean la misma cuenta.
         var correo = datos.Correo.Trim().ToLowerInvariant();
 
