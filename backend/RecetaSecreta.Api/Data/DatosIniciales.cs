@@ -95,14 +95,16 @@ public static class DatosIniciales
         foreach (var cuenta in cuentas)
         {
             var correo = cuenta.Correo.Trim().ToLowerInvariant();
+            // Si ya existe, se salta antes de validar: así, después del primer arranque, se puede borrar
+            // la contraseña de la configuración sin que la API deje de arrancar.
+            // Local cubre un correo repetido dentro de la misma lista, que aún no está guardado.
+            if (db.Usuarios.Any(u => u.Correo == correo) || db.Usuarios.Local.Any(u => u.Correo == correo)) continue;
+
             // Las mismas reglas que el registro (contrato 10.5). Una cuenta mal escrita detiene el arranque
             // con un mensaje claro, en lugar de quedar a medias sin que nadie se entere.
             if (cuenta.Nombre.Trim().Length is 0 or > 60 || !new EmailAddressAttribute().IsValid(correo) || cuenta.Password.Length < 8)
                 throw new InvalidOperationException(
                     $"La cuenta inicial '{correo}' no es válida: necesita nombre (hasta 60 caracteres), un correo válido y una contraseña de al menos 8 caracteres.");
-
-            // Local cubre un correo repetido dentro de la misma lista, que aún no está guardado.
-            if (db.Usuarios.Any(u => u.Correo == correo) || db.Usuarios.Local.Any(u => u.Correo == correo)) continue;
 
             var usuario = new Usuario { Nombre = cuenta.Nombre.Trim(), Correo = correo };
             // Solo se guarda el hash, igual que en el registro.

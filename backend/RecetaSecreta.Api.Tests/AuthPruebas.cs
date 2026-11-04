@@ -105,4 +105,27 @@ public class AuthPruebas(ApiDePrueba api) : PruebaDeApi(api)
         Assert.Equal("Maestra", sesion!.Usuario.Nombre);
         Assert.Equal(correo.ToLowerInvariant(), sesion.Usuario.Correo);
     }
+
+    [Fact]
+    public async Task Una_cuenta_precargada_que_ya_existe_no_necesita_su_contrasena_en_la_configuracion()
+    {
+        var correo = $"{Guid.NewGuid():N}@escuela.mx";
+        using (var primera = ApiConConfiguracion(new()
+        {
+            ["CuentasIniciales:0:Nombre"] = "Hazel",
+            ["CuentasIniciales:0:Correo"] = correo,
+            ["CuentasIniciales:0:Password"] = Password,
+        }))
+            primera.CreateClient();
+
+        // Ya se creó: arrancar sin la contraseña no falla y la contraseña original sigue sirviendo.
+        using var segunda = ApiConConfiguracion(new()
+        {
+            ["CuentasIniciales:0:Nombre"] = "Hazel",
+            ["CuentasIniciales:0:Correo"] = correo,
+        });
+        var login = await segunda.CreateClient().PostAsJsonAsync("/api/auth/login", new LoginCrear(correo, Password));
+
+        Assert.Equal(HttpStatusCode.OK, login.StatusCode);
+    }
 }
