@@ -9,7 +9,11 @@
 // true: usa datos de prueba que imitan el contrato (js/api-prueba.js).
 // false: usa el backend real. Cámbialo cuando el endpoint que necesitas ya exista.
 const USAR_DATOS_DE_PRUEBA = false;
-const URL_API = 'http://localhost:5166/api';
+// Con Live Server la página y la API están en puertos distintos. Publicada, la API sirve la página
+// desde el mismo sitio, así que basta con la ruta /api.
+const URL_API = ['localhost', '127.0.0.1'].includes(location.hostname) && location.port !== '5166'
+  ? 'http://localhost:5166/api'
+  : '/api';
 
 // Error que lanzan todas las funciones de `api` cuando algo sale mal.
 class ErrorApi extends Error {

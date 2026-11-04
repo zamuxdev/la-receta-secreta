@@ -114,6 +114,11 @@ using (var alcance = app.Services.CreateScope())
         app.Configuration.GetSection("CuentasIniciales").Get<List<CuentaInicial>>() ?? []);
 }
 
+// En el servidor publicado la interfaz vive en wwwroot (el despliegue copia ahí frontend/),
+// así la página y la API comparten sitio y no hace falta CORS. En local no hay wwwroot y no sirve nada.
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 // Primero se identifica quién llama (autenticación) y luego se revisa si puede entrar (autorización).
 app.UseAuthentication();
 app.UseAuthorization();
